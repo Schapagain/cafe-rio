@@ -1,6 +1,8 @@
 ## Guide to the API Endpoints
 <br/>
 
+> Server deployed at: https://cafe-rio.herokuapp.com/
+
 ### Responses and Error Codes
 All responses are JSON objects. In cases of failure, an 'error' property shall always exist with an appropriate error message. The following are all possible http response types:
 
