@@ -6,9 +6,7 @@ const { getAuthToken } = require('../../utils/authorization');
 const auth = require('../../middlewares/auth');
 
 // Import the user model
-const User = require('../../models/user');
-const { getCleanUsers } = require('../../utils/users');
-
+const { User } = require('../../database/models');
 
 // @route   POST api/auth
 // @desc    Authenticate user
@@ -39,17 +37,13 @@ router.post('/', async (req,res) => {
 
         // Clean up User and assign token before sending the user back
         const token = getAuthToken(user.id);
-        user = getCleanUsers(user).pop();
         res.status(200).json({
             user,
             token,
         })
     }
     catch(err){
-        console.log(err);
-        return res.status(500).json({
-            error: 'Could not add a new user. Try again later.'
-        })
+       res.status(err.httpCode || 500).json({error: err.message}) 
     }
 })
 
