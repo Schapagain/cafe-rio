@@ -1,15 +1,11 @@
 {
-  "name": "finance-tracker",
+  "name": "cafe-rio",
   "version": "1.0.0",
-  "description": "Simple personal finance tracking application build using the MERN stack",
+  "description": "An office cafeteria solution",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js",
-    "client": "npm start --prefix client",
-    "client-install": "npm install --prefix client",
-    "devStart": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "dev": "nodemon run server"
   },
   "keywords": [
     "Express",
