@@ -23,8 +23,6 @@ app.use((req,res,next) => {
 });
 
 // Serve API routes
-app.use('/api/habits',require('./routes/api/habits'));
-app.use('/api/transactions',require('./routes/api/transactions'));
 app.use('/api/users',require('./routes/api/users'));
 app.use('/api/auth',require('./routes/api/auth'))
 
