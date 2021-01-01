@@ -1,42 +1,23 @@
+## Guide to the API Endpoints
+<br/>
 
-# Guide to the backend API
-> Note: All routes return with { error } in case of failure
+### Responses and Error Codes
+All responses are JSON objects. In cases of failure, an 'error' property shall always exist with an appropriate error message. The following are all possible http response types:
 
-## User handling
-1. Register a user
+|Code|Title|Description|
+|-----|-----|-----|
+|200|OK|Everything went smoothly!|
+|201|Created|Content was posted successfully|
+|400|Bad request|At least one required field, or a JWT, was not provided|
+|401|Unauthorized|Login credentials mismatch, or JWT invalid|
+|404|Not Found|Page, or resource (user, file) not found on the server|
+|409|Conflict|A resource with the provided unique identifier (email, phone) already exists|
+|500|Internal Server Error|Something unexpected happened! Please report an issue asap|
 
-  * **Endpoint**: /api/users
-  * **Method**: POST
-  * **Payload**: User { name, email, password }
-  * **Response**: { User, token } 
+<br/>
 
-2. Authenticate a user
+### User routes
 
-  * **Endpoint**: /api/auth
-  * **Method**: POST
-  * **Payload**: {email, password}
-  * **Response**: { User, token } 
-
-3. Get user info
-  * **Endpoint**: /api/auth/user
-  * **Method**: GET
-  * **Header**: Authorization : token
-  * **Response**: { name, email } 
-## Transaction handling
-
-1. Add a new transaction
-
-  * **Endpoint**: /api/transactions
-  * **Method**: POST
-  * **Header**: Authorization : token
-  * **Payload**: Transaction { amount, title, date, category, type }
-  * **Response**: { transaction: Transaction } 
-
-2. View all transactions
-
-  * **Endpoint**: /api/transactions
-  * **Method**: GET
-  * **Header**: Authorization : token
-  * **Optional parameters**: startDate, endDate, category, type
-  * **Response**: { transactions: [ Transaction ] } 
-  * **Note**: Only startDate is inclusive
+|Endpoint|Desc|Method|Access|Payload|Return|Notes|
+|-----|-----|-----|-----|-----|-----|-----|
+| /api/users/signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user, token } | idCard must be an image file |
