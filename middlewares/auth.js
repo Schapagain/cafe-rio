@@ -16,7 +16,6 @@ const auth = (req,res,next) => {
         req.id = tokenId;
         next();
     }catch(err){
-        console.log(err.message);
         return res.status(401).json({
             success: false,
             error: err.message
