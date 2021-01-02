@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -58,7 +58,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignUp = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [filePath, setFilePath] = useState(null);
+
   const classes = useStyles();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newUser = {
+      name,
+      email,
+      password,
+      organization,
+      employeeId,
+      phoneNumber,
+      filePath,
+    };
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -171,6 +192,7 @@ const SignUp = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onSubmit={handleSubmit}
           >
             Sign Up
           </Button>
