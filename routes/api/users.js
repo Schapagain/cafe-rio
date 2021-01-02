@@ -1,12 +1,25 @@
-
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getAuthToken } = require('../../utils/authorization');
+const { getAuthToken } = require("../../utils/authorization");
 
 // Import the user model
-const { User } = require('../../database/models');
-const formParser = require('../../middlewares/formParser');
-const { signupUser, deleteUser } = require('../../controllers/users');
+const { User } = require("../../database/models");
+const formParser = require("../../middlewares/formParser");
+const { signupUser, deleteUser } = require("../../controllers/users");
+
+/**
+ * Route to fetch all user info
+ * @name api/users
+ * @method POST
+ * @access Public
+ * @inner
+ * @param {string} path
+ * @param {callback} middleware - Form Parser
+ * @param   {callback} middleware - Handle HTTP response
+ */
+router.get("/", formParser, async (req, res) => {
+  User.find().then((items) => res.json(items));
+});
 
 /**
  * Route to sigup a user
@@ -15,21 +28,20 @@ const { signupUser, deleteUser } = require('../../controllers/users');
  * @access  Public
  * @inner
  * @param   {string} path
- * @param   {callback} middleware - Form Parser  
+ * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
-*/
-router.post('/signup', formParser, async (req,res) => {
-    try{
-        const result = await signupUser(req.body);
-        res.status(200).json(result);
-    }
-    catch(err){
-        return res.status(err.httpCode || 500).json({
-            field: err.field,
-            error: err.message
-        })
-    }
-})
+ */
+router.post("/signup", formParser, async (req, res) => {
+  try {
+    const result = await signupUser(req.body);
+    res.status(200).json(result);
+  } catch (err) {
+    return res.status(err.httpCode || 500).json({
+      field: err.field,
+      error: err.message,
+    });
+  }
+});
 
 /**
  * Route to delete a user
@@ -38,19 +50,18 @@ router.post('/signup', formParser, async (req,res) => {
  * @access  Public
  * @inner
  * @param   {string} path
- * @param   {callback} middleware - Form Parser  
+ * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
-*/
-router.delete('/', formParser, async (req,res) => {
-    try{
-        const result = await deleteUser(req.body);
-        res.status(200).json(result);
-    }
-    catch(err){
-        return res.status(500).json({
-            error: 'Could not delete user. Try again later.'
-        })
-    }
-})
+ */
+router.delete("/", formParser, async (req, res) => {
+  try {
+    const result = await deleteUser(req.body);
+    res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({
+      error: "Could not delete user. Try again later.",
+    });
+  }
+});
 
 module.exports = router;
