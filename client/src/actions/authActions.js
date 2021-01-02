@@ -1,4 +1,5 @@
 import axios from "axios";
+import { returnErrors } from "./errorAction";
 import {
   USER_LOADED,
   USER_LOADING,
@@ -31,6 +32,8 @@ export const loadUser = () => async (dispatch, getState) => {
     const res = axios.get("/api/auth/user", config);
     dispatch({ type: USER_LOADED, payload: res });
   } catch (err) {
+    if (err.response)
+      dispatch(returnErrors(err.response.error, err.response.status));
     dispatch({ type: AUTH_ERROR });
   }
 };
