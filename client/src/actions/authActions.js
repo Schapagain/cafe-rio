@@ -15,7 +15,21 @@ export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
 
-  // get token from localStorage
+  
+
+  try {
+    const res = axios.get("/api/auth/user", tokenConfig(getState));
+    dispatch({ type: USER_LOADED, payload: res });
+  } catch (err) {
+    if (err.response)
+      dispatch(returnErrors(err.response.error, err.response.status));
+    dispatch({ type: AUTH_ERROR });
+  }
+};
+
+
+export const tokenConfig = getState => {
+    // get token from localStorage
   const token = getState().auth.token;
 
   // set header
@@ -27,13 +41,6 @@ export const loadUser = () => async (dispatch, getState) => {
 
   // pass along token, if it exists
   if (token) config.headers["authorization"] = token;
-
-  try {
-    const res = axios.get("/api/auth/user", config);
-    dispatch({ type: USER_LOADED, payload: res });
-  } catch (err) {
-    if (err.response)
-      dispatch(returnErrors(err.response.error, err.response.status));
-    dispatch({ type: AUTH_ERROR });
-  }
-};
+  
+  return config
+}
