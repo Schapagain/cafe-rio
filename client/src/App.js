@@ -3,11 +3,13 @@ import { Provider } from "react-redux";
 
 import store from "./store";
 import { loadUser } from "./actions/authActions";
+import SignUp from "./components/SignUp";
 
 function App() {
   return (
     <Provider store={store}>
-      <div className="App">Cafe App</div>
+      <h1>Cafe App</h1>
+      <SignUp />
     </Provider>
   );
 }
