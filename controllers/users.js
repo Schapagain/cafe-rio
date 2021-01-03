@@ -2,7 +2,7 @@ const { getAuthToken } = require("../utils/authorization");
 
 // Import the user model
 const { User } = require("../database/models");
-const { getError, ValidationError } = require("./errors");
+const { getError, ValidationError, NotFoundError } = require("./errors");
 const { saveFiles, deleteFiles } = require("./files");
 
 /**
@@ -13,20 +13,17 @@ const { saveFiles, deleteFiles } = require("./files");
 async function signupUser(user) {
   let idCard, newUser, token;
   try {
-    console.log("id card about to be checked", user);
 
-    // check if idCard is sent
-    if (!user.idCard || !(typeof user.idCard == "object"))
-      throw new ValidationError("idCard", "Upload a picture of an Id card");
-    console.log("id card", user.idCard);
+    checkIdCardPresence(user); 
 
     // save file and replace file with a random fileName
-    idCard = (await saveFiles([user.idCard]))[0];
-    // console.log(idCard);
-    user.idCard = idCard;
+    user.idCard = await saveFiles(user.idCard);
+   
+    // save user to database
     newUser = new User(user);
     await newUser.save();
 
+    // generate JWT and respond
     token = getAuthToken(user.id);
     user = {
       ...user,
@@ -34,10 +31,20 @@ async function signupUser(user) {
     };
     return { user, token };
   } catch (err) {
-    // delete saved file in case of error
-    idCard ? deleteFiles([idCard]) : null;
+
+    // delete saved file
+    if (idCard) deleteFiles(idCard);
     throw await getError(err);
   }
+}
+
+/**
+ * Check if idCard property exists on user
+ * @param {Object} user 
+ */
+function checkIdCardPresence(user) {
+  if (!user.idCard || !(typeof user.idCard == "object"))
+      throw new ValidationError("idCard", "Upload a picture of an Id card");
 }
 
 /**
@@ -47,15 +54,27 @@ async function signupUser(user) {
  */
 async function deleteUser(user) {
   try {
-    const _id = user.id;
-    const result = await User.findOne({ _id });
-    if (!result) return new Error("User not found");
-    await User.deleteOne({ _id });
-    deleteFiles([result.idCard]);
+    await checkUserPresence(user);
+    await User.deleteOne({ _id:user.id });
+    deleteFiles(result.idCard);
     return { id: user.id };
   } catch (err) {
     throw await getError(err);
   }
+}
+
+/**
+ * Check if the user exists in the database
+ * @param {*} user 
+ */
+async function checkUserPresence(user) {
+  try{
+    const exists = await User.findOne({_id:user.id}) 
+    if (!exists) throw new NotFoundError('user');
+  }catch(err){
+    throw await getError(err);
+  }
+  
 }
 
 module.exports = { signupUser, deleteUser };
