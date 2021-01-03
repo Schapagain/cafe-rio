@@ -9,6 +9,7 @@ import {
   // LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  LOGOUT_SUCCESS,
 } from "../actions/types";
 
 export const loadUser = () => async (dispatch, getState) => {
@@ -65,6 +66,13 @@ export const signUp = (newUser) => async (dispatch) => {
     }
     dispatch({ type: REGISTER_FAIL });
   }
+};
+
+// logout
+export const logout = () => (dispatch) => {
+  dispatch({
+    type: LOGOUT_SUCCESS,
+  });
 };
 
 export const tokenConfig = (getState) => {

@@ -2,6 +2,8 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
+import Logout from "./Logout";
+
 const HomePage = () => {
   return (
     <Grid container justify="center">
@@ -10,6 +12,9 @@ const HomePage = () => {
       </Grid>
       <Grid item container justify="center" xs={12}>
         <Typography variant="h4">You're now logged in</Typography>
+      </Grid>
+      <Grid>
+        <Logout />
       </Grid>
     </Grid>
   );
