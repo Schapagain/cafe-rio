@@ -57,13 +57,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = () => {
+const SignUp = ({ signUp }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [organization, setOrganization] = useState("");
   const [employeeId, setEmployeeId] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [filePath, setFilePath] = useState(null);
 
   const classes = useStyles();
@@ -76,9 +76,11 @@ const SignUp = () => {
       password,
       organization,
       employeeId,
-      phoneNumber,
+      phone,
       filePath,
     };
+    //attempt to register user
+    signUp(newUser);
   };
 
   return (
@@ -91,7 +93,7 @@ const SignUp = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -103,6 +105,10 @@ const SignUp = () => {
                 id="name"
                 label="Name"
                 autoFocus
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,6 +120,10 @@ const SignUp = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -126,6 +136,10 @@ const SignUp = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -141,6 +155,10 @@ const SignUp = () => {
                 id="organization"
                 label="Organization"
                 autoFocus
+                value={organization}
+                onChange={(e) => {
+                  setOrganization(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -153,18 +171,26 @@ const SignUp = () => {
                 id="employeeId"
                 label="Employee ID"
                 autoFocus
+                value={employeeId}
+                onChange={(e) => {
+                  setEmployeeId(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                autoComplete="Phone Number"
-                name="phoneNumber"
+                autoComplete="Phone"
+                name="phone"
                 variant="outlined"
                 required
                 fullWidth
-                id="phoneNumber"
-                label="Phone Number"
+                id="phone"
+                label="Phone"
                 autoFocus
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -192,7 +218,6 @@ const SignUp = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onSubmit={handleSubmit}
           >
             Sign Up
           </Button>
