@@ -53,13 +53,13 @@ router.post("/signup", formParser, async (req, res) => {
  * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
  */
-router.delete("/", formParser, async (req, res) => {
+router.delete("/:id", formParser, async (req, res) => {
   try {
-    const result = await deleteUser(req.body);
+    const result = await deleteUser(req.params.id);
     res.status(200).json(result);
   } catch (err) {
-    return res.status(500).json({
-      error: "Could not delete user. Try again later.",
+    return res.status(err.httpCode || 500 ).json({
+      error: err.message
     });
   }
 });
