@@ -1,4 +1,5 @@
 const { getAuthToken } = require("../utils/authorization");
+const { isValidMongooseId } = require('../database');
 
 // Import the user model
 const { User } = require("../database/models");
@@ -19,7 +20,7 @@ async function signupUser(user) {
     // save file and replace file with a random fileName
     idCard = await saveFiles(user.idCard);
     user.idCard = idCard;
-    
+
     // save user to database
     newUser = new User(user);
     await newUser.save();
@@ -28,7 +29,7 @@ async function signupUser(user) {
     token = getAuthToken(user.id);
     user = {
       ...user,
-      id: newUser._id,
+      id: newUser.id,
     };
     return { user: makeUser(user), token };
   } catch (err) {
@@ -63,22 +64,26 @@ function checkIdCardPresence(user) {
  */
 async function deleteUser(id) {
   try {
-    const user = await checkUserPresence(id);
-    await User.deleteOne({ _id:id });
+    const user = await checkUserPresence({id});
+    await User.deleteOne({id});
     deleteFiles(user.idCard);
-    return { id };
+    return {id};
   } catch (err) {
     throw await getError(err);
   }
 }
 
 /**
- * Check if the user with the given id exists in the database
+ * Check if the user with the given parameters exists in the database
  * @param {*} id 
  */
-async function checkUserPresence(id) {
+async function checkUserPresence(query) {
   try{
-    const exists = await User.findOne({_id:id}) 
+    if (!query || (query.id && !isValidMongooseId(query.id))){
+      throw new NotFoundError('user');
+    }
+    const exists = await User.findOne(query) 
+    console.log(exists)
     if (!exists) throw new NotFoundError('user');
     return exists
   }catch(err){
@@ -87,4 +92,15 @@ async function checkUserPresence(id) {
   
 }
 
-module.exports = { signupUser, deleteUser };
+async function getUsers() {
+  let args = [...arguments]
+  let users =[];
+  if (!args.length) {
+    users = await User.find();
+  }else {
+    users = [await checkUserPresence({id:args[0]})]
+  }
+  return {count:users.length,data:users.map(user => makeUser(user))};
+}
+
+module.exports = { signupUser, deleteUser, getUsers };
