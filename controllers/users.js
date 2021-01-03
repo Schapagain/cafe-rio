@@ -17,8 +17,9 @@ async function signupUser(user) {
     checkIdCardPresence(user); 
 
     // save file and replace file with a random fileName
-    user.idCard = await saveFiles(user.idCard);
-   
+    idCard = await saveFiles(user.idCard);
+    user.idCard = idCard;
+    
     // save user to database
     newUser = new User(user);
     await newUser.save();
