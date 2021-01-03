@@ -18,11 +18,11 @@ async function saveFiles() {
         let fileName;
         await asyncForEach(files, async file => {
             if (file.path) {
-                fileName = writeFile(file);
+                fileName = await writeFile(file);
                 fileNames.push(fileName);
             }
         });
-        return fileNames;
+        return fileNames.length > 1 ? fileNames : fileNames[0];
     }catch(err){
         throw await getError(err) 
     }
@@ -40,6 +40,7 @@ async function writeFile(file) {
         let fileStream = await readFile(file.path);
         let fullPath = path.join(uploadPath,fileName);
         writeFile(fullPath,fileStream);
+        return fileName;
     }catch(err){
         throw await getError(err);
     }
