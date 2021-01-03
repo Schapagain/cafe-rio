@@ -23,6 +23,8 @@ const UserSchema = new Schema({
     },
     phone: {
         type: String,
+        trim: true,
+        unique: true,
         required: "Phone is required",
     },
     email: {
@@ -49,7 +51,7 @@ const UserSchema = new Schema({
 UserSchema.pre('save',async function(next) {
     let user = this;
     if (!user.isModified('password')) return next();
-    user.password = generatePasswordHash(user.password);
+    user.password = await generatePasswordHash(user.password);
     return next();
 })
 
