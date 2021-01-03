@@ -26,7 +26,7 @@ export const loadUser = () => async (dispatch, getState) => {
 };
 
 // Register User
-export const signUp = (userDetails) => async (dispatch) => {
+export const signUp = (newUser) => async (dispatch) => {
   // set content-type header
   const config = {
     headers: {
@@ -35,10 +35,18 @@ export const signUp = (userDetails) => async (dispatch) => {
   };
 
   //Request body
-  const body = JSON.stringify(userDetails);
+  console.log(newUser);
+  // const body = JSON.stringify(newUser);
+  const body = newUser;
+  console.log(body);
+
+  const endpoint =
+    process.env.NODE_ENV === "production"
+      ? "/api/users"
+      : "http://localhost:5000/api/users/signup";
 
   try {
-    const res = await axios.post("/api/users", body, config);
+    const res = await axios.post(endpoint, body, config);
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,

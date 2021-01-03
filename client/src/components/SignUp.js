@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -58,28 +56,50 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignUp = ({ signUp }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [employeeId, setEmployeeId] = useState("");
-  const [phone, setPhone] = useState("");
-  const [filePath, setFilePath] = useState(null);
+  // create state to hold form values
+  const [name, setName] = useState("Jay Jay");
+  const [email, setEmail] = useState("jay@gmail.com");
+  const [password, setPassword] = useState("pass1234");
+  const [organization, setOrganization] = useState("Colgate University");
+  const [employeeId, setEmployeeId] = useState("00000000");
+  const [phone, setPhone] = useState("5555555555");
+  const [idCard, setIdCard] = useState(null);
 
   const classes = useStyles();
 
-  const handleSubmit = (e) => {
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newUser = {
-      name,
-      email,
-      password,
-      organization,
-      employeeId,
-      phone,
-      filePath,
-    };
-    //attempt to register user
+    // console.log(fileRef.current.files);
+    // const files = fileRef.current.files;
+    const newUser = new FormData();
+    newUser.append("name", name);
+    newUser.append("email", email);
+    newUser.append("password", password);
+    newUser.append("organization", organization);
+    newUser.append("employeeId", employeeId);
+    newUser.append("phone", phone);
+    newUser.append("idCard", idCard);
+    for (let key of newUser.entries()) {
+      console.log(key[0], key[1]);
+    }
+    // const newUser = {
+    //   name,
+    //   email,
+    //   password,
+    //   organization,
+    //   employeeId,
+    //   phone,
+    //   idCard,
+    // };
+    // //attempt to register user
     signUp(newUser);
   };
 
@@ -197,10 +217,15 @@ const SignUp = ({ signUp }) => {
               <input
                 accept="image/*"
                 className={classes.input}
-                id="idCardUpload"
+                id="idCard"
                 type="file"
+                name="idCard"
+                onChange={(e) => {
+                  setIdCard(e.target.files[0]);
+                }}
+                // ref={fileRef}
               />
-              <label htmlFor="idCardUpload">
+              <label htmlFor="idCard">
                 <Button
                   variant="contained"
                   component="span"
