@@ -15,7 +15,7 @@ async function authenticate(user) {
 
         const givenPassword = user.password;
         user = await checkUserPresence({email:user.email});
-        let isMatch = user.validatePassword(givenPassword)
+        let isMatch = await user.validatePassword(givenPassword)
 
         if (!isMatch)
             throw new Error();
