@@ -4,9 +4,9 @@ import {
   USER_LOADED,
   USER_LOADING,
   AUTH_ERROR,
-  LOGIN_FAIL,
-  LOGIN_SUCCESS,
-  LOGOUT_SUCCESS,
+  // LOGIN_FAIL,
+  // LOGIN_SUCCESS,
+  // LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
 } from "../actions/types";
@@ -35,10 +35,10 @@ export const signUp = (newUser) => async (dispatch) => {
   };
 
   //Request body
-  console.log(newUser);
+  // File objects can't be stringified,
+  //  so we submit the body as FormData instead of JSON
   // const body = JSON.stringify(newUser);
   const body = newUser;
-  console.log(body);
 
   const endpoint =
     process.env.NODE_ENV === "production"
@@ -52,11 +52,17 @@ export const signUp = (newUser) => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
-    if (err.response)
+    // console.log("error", err.response);
+    if (err.response) {
+      console.log("error", err);
       dispatch(
-        returnErrors(err.response.error, err.response.status),
-        "REGISTER_FAIL"
+        returnErrors(
+          err.response.data.error,
+          err.response.status,
+          "REGISTER_FAIL"
+        )
       );
+    }
     dispatch({ type: REGISTER_FAIL });
   }
 };

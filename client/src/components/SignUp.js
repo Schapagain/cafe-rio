@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Divider from "@material-ui/core/Divider";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import Alert from "@material-ui/lab/Alert";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -55,7 +56,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ signUp }) => {
+const SignUp = ({ signUp, error, isAuthenticated }) => {
+  const classes = useStyles();
   // create state to hold form values
   const [name, setName] = useState("Jay Jay");
   const [email, setEmail] = useState("jay@gmail.com");
@@ -65,20 +67,17 @@ const SignUp = ({ signUp }) => {
   const [phone, setPhone] = useState("5555555555");
   const [idCard, setIdCard] = useState(null);
 
-  const classes = useStyles();
+  // showing errors if they exist
+  const [msg, setMsg] = useState("");
+  useEffect(() => {
+    if (error.id === "REGISTER_FAIL") setMsg(error.msg);
+    console.log("error message", error);
+  }, [error]);
 
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-
+  // posts form data to server
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(fileRef.current.files);
-    // const files = fileRef.current.files;
+
     const newUser = new FormData();
     newUser.append("name", name);
     newUser.append("email", email);
@@ -87,20 +86,10 @@ const SignUp = ({ signUp }) => {
     newUser.append("employeeId", employeeId);
     newUser.append("phone", phone);
     newUser.append("idCard", idCard);
-    for (let key of newUser.entries()) {
-      console.log(key[0], key[1]);
-    }
-    // const newUser = {
-    //   name,
-    //   email,
-    //   password,
-    //   organization,
-    //   employeeId,
-    //   phone,
-    //   idCard,
-    // };
+
     // //attempt to register user
     signUp(newUser);
+    console.log("error", error);
   };
 
   return (
@@ -113,6 +102,7 @@ const SignUp = ({ signUp }) => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        {msg !== "" ? <Alert severity="error">{msg}</Alert> : null}
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>

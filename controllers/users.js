@@ -13,12 +13,9 @@ const { saveFiles, deleteFiles } = require("./files");
 async function signupUser(user) {
   let idCard, newUser, token;
   try {
-    console.log("id card about to be checked", user);
-
     // check if idCard is sent
     if (!user.idCard || !(typeof user.idCard == "object"))
       throw new ValidationError("idCard", "Upload a picture of an Id card");
-    console.log("id card", user.idCard);
 
     // save file and replace file with a random fileName
     idCard = (await saveFiles([user.idCard]))[0];
