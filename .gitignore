@@ -1,5 +1,4 @@
 /node_modules
-/config
 .env
 /uploads
 /client/node_modules
