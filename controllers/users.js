@@ -104,4 +104,4 @@ async function getUsers(id=null) {
   return {count:users.length,data:users.map(user => makeUser(user))};
 }
 
-module.exports = { signupUser, deleteUser, getUsers };
+module.exports = { signupUser, deleteUser, getUsers, checkUserPresence, makeUser };
