@@ -19,6 +19,7 @@ class NotAuthorizedError extends Error {
 class NotUniqueError extends Error {
     constructor(field){
         super(`${field} already exists`);
+        this.field = field
         this.name = this.constructor.name;
         this.httpCode = 409;
     }
@@ -60,7 +61,7 @@ async function getError(err){
             case 'ValidatorError':
                 return new ValidationError(firstError.properties.path, firstError.properties.message);
             case 'MongoError':
-                return new NotUniqueError(err.keyValue[Object.keys(err.keyValue)[0]]);
+                return new NotUniqueError(Object.keys(err.keyValue)[0]);
             case 'SequelizeDatabaseError':
                 return new ValidationError('field',err.message) 
             case 'JwtParseError':
