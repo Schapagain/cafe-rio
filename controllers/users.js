@@ -29,13 +29,21 @@ async function signupUser(user) {
       ...user,
       id: newUser._id,
     };
-    return { user, token };
+    return { user: makeUser(user), token };
   } catch (err) {
 
     // delete saved file
     if (idCard) deleteFiles(idCard);
     throw await getError(err);
   }
+}
+
+/**
+ * Trim the user object to only include the given attributes
+ * @param {*} user 
+ */
+function makeUser(user, attributes = ['id','name','email','organization','employeeId']) {
+  return attributes.reduce((obj,attr) => ({...obj,[attr]:user[attr]}),{})
 }
 
 /**
@@ -52,25 +60,26 @@ function checkIdCardPresence(user) {
  * and user files from the disk
  * @param {*} user
  */
-async function deleteUser(user) {
+async function deleteUser(id) {
   try {
-    await checkUserPresence(user);
-    await User.deleteOne({ _id:user.id });
-    deleteFiles(result.idCard);
-    return { id: user.id };
+    const user = await checkUserPresence(id);
+    await User.deleteOne({ _id:id });
+    deleteFiles(user.idCard);
+    return { id };
   } catch (err) {
     throw await getError(err);
   }
 }
 
 /**
- * Check if the user exists in the database
- * @param {*} user 
+ * Check if the user with the given id exists in the database
+ * @param {*} id 
  */
-async function checkUserPresence(user) {
+async function checkUserPresence(id) {
   try{
-    const exists = await User.findOne({_id:user.id}) 
+    const exists = await User.findOne({_id:id}) 
     if (!exists) throw new NotFoundError('user');
+    return exists
   }catch(err){
     throw await getError(err);
   }
