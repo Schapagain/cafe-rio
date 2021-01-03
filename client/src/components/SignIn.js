@@ -15,8 +15,10 @@ import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { useHistory, Link as RouterLink } from "react-router-dom";
 
 import { signIn } from "../actions/authActions";
+import { clearErrors } from "../actions/errorActions";
 
 function Copyright() {
   return (
@@ -51,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = ({ signIn, error, isAuthenticated }) => {
+const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
   const classes = useStyles();
 
   // state to hold input fields data
@@ -64,6 +66,15 @@ const SignIn = ({ signIn, error, isAuthenticated }) => {
     if (error.id === "LOGIN_FAIL") setMsg(error.msg);
     console.log("error message", error);
   }, [error]);
+
+  // redirect if authenticated
+  let history = useHistory();
+  useEffect(() => {
+    if (isAuthenticated) {
+      clearErrors();
+      history.push("/");
+    }
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -137,7 +148,7 @@ const SignIn = ({ signIn, error, isAuthenticated }) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link component={RouterLink} to="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -156,10 +167,11 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, { signIn })(SignIn);
+export default connect(mapStateToProps, { signIn, clearErrors })(SignIn);
 
 SignIn.propTypes = {
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };

@@ -15,9 +15,11 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Alert from "@material-ui/lab/Alert";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { useHistory, Link as RouterLink } from "react-router-dom";
 
 import { signUp } from "../actions/authActions";
 import SignIn from "./SignIn";
+import { clearErrors } from "../actions/errorActions";
 
 // TODO: show feedback for image upload
 
@@ -57,15 +59,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ signUp, error, isAuthenticated }) => {
+const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   const classes = useStyles();
   // create state to hold form values
-  const [name, setName] = useState("Jay Jay");
-  const [email, setEmail] = useState("jay@gmail.com");
-  const [password, setPassword] = useState("pass1234");
-  const [organization, setOrganization] = useState("Colgate University");
-  const [employeeId, setEmployeeId] = useState("00000000");
-  const [phone, setPhone] = useState("5555555555");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
+  const [phone, setPhone] = useState("");
   const [idCard, setIdCard] = useState(null);
 
   // showing errors if they exist
@@ -75,6 +77,14 @@ const SignUp = ({ signUp, error, isAuthenticated }) => {
     console.log("error message", error);
   }, [error]);
 
+  // redirect once authenticated
+  let history = useHistory();
+  useEffect(() => {
+    if (isAuthenticated) {
+      clearErrors();
+      history.push("/");
+    }
+  });
   // posts form data to server
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -239,7 +249,7 @@ const SignUp = ({ signUp, error, isAuthenticated }) => {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link component={RouterLink} to="/" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
@@ -262,6 +272,7 @@ SignUp.propTypes = {
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
   signUp: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { signUp })(SignUp);
+export default connect(mapStateToProps, { signUp, clearErrors })(SignUp);
