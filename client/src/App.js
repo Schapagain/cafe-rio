@@ -5,14 +5,15 @@ import { Switch, Route } from "react-router-dom";
 import store from "./store";
 import { loadUser } from "./actions/authActions";
 import SignUp from "./components/SignUp";
+import SignIn from "./components/SignIn";
 import HomePage from "./components/HomePage";
 
 function App() {
   return (
     <Provider store={store}>
-      <h1>Cafe App</h1>
       {/* <SignUp /> */}
-      <HomePage />
+      <SignIn />
+      {/* <HomePage /> */}
     </Provider>
   );
 }

@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
+const SignUp = ({ signUp, error, isAuthenticated }) => {
   const classes = useStyles();
   // create state to hold form values
   const [name, setName] = useState("Jay Jay");
@@ -76,7 +76,7 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   }, [error]);
 
   // posts form data to server
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const newUser = new FormData();

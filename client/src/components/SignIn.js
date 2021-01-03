@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,13 +12,18 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Alert from "@material-ui/lab/Alert";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { signIn } from "../actions/authActions";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="/">
+        Cafe Rio
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -46,8 +51,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+const SignIn = ({ signIn, error, isAuthenticated }) => {
   const classes = useStyles();
+
+  // state to hold input fields data
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // error msg state
+  const [msg, setMsg] = useState("");
+  useEffect(() => {
+    if (error.id === "LOGIN_FAIL") setMsg(error.msg);
+    console.log("error message", error);
+  }, [error]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newUser = {
+      email,
+      password,
+    };
+    signIn(newUser);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,7 +85,8 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        {msg !== "" ? <Alert severity="error">{msg}</Alert> : null}
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -70,6 +97,10 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <TextField
             variant="outlined"
@@ -81,6 +112,10 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -114,4 +149,17 @@ export default function SignIn() {
       </Box>
     </Container>
   );
-}
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
+});
+
+export default connect(mapStateToProps, { signIn })(SignIn);
+
+SignIn.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  error: PropTypes.object.isRequired,
+  signIn: PropTypes.func.isRequired,
+};

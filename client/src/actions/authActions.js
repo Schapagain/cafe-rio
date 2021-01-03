@@ -4,12 +4,11 @@ import {
   USER_LOADED,
   USER_LOADING,
   AUTH_ERROR,
-  // LOGIN_FAIL,
-  // LOGIN_SUCCESS,
-  // LOGOUT_SUCCESS,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
+  LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  LOGOUT_SUCCESS,
 } from "../actions/types";
 
 export const loadUser = () => async (dispatch, getState) => {
@@ -65,6 +64,40 @@ export const signUp = (newUser) => async (dispatch) => {
       );
     }
     dispatch({ type: REGISTER_FAIL });
+  }
+};
+
+// log in
+export const signIn = ({ email, password }) => async (dispatch) => {
+  // set content-type header
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+
+  const endpoint =
+    process.env.NODE_ENV === "production"
+      ? "/api/users"
+      : "http://localhost:5000/api/auth";
+
+  const body = JSON.stringify({ email, password });
+
+  try {
+    const res = await axios.post(endpoint, body, config);
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+    });
+  } catch (err) {
+    // console.log("error", err.response);
+    if (err.response) {
+      console.log("error", err);
+      dispatch(
+        returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
+      );
+    }
+    dispatch({ type: LOGIN_FAIL });
   }
 };
 
