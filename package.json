@@ -29,6 +29,7 @@
     "moment": "^2.29.1",
     "mongoose": "^5.11.9",
     "njwt": "^1.0.0",
+    "react-router-dom": "^5.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

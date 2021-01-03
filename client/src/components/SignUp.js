@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { signUp } from "../actions/authActions";
+import SignIn from "./SignIn";
 
 // TODO: show feedback for image upload
 
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ signUp, error, isAuthenticated }) => {
+const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   const classes = useStyles();
   // create state to hold form values
   const [name, setName] = useState("Jay Jay");
