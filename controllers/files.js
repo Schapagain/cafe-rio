@@ -69,12 +69,16 @@ async function asyncForEach(array, callback) {
  * Delete files by fileNames
  * 
  */
-function deleteFiles() {
+async function deleteFiles() {
     fileNames = [...arguments]
-    fileNames.forEach(fileName => {
-        const filePath = path.join(uploadPath,fileName);
-        fs.unlink(filePath,err=>console.log(err));
-    })
+    try{
+        fileNames.forEach(fileName => {
+            const filePath = path.join(uploadPath,fileName);
+            fs.unlink(filePath,err=>console.log(err));
+        })
+    }catch(err){
+        throw await getError(err);
+    }
 }
 
 function _getRandomId(size) {
