@@ -75,7 +75,7 @@ async function deleteUser(id) {
 
 /**
  * Check if the user with the given parameters exists in the database
- * @param {*} id 
+ * @param {object} query
  */
 async function checkUserPresence(query) {
   try{
@@ -83,7 +83,6 @@ async function checkUserPresence(query) {
       throw new NotFoundError('user');
     }
     const exists = await User.findOne(query) 
-    console.log(exists)
     if (!exists) throw new NotFoundError('user');
     return exists
   }catch(err){
@@ -91,14 +90,16 @@ async function checkUserPresence(query) {
   }
   
 }
-
-async function getUsers() {
-  let args = [...arguments]
+/**
+ * Get users info from database
+ * @param {String} id
+ */
+async function getUsers(id=null) {
   let users =[];
-  if (!args.length) {
+  if (!id) {
     users = await User.find();
   }else {
-    users = [await checkUserPresence({id:args[0]})]
+    users = [await checkUserPresence({id})]
   }
   return {count:users.length,data:users.map(user => makeUser(user))};
 }
