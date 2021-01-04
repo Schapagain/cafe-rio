@@ -1,10 +1,11 @@
-const { getAuthToken } = require("../utils/authorization");
 const { isValidMongooseId } = require('../database');
 
 // Import the user model
 const { User } = require("../database/models");
 const { getError, ValidationError, NotFoundError } = require("./errors");
 const { saveFiles, deleteFiles, getFilePath } = require("./files");
+const { sendActivationEmail } = require("./email");
+const { getRandomCode, getServerURL } = require('./utils');
 
 /**
  * Save user info to the database
@@ -12,7 +13,7 @@ const { saveFiles, deleteFiles, getFilePath } = require("./files");
  * @param {*} user
  */
 async function signupUser(user) {
-  let idCard, newUser, token;
+  let idCard, newUser, activationCode, activationLink;
   try {
 
     checkIdCardPresence(user); 
@@ -23,15 +24,16 @@ async function signupUser(user) {
 
     // save user to database
     newUser = new User(user);
-    await newUser.save();
+    user = await newUser.save();
 
-    // generate JWT and respond
-    token = getAuthToken(user.id);
-    user = {
-      ...user,
-      id: newUser.id,
-    };
-    return { user: makeUser(user), token };
+    // generate activation link
+    activationCode = generateActivationCode(user);
+    activationLink = getServerURL().concat('/api/auth/activate',activationCode);
+
+    // generate activation code for the user and send email
+    sendActivationEmail(user.name,user.email,activationLink);
+
+    return { user: makeUser(user) };
   } catch (err) {
 
     // delete saved file
@@ -41,10 +43,20 @@ async function signupUser(user) {
 }
 
 /**
+ * Generates a random code and persist it as activationCode
+ * @param {*} user 
+ */
+function generateActivationCode(user) {
+  const activationCode = gerRandomCode(10);
+  user.activationCode = activationCode;
+  user.save();
+}
+
+/**
  * Trim the user object to only include the given attributes
  * @param {*} user 
  */
-function makeUser(user, attributes = ['id','name','email','organization','employeeId','registrationDate']) {
+function makeUser(user, attributes = ['active','id','name','email','organization','employeeId','registrationDate']) {
   return attributes.reduce((obj,attr) => ({...obj,[attr]:user[attr]}),{})
 }
 
