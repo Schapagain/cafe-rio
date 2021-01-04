@@ -34,7 +34,7 @@ async function authenticate(user) {
 
         if (!isMatch) new NotAuthorizedError();
         
-        if (!user.active) throw NotActiveError('account')
+        if (!user.active) throw new NotActiveError('account')
 
         return {
             token: getAuthToken(user.id),
