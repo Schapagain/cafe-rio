@@ -46,8 +46,19 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: "Password is required"
+    },
+    activationCode: {
+        type: String,
+        unique: true,
     }
 },{timestamps: true})
+
+/**
+ * Virtual to check if user has activated their account
+ */
+UserSchema.virtual('active').get(function() {
+    return this.activationCode == null;
+})
 
 /**
  * Virtual to get registrationDate
