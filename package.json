@@ -19,14 +19,17 @@
   "author": "Sandesh Chapagain",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "concurrently": "^5.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "formidable": "^1.2.2",
+    "googleapis": "^66.0.0",
     "moment": "^2.29.1",
     "mongoose": "^5.11.9",
     "njwt": "^1.0.0",
+    "nodemailer": "^6.4.17",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

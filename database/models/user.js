@@ -46,18 +46,36 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: "Password is required"
+    },
+    activationCode: {
+        type: String,
+        unique: true,
     }
 },{timestamps: true})
+
+/**
+ * Virtual to check if user has activated their account
+ */
+UserSchema.virtual('active').get(function() {
+    return this.activationCode == null;
+})
+
+/**
+ * Virtual to get registrationDate
+ */
+UserSchema.virtual('registrationDate').get(function() {
+    return this.createdAt;
+})
 
 /**
  * Hash password and save id before saving user
  */
 UserSchema.pre('save',async function(next) {
     let user = this;
-
-    // set user id
-    user.id = user._id;
     
+    // save id
+    user.id = this._id;
+
     // hash password
     if (!user.isModified('password')) return next();
     user.password = await generatePasswordHash(user.password);

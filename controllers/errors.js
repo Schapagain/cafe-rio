@@ -1,5 +1,5 @@
 class ValidationError extends Error {
-    constructor(field,message){
+    constructor(field,message) {
         super(`Invalid ${field} : ${message}`);
         this.message = message? `Invalid ${field} : ${message}`: `Invalid ${field}` ;
         this.field = field;
@@ -8,8 +8,16 @@ class ValidationError extends Error {
     }
 }
 
+class NotActiveError extends Error {
+    constructor(resource) {
+        super(resource + ' is not active');
+        this.name = this.constructor.name;
+        this.httpCode = 403;
+    }
+}
+
 class NotAuthorizedError extends Error {
-    constructor(message){
+    constructor(message) {
         super(message? 'Not Authorized: '+message : 'Not Authorized');
         this.name = this.constructor.name;
         this.httpCode = 401;
@@ -17,7 +25,7 @@ class NotAuthorizedError extends Error {
 }
 
 class NotUniqueError extends Error {
-    constructor(field){
+    constructor(field) {
         super(`${field} already exists`);
         this.field = field
         this.name = this.constructor.name;
@@ -26,7 +34,7 @@ class NotUniqueError extends Error {
 }
 
 class NotFoundError extends Error {
-    constructor(resource){
+    constructor(resource) {
         super(`${resource} not found`);
         this.resource = resource;
         this.name = this.constructor.name;
@@ -35,16 +43,16 @@ class NotFoundError extends Error {
 }
 
 class ServerError extends Error {
-    constructor(message){
+    constructor(message) {
         super(message? message:"Oops something's wrong with the server. We're working on a fix. ");
         this.name = this.constructor.name;
         this.httpCode = 500;
     }
 }
 
-async function getError(err){
+async function getError(err) {
     console.log(err)
-    if (err){
+    if (err) {
         let firstError = {properties:{}};
         let errorName = err.name;
         if (err.errors) {
@@ -52,10 +60,9 @@ async function getError(err){
             errorName = firstError.name
         }
         switch (errorName) {
+            case 'NotActiveError':
             case 'ValidationError':
-                return err;
             case 'NotFoundError':
-                return err;
             case 'NotAuthorizedError':
                 return err;
             case 'ValidatorError':
@@ -78,5 +85,6 @@ module.exports = {
     NotFoundError,
     NotAuthorizedError,
     NotUniqueError,
+    NotActiveError,
     getError
 }

@@ -43,7 +43,7 @@ app.use((req,res,next) => {
 
 // Handle all errors thrown
 app.use((err,req,res,next) => {
-    res.status(err.httpCode || 500 ).json({ error: err.message || 'Server error' })
+    res.status(err.httpCode || 500 ).json({ error: {msg:err.message || 'Server error' }})
 });
 
 module.exports = app;
