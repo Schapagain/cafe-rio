@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 
 import { signUp } from "../actions/authActions";
-import SignIn from "./SignIn";
+// import SignIn from "./SignIn";
 import { clearErrors } from "../actions/errorActions";
 
 // TODO: show feedback for image upload
