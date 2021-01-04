@@ -2,8 +2,27 @@ const express = require("express");
 const router = express.Router();
 
 const formParser = require("../../middlewares/formParser");
-const { authenticate } = require('../../controllers/auth');
+const { authenticate, activateAccount } = require('../../controllers/auth');
+const appAddress = 'https://cafe-rio.netlify.app/activate'
 
+/**
+ * Route to active account
+ * @name api/auth/activate
+ * @method POST
+ * @access Public
+ * @inner
+ * @param {string} path
+ * @param   {callback} middleware - Handle HTTP response
+ */
+router.get("/activate/:activationCode", async (req, res) => {
+
+  try {
+    await activateAccount(req.params.activationCode);
+    res.redirect(appAddress);
+  } catch (err) {
+    res.status(err.httpCode || 500).json({ error: err.message });
+  }
+});
 
 /**
  * Route to authenticate credentials
