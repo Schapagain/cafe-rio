@@ -4,7 +4,7 @@ const path = require('path');
 const { uploadPath } = require('../config');
 const { getError } = require('./errors');
 const { getRandomCode } = require('./utils');
-
+const { NotFoundError } = require('./errors');
 /**
  * Save given files to the disk
  * Return randomly generated filenames
@@ -87,7 +87,7 @@ async function getFilePath(fileName) {
         await fs.promises.access(fullPath)
         return fullPath;
     }catch(err) {
-        throw await getError(err);
+        throw new NotFoundError('file'); 
     }
     
 }
