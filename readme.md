@@ -48,11 +48,25 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 <br/>
 
 ### User routes
+> URL prefix: api/users
 
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
-| /api/users/signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user } | idCard must be an image file <br/> Activation link sent via email |
-| /api/users | Fetch all users | GET | Admin |  | { count, data : [ User ] } |  |
-| /api/users/:id | Fetch user info | GET | Private |  | { count, data : [ User ] } | |
-| /api/users/:id/id_card | Fetch user id card | GET | Private |  | image file | |
-| /api/users/:id | Delete a user | DELETE | Admin |  | { id } | |
+| /signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user } | idCard must be an image file <br/> Activation link sent via email |
+| / | Fetch all users | GET | Admin |  | { count, data : [ User ] } |  |
+| /:id | Fetch user info | GET | Private |  | { count, data : [ User ] } | |
+| /:id/id_card | Fetch user id card | GET | Private |  | image file | |
+| /:id | Delete a user | DELETE | Admin |  | { id } | |
+
+### Meal routes
+> URL prefix: api/meals <br/>
+> \* marks required fields
+
+|Endpoint|Desc|Method|Access|Payload|Return|Notes|
+|-----|-----|-----|-----|-----|-----|-----|
+| / | Add a new meal | POST | Public | {name*, price*, category} | { meal } | picture must be an image file |
+| / | Fetch all meals | GET | Public |  | { count, data : [ Meal ] } |  |
+| /:id | Fetch meal info | GET | Public |  | { count, data : [ Meal ] } | |
+| /:id/picture | Fetch meal picture | GET | Public |  | image file | |
+| /:id | Delete a meal | DELETE | Public |  | { id } | |
+
