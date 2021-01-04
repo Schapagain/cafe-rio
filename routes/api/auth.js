@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
-const { getAuthToken } = require("../../utils/authorization");
-const auth = require("../../middlewares/auth");
 
 const formParser = require("../../middlewares/formParser");
 const { authenticate } = require('../../controllers/auth');
