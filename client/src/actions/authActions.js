@@ -1,11 +1,14 @@
 import axios from "axios";
-import { returnErrors } from "./errorAction";
+import { returnErrors } from "./errorActions";
 import {
   USER_LOADED,
   USER_LOADING,
   AUTH_ERROR,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT_SUCCESS,
 } from "./types";
 
 export const loadUser = () => async (dispatch, getState) => {
@@ -32,10 +35,10 @@ export const signUp = (newUser) => async (dispatch) => {
   };
 
   //Request body
-  console.log(newUser);
+  // File objects can't be stringified,
+  //  so we submit the body as FormData instead of JSON
   // const body = JSON.stringify(newUser);
   const body = newUser;
-  console.log(body);
 
   const endpoint =
     process.env.NODE_ENV === "production"
@@ -49,13 +52,60 @@ export const signUp = (newUser) => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
-    if (err.response)
+    // console.log("error", err.response);
+    if (err.response) {
+      console.log("error", err);
       dispatch(
-        returnErrors(err.response.error, err.response.status),
-        "REGISTER_FAIL"
+        returnErrors(
+          err.response.data.error,
+          err.response.status,
+          "REGISTER_FAIL"
+        )
       );
+    }
     dispatch({ type: REGISTER_FAIL });
   }
+};
+
+// log in
+export const signIn = ({ email, password }) => async (dispatch) => {
+  // set content-type header
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+
+  const endpoint =
+    process.env.NODE_ENV === "production"
+      ? "/api/users"
+      : "http://localhost:5000/api/auth";
+
+  const body = JSON.stringify({ email, password });
+
+  try {
+    const res = await axios.post(endpoint, body, config);
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+    });
+  } catch (err) {
+    // console.log("error", err.response);
+    if (err.response) {
+      console.log("error", err);
+      dispatch(
+        returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
+      );
+    }
+    dispatch({ type: LOGIN_FAIL });
+  }
+};
+
+// logout
+export const logout = () => (dispatch) => {
+  dispatch({
+    type: LOGOUT_SUCCESS,
+  });
 };
 
 export const tokenConfig = (getState) => {
