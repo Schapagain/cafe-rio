@@ -81,8 +81,19 @@ async function deleteFiles() {
     }
 }
 
+async function getFilePath(fileName) {
+    try{
+        const fullPath = path.join(uploadPath,fileName);
+        await fs.promises.access(fullPath)
+        return fullPath;
+    }catch(err) {
+        throw await getError(err);
+    }
+    
+}
+
 function _getRandomId(size) {
     return uuid().slice(0, size);
 }
 
-module.exports = { saveFiles, deleteFiles }
+module.exports = { saveFiles, deleteFiles, getFilePath }
