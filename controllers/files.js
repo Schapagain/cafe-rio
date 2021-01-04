@@ -1,9 +1,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const { v4: uuid } = require('uuid');
 const { uploadPath } = require('../config');
 const { getError } = require('./errors');
+const { getRandomCode } = require('./utils');
 
 /**
  * Save given files to the disk
@@ -51,7 +51,7 @@ async function writeFile(file) {
  * @param {String} orgName 
  */
 function makeRandomFilename(orgName) {
-    return _getRandomId(5).concat(path.extname(orgName))
+    return getRandomCode(5).concat(path.extname(orgName))
 }
 
 /**
@@ -90,10 +90,6 @@ async function getFilePath(fileName) {
         throw await getError(err);
     }
     
-}
-
-function _getRandomId(size) {
-    return uuid().slice(0, size);
 }
 
 module.exports = { saveFiles, deleteFiles, getFilePath }
