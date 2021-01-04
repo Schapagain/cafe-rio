@@ -1,7 +1,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { uploadPath } = require('../config');
+const { uploadPath, defaultPrefix } = require('../config');
 const { getError } = require('./errors');
 const { getRandomCode } = require('./utils');
 const { NotFoundError } = require('./errors');
@@ -12,7 +12,7 @@ const { NotFoundError } = require('./errors');
  */
 async function saveFiles() {
     const files = [...arguments];
-    if (!files || !files.length) return [];
+    if (!files || !files[0]) return [];
     const fileNames = [];
     try{
         let fileName;
@@ -33,6 +33,7 @@ async function saveFiles() {
  * @param {File} file 
  */
 async function writeFile(file) {
+    if (!file) return file;
     const readFile = fs.promises.readFile;
     const writeFile = fs.promises.writeFile;
     let fileName = makeRandomFilename(file.name);
@@ -67,14 +68,17 @@ async function asyncForEach(array, callback) {
 
 /**
  * Delete files by fileNames
- * 
+ * unless they're default images
  */
 async function deleteFiles() {
     fileNames = [...arguments]
+    if (!fileNames || !fileNames[0]) return;
     try{
-        fileNames.forEach(fileName => {
-            const filePath = path.join(uploadPath,fileName);
-            fs.unlink(filePath,err=>console.log(err));
+        await asyncForEach(fileNames, async fileName => {
+            if (!fileName.includes(defaultPrefix)) {
+                const filePath = path.join(uploadPath,fileName);
+                await fs.promises.unlink(filePath);
+            }
         })
     }catch(err){
         throw await getError(err);
