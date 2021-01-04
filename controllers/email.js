@@ -1,40 +1,38 @@
 const axios = require('axios');
 const { getError } = require('./errors');
 require('dotenv').config();
+const nodemailer = require('nodemailer');
 
-async function sendActivationEmail(name,emailAddress,activationLink) {
-    const endPoint = process.env.TRUSTIFI_URL.concat('/api/i/v1/email');
+async function sendActivationEmail(name,email,activationLink) {
 
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    service:"Gmail",
+    auth: {
+      user: "activation.cafe.rio@gmail.com", // generated ethereal user
+      pass: "Ambrosia77", // generated ethereal password
+    },
+  });
 
-    const emailBody = `
-    Hi ${name}, \n
-    Welcome to Café Río. 
-    Please click on the folowing link to activate your account:\n
-    ${activationLink}`;
+  let mailBody = {
+    from: `"Cafe Rio" <${process.env.EMAILUSER}>`,
+    to: email, 
+    subject: "Activate account",
+    text: `Hello ${name}, welcome to Cafe Rio. Please click on the following link to activate your account: ${activationLink}`, // plain text body
+    html: 
+    `<h2>Hello ${name}</h2>
+    <p>Welcome to Cafe Rio. 
+    Please click on the following link to activate your account: <p>
+    <a href = ${activationLink} >Activate account</a>
+    `
+  }
+ 
+  try {
+    transporter.sendMail(mailBody);
+  }catch(err) {
+    throw await getError(err);
+  }
 
-    const config = {
-        headers: {
-            'x-trustifi-key': process.env.TRUSTIFI_KEY,
-            'x-trustifi-secret': process.env.TRUSTIFI_SECRET,
-            'Content-type': 'application/json'
-         }
-    }
-    const body = {
-        "title": "Verify email for Cafe Rio",
-        "html": emailBody,
-        "recipients": [{"email": emailAddress, "name": name}],
-        "methods": { 
-          "postmark": false,
-          "secureSend": false,
-          "encryptContent": false,
-          "secureReply": false 
-        }
-      }
-      try{
-        axios.post(endPoint,body,config);
-      }catch(err) {
-          throw await getError(err);
-      }
 }
 
 module.exports = { sendActivationEmail }
