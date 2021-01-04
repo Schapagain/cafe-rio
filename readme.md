@@ -12,6 +12,7 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 |201|Created|Content was posted successfully|
 |400|Bad request|At least one required field, or a JWT, was not provided|
 |401|Unauthorized|Login credentials mismatch, or JWT invalid|
+|403|Forbidden|Inactive account attempting login|
 |404|Not Found|Page, or resource (user, file) not found on the server|
 |409|Conflict|A resource with the provided unique identifier (email, phone) already exists|
 |500|Internal Server Error|Something unexpected happened! Please report an issue asap|
@@ -22,6 +23,7 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
+| /api/auth/activate/:code | Activate an account | GET | Public |  |  | this link is sent via email during registration <br/> |
 | /api/auth | Login a user | POST | Public | {email, password } | { token, User } |  |
 
 <br/>
@@ -31,7 +33,8 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
-| /api/users/signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user, token } | idCard must be an image file |
+| /api/users/signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user } | idCard must be an image file <br/> Activation link sent via email |
 | /api/users | Fetch all users | GET | Public |  | { count, data : [ User ] } | This has to be an admin route later on |
 | /api/users/:id | Fetch user info | GET | Public |  | { count, data : [ User ] } | This has to be private route later on |
+| /api/users/:id/id_card | Fetch user id card | GET | Public |  | image file | This has to be private route later on |
 | /api/users/:id | Delete a user | DELETE | Public |  | { id } | This has to be an admin route later on |
