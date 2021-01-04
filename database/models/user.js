@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 const UserSchema = new Schema({
+    id: {
+        type: String,
+        unique: true,
+    },
     name: {
         type: String,
         required: 'Full name is required',
@@ -53,18 +57,14 @@ UserSchema.virtual('registrationDate').get(function() {
 })
 
 /**
- * Virtual to get id
- */
-UserSchema.virtual('id').get(function() {
-    return this._id;
-})
-
-/**
- * Hash password before saving user
+ * Hash password and save id before saving user
  */
 UserSchema.pre('save',async function(next) {
     let user = this;
     
+    // save id
+    user.id = this._id;
+
     // hash password
     if (!user.isModified('password')) return next();
     user.password = await generatePasswordHash(user.password);
