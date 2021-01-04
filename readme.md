@@ -24,7 +24,8 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
 | /api/auth/activate/:code | Activate an account | GET | Public |  |  | this link is sent via email during registration <br/> |
-| /api/auth | Login a user | POST | Public | {email, password } | { token, User } |  |
+| /api/auth | User login | POST | Public | {email, password } | { token, User } |  |
+| /api/auth/admin | Admin login | POST | Public | {password } | { token } |  |
 
 <br/>
 <br/>
@@ -34,7 +35,7 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
 | /api/users/signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user } | idCard must be an image file <br/> Activation link sent via email |
-| /api/users | Fetch all users | GET | Public |  | { count, data : [ User ] } | This has to be an admin route later on |
-| /api/users/:id | Fetch user info | GET | Public |  | { count, data : [ User ] } | This has to be private route later on |
-| /api/users/:id/id_card | Fetch user id card | GET | Public |  | image file | This has to be private route later on |
-| /api/users/:id | Delete a user | DELETE | Public |  | { id } | This has to be an admin route later on |
+| /api/users | Fetch all users | GET | Admin |  | { count, data : [ User ] } |  |
+| /api/users/:id | Fetch user info | GET | Private |  | { count, data : [ User ] } | |
+| /api/users/:id/id_card | Fetch user id card | GET | Private |  | image file | |
+| /api/users/:id | Delete a user | DELETE | Admin |  | { id } | |
