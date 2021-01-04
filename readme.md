@@ -18,8 +18,20 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 
 <br/>
 
+### Auth routes
+
+|Endpoint|Desc|Method|Access|Payload|Return|Notes|
+|-----|-----|-----|-----|-----|-----|-----|
+| /api/auth | Login a user | POST | Public | {email, password } | { token, User } |  |
+
+<br/>
+<br/>
+
 ### User routes
 
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
 | /api/users/signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user, token } | idCard must be an image file |
+| /api/users | Fetch all users | GET | Public |  | { count, data : [ User ] } | This has to be an admin route later on |
+| /api/users/:id | Fetch user info | GET | Public |  | { count, data : [ User ] } | This has to be private route later on |
+| /api/users/:id | Delete a user | DELETE | Public |  | { id } | This has to be an admin route later on |

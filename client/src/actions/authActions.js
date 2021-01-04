@@ -4,12 +4,12 @@ import {
   USER_LOADED,
   USER_LOADING,
   AUTH_ERROR,
-  LOGIN_FAIL,
-  LOGIN_SUCCESS,
-  LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-} from "../actions/types";
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT_SUCCESS,
+} from "./types";
 
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
@@ -42,7 +42,7 @@ export const signUp = (newUser) => async (dispatch) => {
 
   const endpoint =
     process.env.NODE_ENV === "production"
-      ? "/api/users"
+      ? "https://cafe-rio.herokuapp.com/api/users/signup"
       : "http://localhost:5000/api/users/signup";
 
   try {
