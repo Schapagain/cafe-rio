@@ -3,6 +3,23 @@
 
 > Server deployed at: https://cafe-rio.herokuapp.com/
 
+
+### Environment Variables
+> Should remove this after we're done with MVP development
+```
+DBNAME=cafe_rio
+DBPASSWORD=Ambrosia77%23
+
+SECRET_KEY=39agk215mknfa3kj2749k3
+
+EMAILUSER=activation.cafe.rio@gmail.com
+CLIENTID=474103696367-1h33cjcs67mjl1k7tf9bjm5m4je9rvab.apps.googleusercontent.com
+CLIENTSECRET=bUDnXAmN4b6q_hWm9peblBDF
+REFRESHTOKEN=1//048xOaMyYmH8pCgYIARAAGAQSNwF-L9IrJI9K-X8JPfP_Xz1gtYPIffxsxO0u18AmrTJcmS1UqPFU6HtBvPh2vjL2yMzQBguGW2U
+
+ADMINPASSWORD=admin123
+```
+
 ### Responses and Error Codes
 All responses are JSON objects. In cases of failure, an 'error' property shall always exist with an appropriate error message. The following are all possible http response types:
 
