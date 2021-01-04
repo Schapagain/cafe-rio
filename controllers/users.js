@@ -5,7 +5,7 @@ const { User } = require("../database/models");
 const { getError, ValidationError, NotFoundError } = require("./errors");
 const { saveFiles, deleteFiles, getFilePath } = require("./files");
 const { sendActivationEmail } = require("./email");
-const { getRandomCode, getServerURL } = require('./utils');
+const { getRandomCode, getServerURL, trimPrematureIds, makeItem } = require('./utils');
 
 /**
  * Save user info to the database
@@ -13,33 +13,38 @@ const { getRandomCode, getServerURL } = require('./utils');
  * @param {*} user
  */
 async function signupUser(user) {
-  let idCard, newUser, activationCode, activationLink;
+  let idCardFileName, newUser, activationLink;
   try {
 
     checkIdCardPresence(user); 
+    user = trimPrematureIds(user);
 
     // save file and replace file with a random fileName
-    idCard = await saveFiles(user.idCard);
-    user.idCard = idCard;
+    idCardFileName = await saveFiles(user.idCard);
+    user.idCard = idCardFileName;
 
     // save user to database
     newUser = new User(user);
     user = await newUser.save();
 
-    // generate activation link
-    activationCode = generateActivationCode(user);
-    activationLink = getServerURL().concat('/api/auth/activate/',activationCode);
-
-    // generate activation code for the user and send email
+    // generate activation link for the user and send email
+    activationLink = generateActivationLink(user);
     sendActivationEmail(user.name,user.email,activationLink);
 
-    return { user: makeUser(user) };
+    return { user: makeItem(user,['id','name','email']) };
   } catch (err) {
-
-    // delete saved file
-    if (idCard) deleteFiles(idCard);
+    deleteFiles(idCardFileName);
     throw await getError(err);
   }
+}
+
+/**
+ * Generates an activation link for the new user
+ * @param {*} user 
+ */
+function generateActivationLink(user) {
+  const activationCode = generateActivationCode(user);
+  return getServerURL().concat('/api/auth/activate/',activationCode);;
 }
 
 /**
@@ -51,14 +56,6 @@ function generateActivationCode(user) {
   user.activationCode = activationCode;
   user.save();
   return activationCode;
-}
-
-/**
- * Trim the user object to only include the given attributes
- * @param {*} user 
- */
-function makeUser(user, attributes = ['active','id','name','email','organization','employeeId','registrationDate']) {
-  return attributes.reduce((obj,attr) => ({...obj,[attr]:user[attr]}),{})
 }
 
 /**
@@ -107,16 +104,20 @@ async function checkUserPresence(query) {
  * Get users info from database
  * @param {String} id
  */
-async function getUsers(id=null) {
+async function getUsers(id=null,attributes=['id','active','name','email','phone','registrationDate']) {
   let users =[];
   if (!id) {
     users = await User.find();
   }else {
     users = [await checkUserPresence({id})]
   }
-  return {count:users.length,data:users.map(user => makeUser(user))};
+  return {count:users.length,data:users.map(user => makeItem(user,attributes))};
 }
 
+/**
+ * Returns file path for idcard of the user with the given id
+ * @param {String} id 
+ */
 async function getIdCard(id) {
   try{
     let user = await checkUserPresence({id});
@@ -127,4 +128,4 @@ async function getIdCard(id) {
   }
 }
 
-module.exports = { signupUser, deleteUser, getUsers, checkUserPresence, makeUser, getIdCard };
+module.exports = { signupUser, deleteUser, getUsers, checkUserPresence, getIdCard };
