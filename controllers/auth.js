@@ -1,7 +1,21 @@
-const { getAuthToken } = require("../utils/authorization");
 const { ValidationError, getError, NotAuthorizedError } = require("./errors");
 const { checkUserPresence, makeUser } = require("./users");
+const njwt = require('njwt');
+require('dotenv').config();
+const signingKey = process.env.SECRET_KEY;
 
+/**
+ * Generate a JWT for the given id
+ * @param {String} id 
+ */
+function getAuthToken (id) {
+    const claims = {
+      sub: id,
+    }
+    const token = njwt.create(claims,signingKey);
+    token.setExpiration(new Date().getTime() + (60*60*1000));
+    return token.compact();
+}
 
 /**
  * Validate given user credentials
@@ -30,4 +44,17 @@ async function authenticate(user) {
     
 }
 
-module.exports = { authenticate }
+async function activateAccount(activationCode){
+    try{
+        if (!activationCode) throw new ValidationError('activation code');
+        let user = checkUserPresence({activationCode});
+        if (!user) throw new ValidationError('activation code','code has expired');
+        user.activationCode = null;
+        user.save();
+
+    }catch(err){
+        throw await getError(err);
+    }
+}
+
+module.exports = { authenticate, activateAccount, getAuthToken}
