@@ -28,7 +28,7 @@ async function signupUser(user) {
 
     // generate activation link
     activationCode = generateActivationCode(user);
-    activationLink = getServerURL().concat('/api/auth/activate',activationCode);
+    activationLink = getServerURL().concat('/api/auth/activate/',activationCode);
 
     // generate activation code for the user and send email
     sendActivationEmail(user.name,user.email,activationLink);
@@ -50,6 +50,7 @@ function generateActivationCode(user) {
   const activationCode = getRandomCode(10);
   user.activationCode = activationCode;
   user.save();
+  return activationCode;
 }
 
 /**
