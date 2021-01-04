@@ -5,7 +5,7 @@ const router = express.Router();
 // Import the user model
 const { User } = require("../../database/models");
 const formParser = require("../../middlewares/formParser");
-const { signupUser, deleteUser, getUsers } = require("../../controllers/users");
+const { signupUser, deleteUser, getUsers, getIdCard } = require("../../controllers/users");
 
 /**
  * Route to fetch all users
@@ -68,7 +68,7 @@ router.post("/signup", formParser, async (req, res) => {
  */
 router.get("/:id", formParser, async (req, res) => {
   try{
-    const result = await getUsers(req.params.id);
+    let result = await getUsers(req.params.id);
     res.status(200).json(result);
   }catch(err){
     return res.status(err.httpCode || 500).json({
@@ -76,6 +76,25 @@ router.get("/:id", formParser, async (req, res) => {
     })
   }
 });
+
+/**
+ * Route to fetch user idCard
+ * @name api/users/:id/id_card
+ * @method Get
+ * @access Public
+ * @param {string} path
+ * @param   {callback} middleware - Handle HTTP response
+ */
+router.get("/:id/id_card", async (req,res) => {
+  try{
+    const idPath = await getIdCard(req.params.id);
+    res.status(200).sendFile(idPath,{root:'.'});
+  }catch(err) {
+    return res.status(err.httpCode ||500).json({
+      error: err.message
+    })
+  }
+})
 
 /**
  * Route to delete a user
