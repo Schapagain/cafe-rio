@@ -1,4 +1,4 @@
-const { ValidationError, getError, NotAuthorizedError } = require("./errors");
+const { ValidationError, getError, NotAuthorizedError, NotActiveError } = require("./errors");
 const { checkUserPresence, makeUser } = require("./users");
 const njwt = require('njwt');
 require('dotenv').config();
@@ -29,17 +29,19 @@ async function authenticate(user) {
 
         const givenPassword = user.password;
         user = await checkUserPresence({email:user.email});
+
         let isMatch = await user.validatePassword(givenPassword)
 
-        if (!isMatch)
-            throw new Error();
+        if (!isMatch) new NotAuthorizedError();
         
+        if (!user.active) throw NotActiveError('account')
+
         return {
             token: getAuthToken(user.id),
             user: makeUser(user)
         }
     }catch(err) {
-        throw new NotAuthorizedError()
+        throw await getError(err);
     }
     
 }
