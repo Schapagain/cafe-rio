@@ -13,11 +13,6 @@ async function getGoogleMailInfo() {
   const refreshToken = process.env.REFRESHTOKEN
   const user = process.env.EMAILUSER;
 
-  console.log(clientId)
-  console.log(clientSecret);
-  console.log(refreshToken);
-  console.log(user);
-
   const authClient = new OAuth2(
     clientId,
     clientSecret,
@@ -43,7 +38,7 @@ async function sendActivationEmail(name,email,activationLink) {
   const {user,clientId,clientSecret,refreshToken,accessToken} = await getGoogleMailInfo();
 
   let transporter = nodemailer.createTransport({
-    service:"Gmail",
+    service:"gmail",
     auth: {
       type: "OAuth2",
       user,
@@ -52,6 +47,7 @@ async function sendActivationEmail(name,email,activationLink) {
       refreshToken,
       accessToken,
     },
+    
   });
 
   let mailBody = {
