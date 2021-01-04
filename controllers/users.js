@@ -4,7 +4,7 @@ const { isValidMongooseId } = require('../database');
 // Import the user model
 const { User } = require("../database/models");
 const { getError, ValidationError, NotFoundError } = require("./errors");
-const { saveFiles, deleteFiles } = require("./files");
+const { saveFiles, deleteFiles, getFilePath } = require("./files");
 
 /**
  * Save user info to the database
@@ -44,7 +44,7 @@ async function signupUser(user) {
  * Trim the user object to only include the given attributes
  * @param {*} user 
  */
-function makeUser(user, attributes = ['id','name','email','organization','employeeId']) {
+function makeUser(user, attributes = ['id','name','email','organization','employeeId','registrationDate']) {
   return attributes.reduce((obj,attr) => ({...obj,[attr]:user[attr]}),{})
 }
 
@@ -104,4 +104,14 @@ async function getUsers(id=null) {
   return {count:users.length,data:users.map(user => makeUser(user))};
 }
 
-module.exports = { signupUser, deleteUser, getUsers, checkUserPresence, makeUser };
+async function getIdCard(id) {
+  try{
+    let user = await checkUserPresence({id});
+    let filePath = await getFilePath(user.idCard);
+    return filePath;
+  }catch(err) {
+    throw await getError(err);
+  }
+}
+
+module.exports = { signupUser, deleteUser, getUsers, checkUserPresence, makeUser, getIdCard };
