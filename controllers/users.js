@@ -47,7 +47,7 @@ async function signupUser(user) {
  * @param {*} user 
  */
 function generateActivationCode(user) {
-  const activationCode = gerRandomCode(10);
+  const activationCode = getRandomCode(10);
   user.activationCode = activationCode;
   user.save();
 }
