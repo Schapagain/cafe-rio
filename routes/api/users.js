@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-
-// Import the user model
-const { User } = require("../../database/models");
 const formParser = require("../../middlewares/formParser");
 const { signupUser, deleteUser, getUsers, getIdCard } = require("../../controllers/users");
 
@@ -45,7 +42,7 @@ router.get("/", formParser, async (req, res) => {
 router.post("/signup", formParser, async (req, res) => {
   try {
     const result = await signupUser(req.body);
-    res.status(200).json(result);
+    res.status(201).json(result);
   } catch (err) {
     return res.status(err.httpCode || 500).json({
       error: {
@@ -59,7 +56,7 @@ router.post("/signup", formParser, async (req, res) => {
 /**
  * Route to fetch user details
  * @name api/users/:id
- * @method POST
+ * @method GET
  * @access Public
  * @inner
  * @param {string} path
