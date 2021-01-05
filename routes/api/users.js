@@ -3,7 +3,7 @@ const router = express.Router();
 
 const auth = require('../../middlewares/auth');
 const formParser = require("../../middlewares/formParser");
-const { signupUser, deleteUser, getUsers, getIdCard } = require("../../controllers/users");
+const { signupUser, updateUser, deleteUser, getUsers, getIdCard } = require("../../controllers/users");
 const { ADMIN, CUSTOMER } = require("../../controllers/roles");
 
 /**
@@ -94,6 +94,28 @@ router.get("/:id/id_card", auth([ADMIN,CUSTOMER]), async (req,res) => {
     })
   }
 })
+
+/**
+ * Route to update user info
+ * @name    api/users/:id
+ * @method  PATCH
+ * @access  Private
+ * @inner
+ * @param   {string} path
+ * @param   {callback} middleware - Authenticate
+ * @param   {callback} middleware - Handle HTTP response
+*/
+router.patch('/:id', auth([ADMIN,CUSTOMER]), formParser, async (req,res) => {
+  try{
+      let result = await updateUser({...req.body,id:req.params.id});
+      res.status(200).json(result);
+  }catch(err){
+      res.status(err.httpCode || 500).json({ 
+        error: {msg: err.message}
+      })
+  }
+}
+);
 
 /**
  * Route to delete a user
