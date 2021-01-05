@@ -4,6 +4,7 @@ const njwt = require('njwt');
 require('dotenv').config();
 const signingKey = process.env.SECRET_KEY;
 const { CUSTOMER, ADMIN } = require('./roles');
+const { makeItem } = require("./utils");
 
 /**
  * Generate a JWT for the given id
@@ -49,16 +50,14 @@ async function authenticate(user) {
 
         const givenPassword = user.password;
         user = await checkUserPresence({email:user.email});
-
         let isMatch = await user.validatePassword(givenPassword)
-
-        if (!isMatch) new NotAuthorizedError();
         
+        if (!isMatch) throw new NotAuthorizedError();
         if (!user.active) throw new NotActiveError('account')
 
         return {
             token: getAuthToken(user.id,CUSTOMER),
-            user: makeUser(user)
+            user: makeItem(user,['id','name','email'])
         }
     }catch(err) {
         throw await getError(err);
