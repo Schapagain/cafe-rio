@@ -73,6 +73,7 @@ async function getError(err) {
             case 'JwtParseError':
                 return new NotAuthorizedError('Invalid token')
             default:
+                console.log(err);
                 return new ServerError();
         }
     }
