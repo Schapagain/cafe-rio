@@ -38,4 +38,4 @@ MealSchema.pre('save',async function(next) {
     return next();
 })
 
-module.exports = User = mongoose.model('meals',MealSchema);
+module.exports = Meal = mongoose.model('Meal',MealSchema);
