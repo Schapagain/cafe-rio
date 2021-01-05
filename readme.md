@@ -1,8 +1,10 @@
 ## Guide to the API Endpoints
 <br/>
 
-> Server deployed at: https://cafe-rio.herokuapp.com/
+> Server deployed at: https://cafe-rio.herokuapp.com <br/>
+> Client deployed at: https://cafe-rio.netlify.app
 
+<br/>
 
 ### Environment Variables
 > Should remove this after we're done with MVP development
@@ -35,6 +37,9 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 |500|Internal Server Error|Something unexpected happened! Please report an issue asap|
 
 <br/>
+
+> Note: All private or admin routes require a bearer token in headers
+
 
 ### Auth routes
 
