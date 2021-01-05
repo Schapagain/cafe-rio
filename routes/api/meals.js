@@ -3,7 +3,7 @@ const router = express.Router();
 
 const auth = require('../../middlewares/auth');
 const formParser = require("../../middlewares/formParser");
-const { getMeals, addMeal, getPicture, deleteMeal } = require("../../controllers/meals");
+const { getMeals, addMeal, getPicture, updateMeal, deleteMeal } = require("../../controllers/meals");
 const { ADMIN } = require("../../controllers/roles");
 
 /**
@@ -92,6 +92,28 @@ router.get("/:id/picture", async (req,res) => {
     })
   }
 })
+
+/**
+ * Route to update a meal
+ * @name    api/meals/:id
+ * @method  PATCH
+ * @access  Admin
+ * @inner
+ * @param   {string} path
+ * @param   {callback} middleware - Authenticate
+ * @param   {callback} middleware - Handle HTTP response
+*/
+router.patch('/:id', auth([ADMIN]), formParser, async (req,res) => {
+  try{
+      let result = await updateMeal({...req.body,id:req.params.id});
+      res.status(200).json(result);
+  }catch(err){
+      res.status(err.httpCode || 500).json({ 
+        error: {msg: err.message}
+      })
+  }
+}
+);
 
 /**
  * Route to delete a meal
