@@ -19,6 +19,10 @@ function getAuthToken (id,role) {
     return token.compact();
 }
 
+/**
+ * Validates the given admin password against the environment
+ * @param {*} Credentials.password
+ */
 async function authenticateAdmin({password}) {
     const correctPassword = process.env.ADMINPASSWORD;
     try{
@@ -62,6 +66,10 @@ async function authenticate(user) {
     
 }
 
+/**
+ * Activate the associated user account given valid activation code
+ * @param {String} activationCode 
+ */
 async function activateAccount(activationCode){
     try{
         if (!activationCode) throw new ValidationError('activation code');
