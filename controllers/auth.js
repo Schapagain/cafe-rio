@@ -75,4 +75,17 @@ async function activateAccount(activationCode){
     }
 }
 
-module.exports = { authenticate, authenticateAdmin, activateAccount, getAuthToken}
+/**
+ * Return accepted token authorization methods
+ */
+function getValidAuthMethods() {
+    return ['bearer'];
+}
+
+module.exports = { 
+    authenticate, 
+    authenticateAdmin, 
+    activateAccount, 
+    getAuthToken,
+    getValidAuthMethods,
+}
