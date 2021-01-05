@@ -23,6 +23,10 @@ async function addMeal(meal) {
     }
 }
 
+/**
+ * If a picture is provided, save it to the disk
+ * @param {*} meal 
+ */
 async function saveMealPicture(meal) {
     if (meal.picture && typeof meal.picture == "object") {
         const pictureFileName = await saveFiles(meal.picture);
