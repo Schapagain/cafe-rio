@@ -66,14 +66,26 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 
 ### Meal routes
 > URL prefix: api/meals <br/>
-> \* marks required fields
+> \* marks required fields<br/>
+> default values are within parenthesis
 
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
-| / | Add a new meal | POST | Public | {name*, price*, category, available} | { meal } | picture must be an image file |
+| / | Add a new meal | POST | Public | {name*, price*, category(miscellaneous) , available(true)} | { meal } | picture must be an image file |
 | / | Fetch all meals | GET | Public |  | { count, data : [ Meal ] } |  |
 | /:id | Fetch meal info | GET | Public |  | { count, data : [ Meal ] } | |
 | /:id/picture | Fetch meal picture | GET | Public |  | image file | |
 | /:id | Update meal info | PATCH | Admin | {name, price, category, available} | { meal } | |
 | /:id | Delete a meal | DELETE | Public |  | { id } | |
 
+### Order routes
+> URL prefix: api/orders <br/>
+> \* marks required fields
+
+|Endpoint|Desc|Method|Access|Payload|Return|Notes|
+|-----|-----|-----|-----|-----|-----|-----|
+| / | Add a new order | POST | Public | {user*, meals*, type(dinein)} | { order } | user is id of the user, and meals is an array of meal ids |
+| / | Fetch all orders | GET | Public |  | { count, data : [ Meal ] } |  |
+| /:id | Fetch order info | GET | Public |  | { count, data : [ Meal ] } | |
+| /:id | Update order info | PATCH | Public | {name, price, category, available} | { order } | |
+| /:id | Delete an order | DELETE | Admin |  | { id } | |
