@@ -51,7 +51,6 @@ class ServerError extends Error {
 }
 
 async function getError(err) {
-    console.log(err)
     if (err) {
         let firstError = {properties:{}};
         let errorName = err.name;
@@ -77,6 +76,7 @@ async function getError(err) {
                 return new ServerError();
         }
     }
+    console.log(err);
     return new ServerError();
 }
 
