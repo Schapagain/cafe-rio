@@ -4,7 +4,7 @@ const router = express.Router();
 const auth = require('../../middlewares/auth');
 const formParser = require("../../middlewares/formParser");
 const { getMeals, addMeal, getPicture, deleteMeal } = require("../../controllers/meals");
-const { ADMIN, CUSTOMER } = require("../../controllers/roles");
+const { ADMIN } = require("../../controllers/roles");
 
 /**
  * Route to fetch all meals
@@ -33,13 +33,13 @@ router.get("/", async (req, res) => {
  * Route to add a new meal
  * @name api/meals
  * @method POST
- * @access Public 
+ * @access Admin 
  * @inner
  * @param {string} path
  * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
  */
-router.post("/", formParser, async (req, res) => {
+router.post("/",auth([ADMIN]), formParser, async (req, res) => {
  
     try{
       const result = await addMeal(req.body);
@@ -97,13 +97,13 @@ router.get("/:id/picture", async (req,res) => {
  * Route to delete a meal
  * @name    api/meals/:id
  * @method  DELETE
- * @access  Public
+ * @access  Admin
  * @inner
  * @param   {string} path
  * @param   {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth([ADMIN]), async (req, res) => {
   try {
     const result = await deleteMeal(req.params.id);
     res.status(200).json(result);
