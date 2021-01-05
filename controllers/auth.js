@@ -16,7 +16,7 @@ function getAuthToken (id,role) {
       scope: role,
     }
     const token = njwt.create(claims,signingKey);
-    token.setExpiration(new Date().getTime() + (60*60*1000));
+    token.setExpiration(new Date().getTime() + (24*60*60*1000));
     return token.compact();
 }
 
