@@ -61,7 +61,7 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 | / | Fetch all users | GET | Admin |  | { count, data : [ User ] } |  |
 | /:id | Fetch user info | GET | Private |  | { count, data : [ User ] } | |
 | /:id/id_card | Fetch user id card | GET | Private |  | image file | |
-| /:id | Update user info | GET | Private | {name, email, phone, password, organization, employeeId, idcard} | { meal } | idCard must be an image file |
+| /:id | Update user info | GET | Private | {name, email, phone, password, organization, employeeId, idcard} | {user } | idCard must be an image file |
 | /:id | Delete a user | DELETE | Admin |  | { id } | |
 
 ### Meal routes
