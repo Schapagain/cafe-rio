@@ -24,6 +24,7 @@ export default function reducer(state = initialState, action) {
     case USER_LOADED:
       return {
         ...state,
+        token: localStorage.getItem("token"),
         isAuthenticated: true,
         isLoading: false,
         user: action.payload,
@@ -34,6 +35,7 @@ export default function reducer(state = initialState, action) {
       localStorage.setItem("token", action.payload.token);
       return {
         ...state,
+        token: action.payload.token,
         isAuthenticated: true,
         isLoading: false,
         user: action.payload,
