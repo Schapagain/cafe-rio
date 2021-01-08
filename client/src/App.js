@@ -28,9 +28,12 @@ function App() {
           <Route path="/signup">
             <SignUp />
           </Route>
-          <PrivateRoute path="/">
+          {/* <PrivateRoute path="/">
             <HomePage />
-          </PrivateRoute>
+          </PrivateRoute> */}
+          <Route path="/">
+            <HomePage />
+          </Route>
         </Switch>
       </ThemeProvider>
     </Provider>
