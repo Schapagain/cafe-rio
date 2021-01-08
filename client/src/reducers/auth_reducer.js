@@ -13,12 +13,14 @@ const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: false,
   isLoading: false,
-  user: null,
+  user: { name: "Desmond TUiyoot" },
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case USER_LOADING:
+      console.log("state");
+      console.log(state);
       return { ...state, isLoading: true };
 
     case USER_LOADED:

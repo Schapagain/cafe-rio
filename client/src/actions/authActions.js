@@ -14,10 +14,13 @@ import {
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
-
+  console.log("callsed here");
   try {
-    const res = await axios.get("/api/auth", tokenConfig(getState));
-    console.log(res);
+    const userId = getState().auth.user;
+    console.log("asdfadgf");
+    console.log(userId);
+    const res = await axios.get(`/api/users/${userId}`, tokenConfig(getState));
+    // console.log(res);
     dispatch({ type: USER_LOADED, payload: res });
   } catch (err) {
     if (err.response)
@@ -55,7 +58,7 @@ export const signUp = (newUser) => async (dispatch) => {
   } catch (err) {
     // console.log("error", err.response);
     if (err.response) {
-      console.log("error", err);
+      // console.log("error", err);
       dispatch(
         returnErrors(
           err.response.data.error,
@@ -86,14 +89,15 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 
   try {
     const res = await axios.post(endpoint, body, config);
+
+    console.log("res.data");
+    console.log(res.data);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
   } catch (err) {
-    // console.log("error", err.response);
     if (err.response) {
-      console.log("error", err);
       dispatch(
         returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
       );
@@ -122,6 +126,9 @@ export const tokenConfig = (getState) => {
 
   // pass along token, if it exists
   if (token) config.headers["authorization"] = token;
+
+  console.log("token");
+  console.log(token);
 
   return config;
 };
