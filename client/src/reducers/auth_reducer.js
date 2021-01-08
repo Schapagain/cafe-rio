@@ -27,7 +27,7 @@ export default function reducer(state = initialState, action) {
         token: localStorage.getItem("token"),
         isAuthenticated: true,
         isLoading: false,
-        user: action.payload,
+        user: action.payload.user,
       };
 
     case LOGIN_SUCCESS:
@@ -38,7 +38,7 @@ export default function reducer(state = initialState, action) {
         token: action.payload.token,
         isAuthenticated: true,
         isLoading: false,
-        user: action.payload,
+        user: action.payload.user,
       };
 
     case AUTH_ERROR:

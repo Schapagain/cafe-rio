@@ -1,17 +1,15 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
-import { BrowserRouter as Router } from "react-router";
 import { Link as RouterLink } from "react-router-dom";
-
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
 
 // setting up how the AppBar behaves when scrolling
 function ElevationScroll(props) {
@@ -39,15 +37,44 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = ({ isAuthenticated, user }) => {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+    setOpen(true);
+  };
+
+  const handleClose = (e) => {
+    setAnchorEl(null);
+    setOpen(false);
+  };
 
   const AuthLinks = () => (
-    <Button
-      className={classes.button}
-      size="large"
-      startIcon={<AccountCircle />}
-    >
-      {user.name}
-    </Button>
+    <Fragment>
+      <Button
+        className={classes.button}
+        size="large"
+        startIcon={<AccountCircle />}
+        aria-controls="profile-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        {user.user ? user.user.name : "Why No Name"}
+      </Button>
+      <Menu
+        id="profile-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem>Profile</MenuItem>
+        <MenuItem>Payment</MenuItem>
+        <MenuItem>Order History</MenuItem>
+        <MenuItem>Logout</MenuItem>
+      </Menu>
+    </Fragment>
   );
 
   const UnauthLinks = () => (
@@ -81,7 +108,7 @@ const NavBar = ({ isAuthenticated, user }) => {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user.user,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(NavBar);

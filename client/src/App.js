@@ -14,6 +14,7 @@ import theme from "./components/Theme";
 
 function App() {
   useEffect(() => {
+    console.log("here");
     store.dispatch(loadUser());
   }, []);
   return (
