@@ -16,7 +16,7 @@ const Meals = () => {
   return (
     <Grid container spacing={2} className={classes.root}>
       {meals.map((meal) => (
-        <Grid item key={meal} xs={4}>
+        <Grid item key={meal} xs={6} md={4}>
           <MealCard />
         </Grid>
       ))}

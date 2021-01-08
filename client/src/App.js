@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "./App.css";
 import { Provider } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
