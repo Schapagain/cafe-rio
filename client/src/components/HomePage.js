@@ -8,11 +8,11 @@ import Meals from "./Meals";
 
 const HomePage = () => {
   return (
-    <Grid container justify="center">
+    <Grid container justify="center" spacing={0}>
       <Grid item container justify="center" xs={12}>
-        <Typography variant="h4">Today's Menu</Typography>
+        <Typography variant="h5">Today's Menu</Typography>
       </Grid>
-      <Grid item container justify="center" xs={12}>
+      <Grid item xs={12}>
         <Meals />
       </Grid>
       <Grid>

@@ -13,13 +13,13 @@ import { makeStyles, useTheme } from "@material-ui/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     [theme.breakpoints.up("md")]: {
-      width: "320px",
+      width: "300px",
     },
     [theme.breakpoints.down("sm")]: {
-      width: "33.33%",
+      width: "100%",
     },
     [theme.breakpoints.down("xs")]: {
-      width: "100%",
+      // width: "100%",
       marginLeft: "1rem",
       marginRight: "1rem",
     },
