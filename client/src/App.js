@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { Switch, Route } from "react-router-dom";
+import { ThemeProvider } from "@material-ui/styles";
 
 import NavBar from "./components/NavBar";
 import SignUp from "./components/SignUp";
@@ -9,6 +10,7 @@ import HomePage from "./components/HomePage";
 import PrivateRoute from "./components/PrivateRoute";
 import store from "./store";
 import { loadUser } from "./actions/authActions";
+import theme from "./components/Theme";
 
 function App() {
   useEffect(() => {
@@ -16,18 +18,20 @@ function App() {
   }, []);
   return (
     <Provider store={store}>
-      <NavBar />
-      <Switch>
-        <Route path="/login">
-          <SignIn />
-        </Route>
-        <Route path="/signup">
-          <SignUp />
-        </Route>
-        <PrivateRoute path="/">
-          <HomePage />
-        </PrivateRoute>
-      </Switch>
+      <ThemeProvider theme={theme}>
+        <NavBar />
+        <Switch>
+          <Route path="/login">
+            <SignIn />
+          </Route>
+          <Route path="/signup">
+            <SignUp />
+          </Route>
+          <PrivateRoute path="/">
+            <HomePage />
+          </PrivateRoute>
+        </Switch>
+      </ThemeProvider>
     </Provider>
   );
 }

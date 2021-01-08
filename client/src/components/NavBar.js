@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavBar = ({ isAuthenticated }) => {
-  const classes = useStyles;
+  const classes = useStyles();
   return (
     <Fragment>
       <ElevationScroll>
