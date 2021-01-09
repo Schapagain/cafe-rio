@@ -35,7 +35,14 @@ export const addMeals = (meal) => async (dispatch) => {
   });
 };
 
-export const deleteMeal = (id) => async (dispatch) => {};
+export const deleteMeal = (id) => async (dispatch) => {
+  const endpoint = `${rootEndpoint}/api/meals/${id}`;
+  await axios.delete(endpoint);
+  return dispatch({
+    type: DELETE_MEAL,
+    payload: id,
+  });
+};
 
 export const setMealsLoading = () => {
   return {
