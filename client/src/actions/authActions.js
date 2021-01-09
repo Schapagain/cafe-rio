@@ -14,14 +14,10 @@ import {
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
-  console.log("callsed here");
   try {
-    const userId = getState().auth.user;
-    console.log("asdfadgf");
-    console.log(userId);
+    const userId = getState().auth.userId;
     const res = await axios.get(`/api/users/${userId}`, tokenConfig(getState));
-    // console.log(res);
-    dispatch({ type: USER_LOADED, payload: res });
+    dispatch({ type: USER_LOADED, payload: res.data.data[0] });
   } catch (err) {
     if (err.response)
       dispatch(returnErrors(err.response.error, err.response.status));
@@ -56,9 +52,7 @@ export const signUp = (newUser) => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
-    // console.log("error", err.response);
     if (err.response) {
-      // console.log("error", err);
       dispatch(
         returnErrors(
           err.response.data.error,
@@ -90,8 +84,6 @@ export const signIn = ({ email, password }) => async (dispatch) => {
   try {
     const res = await axios.post(endpoint, body, config);
 
-    console.log("res.data");
-    console.log(res.data);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
@@ -126,9 +118,6 @@ export const tokenConfig = (getState) => {
 
   // pass along token, if it exists
   if (token) config.headers["authorization"] = token;
-
-  console.log("token");
-  console.log(token);
 
   return config;
 };

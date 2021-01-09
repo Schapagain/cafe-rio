@@ -70,9 +70,7 @@ router.post("/signup", formParser, async (req, res) => {
  */
 router.get("/:id", auth([ADMIN, CUSTOMER]), async (req, res) => {
   try {
-    console.log("herdde");
     let result = await getUsers(req.params.id);
-    console.log(result);
     res.status(200).json(result);
   } catch (err) {
     return res.status(err.httpCode || 500).json({

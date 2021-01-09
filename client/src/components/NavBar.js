@@ -60,7 +60,7 @@ const NavBar = ({ isAuthenticated, user }) => {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        {user.user ? user.user.name : "Why No Name"}
+        {user ? user.name : "Why No Name"}
       </Button>
       <Menu
         id="profile-menu"

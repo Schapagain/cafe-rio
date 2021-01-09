@@ -14,7 +14,6 @@ function auth(allowedRoles) {
     try {
       // Get token from the header
       const userToken = req.header("authorization");
-      console.log(`token: ${userToken}`);
       if (!userToken) throw new ValidationError("token");
 
       // Verify token and extract user id

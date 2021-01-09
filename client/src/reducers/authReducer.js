@@ -29,7 +29,7 @@ export default function reducer(state = initialState, action) {
         userId: localStorage.getItem("userId"),
         isAuthenticated: true,
         isLoading: false,
-        user: action.payload.user,
+        user: action.payload,
       };
 
     case LOGIN_SUCCESS:
