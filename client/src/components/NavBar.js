@@ -83,7 +83,7 @@ const NavBar = ({ isAuthenticated, user }) => {
       component={RouterLink}
       to="/login"
       className={classes.button}
-      size="large"
+      size="medium"
       startIcon={<AccountCircle />}
     >
       Login
