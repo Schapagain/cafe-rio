@@ -5,7 +5,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Logout from "./Logout";
-import MealCard from "./MealCard";
 import Meals from "./Meals";
 
 const useStyles = makeStyles((theme) => ({
