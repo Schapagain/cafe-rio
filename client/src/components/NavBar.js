@@ -1,9 +1,9 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { makeStyles } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+// import Menu from "@material-ui/core/Menu";
+// import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -37,18 +37,19 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = ({ isAuthenticated, user }) => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(false);
+  // const [anchorEl, setAnchorEl] = useState(null);
+  // const [open, setOpen] = useState(false);
 
-  const handleClick = (e) => {
-    setAnchorEl(e.currentTarget);
-    setOpen(true);
-  };
+  // const handleClick = (e) => {
+  //   console.log(e.currentTarget);
+  //   setAnchorEl(e.currentTarget);
+  //   setOpen(true);
+  // };
 
-  const handleClose = (e) => {
-    setAnchorEl(null);
-    setOpen(false);
-  };
+  // const handleClose = (e) => {
+  //   setAnchorEl(null);
+  //   setOpen(false);
+  // };
 
   const AuthLinks = () => (
     <Fragment>
@@ -58,11 +59,11 @@ const NavBar = ({ isAuthenticated, user }) => {
         startIcon={<AccountCircle />}
         aria-controls="profile-menu"
         aria-haspopup="true"
-        onClick={handleClick}
+        // onClick={handleClick}
       >
         {user ? user.name : "Why No Name"}
       </Button>
-      <Menu
+      {/* <Menu
         id="profile-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -73,7 +74,7 @@ const NavBar = ({ isAuthenticated, user }) => {
         <MenuItem>Payment</MenuItem>
         <MenuItem>Order History</MenuItem>
         <MenuItem>Logout</MenuItem>
-      </Menu>
+      </Menu> */}
     </Fragment>
   );
 

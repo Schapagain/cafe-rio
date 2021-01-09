@@ -11,12 +11,16 @@ import {
   LOGOUT_SUCCESS,
 } from "./types";
 
+const rootEndpoint =
+  process.env.NODE_ENV === "production" ? "https://cafe-rio.herokuapp.com" : "";
+
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
   try {
     const userId = getState().auth.userId;
-    const res = await axios.get(`/api/users/${userId}`, tokenConfig(getState));
+    const endpoint = `${rootEndpoint}/api/users/${userId}`;
+    const res = await axios.get(endpoint, tokenConfig(getState));
     dispatch({ type: USER_LOADED, payload: res.data.data[0] });
   } catch (err) {
     if (err.response)
@@ -40,10 +44,7 @@ export const signUp = (newUser) => async (dispatch) => {
   // const body = JSON.stringify(newUser);
   const body = newUser;
 
-  const endpoint =
-    process.env.NODE_ENV === "production"
-      ? "https://cafe-rio.herokuapp.com/api/users/signup"
-      : "http://localhost:5000/api/users/signup";
+  const endpoint = `${rootEndpoint}/api/users/signup`;
 
   try {
     const res = await axios.post(endpoint, body, config);
@@ -74,11 +75,7 @@ export const signIn = ({ email, password }) => async (dispatch) => {
     },
   };
 
-  const endpoint =
-    process.env.NODE_ENV === "production"
-      ? "/api/users"
-      : "http://localhost:5000/api/auth";
-
+  const endpoint = `${rootEndpoint}/api/auth`;
   const body = JSON.stringify({ email, password });
 
   try {
@@ -91,7 +88,11 @@ export const signIn = ({ email, password }) => async (dispatch) => {
   } catch (err) {
     if (err.response) {
       dispatch(
-        returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
+        returnErrors(
+          err.response.data.error.msg,
+          err.response.status,
+          "LOGIN_FAIL"
+        )
       );
     }
     dispatch({ type: LOGIN_FAIL });
