@@ -74,7 +74,7 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   const [msg, setMsg] = useState("");
   useEffect(() => {
     if (error.id === "REGISTER_FAIL") setMsg(error.msg);
-    console.log("error message", error);
+    // console.log("error message", error);
   }, [error]);
 
   // redirect once authenticated
@@ -100,7 +100,7 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
 
     // //attempt to register user
     signUp(newUser);
-    console.log("error", error);
+    // console.log("error", error);
   };
 
   return (
