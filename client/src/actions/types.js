@@ -16,6 +16,7 @@ export const GET_MEAL_PHOTO = "GET_MEAL_PHOTO";
 export const DELETE_MEAL = "DELETE_MEAL";
 export const ADD_MEAL_FAIL = "ADD_MEAL_FAIL";
 export const GET_MEALS_FAIL = "GET_MEALS_FAIL";
+export const MEALS_LOADING = "MEALS_LOADING";
 
 // ERROR ACTION TYPES
 export const GET_ERRORS = "GET_ERRORS";
