@@ -7,21 +7,30 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  meals: [],
+  meals: [
+    { id: "12412", name: "Burger", price: "20", category: "take-out" },
+    {
+      id: "34543",
+      name: "Sphagetti & Meatballs",
+      price: "10",
+      category: "dine-in",
+    },
+  ],
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_MEAL:
       return {
-        meals: state.meals.concat(action.payload),
+        meals: state.meals
+          ? state.meals.concat(action.payload)
+          : action.payload,
       };
     case GET_MEALS:
       return {
-        meals: state.meals.concat(action.payload),
+        ...state,
       };
     default:
-      console.log("null");
-      return;
+      return state;
   }
 }

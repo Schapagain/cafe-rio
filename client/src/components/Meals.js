@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import { connect } from "react-redux";
 
 import MealCard from "./MealCard";
+import store from "../store";
+import { getMeals } from "../actions/mealActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -10,9 +13,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Meals = () => {
+const Meals = ({ meals, getMeals }) => {
+  const [currentMeals, setCurrentMeals] = useState([]);
+
+  // load meals
+  useEffect(() => {
+    console.log(meals);
+    store.dispatch(getMeals());
+    console.log(meals);
+    setCurrentMeals(meals);
+    console.log(currentMeals);
+  }, []);
   const classes = useStyles();
-  const meals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
   return (
     // <Container maxWidth="md">
     <Grid
@@ -23,9 +35,9 @@ const Meals = () => {
       spacing={2}
       className={classes.root}
     >
-      {meals.map((meal) => (
-        <Grid item key={meal} xs={12} sm={4}>
-          <MealCard />
+      {currentMeals.map((meal) => (
+        <Grid item key={meal.id} xs={12} sm={4}>
+          <MealCard meal={meal} />
         </Grid>
       ))}
     </Grid>
@@ -33,4 +45,8 @@ const Meals = () => {
   );
 };
 
-export default Meals;
+const mapStateToProps = (state) => ({
+  meals: state.meals.meals,
+});
+
+export default connect(mapStateToProps, { getMeals })(Meals);

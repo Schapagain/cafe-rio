@@ -15,15 +15,6 @@ import {
 const rootEndpoint =
   process.env.NODE_ENV === "production" ? "https://cafe-rio.herokuapp.com" : "";
 
-export const getMeals = () => async (dispatch, getState) => {
-  try {
-    const endpoint = `${rootEndpoint}/api/meals`;
-    const res = await axios.get(endpoint);
-    dispatch({ type: GET_MEALS, payload: res.data });
-  } catch (err) {
-    console.log(err);
-    // if (err.response)
-    //   dispatch(returnErrors(err.response.error, err.response.status));
-    // dispatch({ type: ADD_MEAL_FAIL });
-  }
+export const getMeals = () => {
+  return { type: GET_MEALS };
 };
