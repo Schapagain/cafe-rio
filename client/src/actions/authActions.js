@@ -19,7 +19,7 @@ export const loadUser = () => async (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
   try {
     const userId = getState().auth.userId;
-    const endpoint = `${rootEndpoint}/api/users/${userId}`;
+    const endpoint = `${rootEndpoint}/api/users/${userId ? userId : ""}`;
     const res = await axios.get(endpoint, tokenConfig(getState));
     dispatch({ type: USER_LOADED, payload: res.data.data[0] });
   } catch (err) {

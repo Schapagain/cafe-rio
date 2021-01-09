@@ -1,5 +1,6 @@
 import axios from "axios";
 import { returnErrors } from "./errorActions";
+import { ROOT_ENDPOINT } from "../constants";
 import {
   ADD_MEAL,
   GET_MEALS,
@@ -8,20 +9,14 @@ import {
   GET_MEALS_FAIL,
   ADD_MEAL_FAIL,
   DELETE_MEAL_FAIL,
-  //   GET_MEAL_PHOTO,
-  //   ADD_MEAL_FAIL,
-  //   ADD_MEAL_FAIL,
-  //   GET_MEAL_INFO,
-  //   GET_MEAL_PHOTO,
+  GET_MEAL_INFO,
+  GET_MEAL_INFO_FAIL,
 } from "../actions/types";
-
-const rootEndpoint =
-  process.env.NODE_ENV === "production" ? "https://cafe-rio.herokuapp.com" : "";
 
 export const getMeals = () => async (dispatch) => {
   dispatch(setMealsLoading());
   try {
-    const endpoint = `${rootEndpoint}/api/meals`;
+    const endpoint = `${ROOT_ENDPOINT}/api/meals`;
     const res = await axios.get(endpoint);
     return dispatch({
       type: GET_MEALS,
@@ -34,9 +29,24 @@ export const getMeals = () => async (dispatch) => {
   }
 };
 
+export const getMealInfo = (id) => async (dispatch) => {
+  try {
+    const endpoint = `${ROOT_ENDPOINT}/api/meals/${id}`;
+    const res = await axios.get(endpoint);
+    return dispatch({
+      type: GET_MEAL_INFO,
+      payload: res.data.data[0],
+    });
+  } catch (err) {
+    if (err.response)
+      dispatch(returnErrors(err.response.error, err.response.status));
+    dispatch({ type: GET_MEAL_INFO_FAIL });
+  }
+};
+
 export const addMeal = (meal) => async (dispatch) => {
   try {
-    const endpoint = `${rootEndpoint}/api/meals`;
+    const endpoint = `${ROOT_ENDPOINT}/api/meals`;
     const res = await axios.post(endpoint, meal);
     return dispatch({
       type: ADD_MEAL,
@@ -51,7 +61,7 @@ export const addMeal = (meal) => async (dispatch) => {
 
 export const deleteMeal = (id) => async (dispatch) => {
   try {
-    const endpoint = `${rootEndpoint}/api/meals/${id}`;
+    const endpoint = `${ROOT_ENDPOINT}/api/meals/${id}`;
     await axios.delete(endpoint);
     return dispatch({
       type: DELETE_MEAL,

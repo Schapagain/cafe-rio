@@ -15,9 +15,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Meals = ({ meal, getMeals }) => {
   // load meals
-  useEffect(() => {
-    getMeals();
-  }, []);
+  // eslint-disable-next-line
+  useEffect(
+    () => {
+      getMeals();
+    },
+    // eslint-disable-next-line
+    []
+  );
 
   const classes = useStyles();
 

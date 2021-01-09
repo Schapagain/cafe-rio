@@ -12,11 +12,11 @@ export const REGISTER_FAIL = "REGISTER_FAIL";
 export const ADD_MEAL = "ADD_MEAL";
 export const GET_MEALS = "GET_MEALS";
 export const GET_MEAL_INFO = "GET_MEAL_INFO";
-export const GET_MEAL_PHOTO = "GET_MEAL_PHOTO";
 export const DELETE_MEAL = "DELETE_MEAL";
 export const ADD_MEAL_FAIL = "ADD_MEAL_FAIL";
 export const GET_MEALS_FAIL = "GET_MEALS_FAIL";
 export const DELETE_MEAL_FAIL = "DELETE_MEAL_FAIL";
+export const GET_MEAL_INFO_FAIL = "GET_MEAL_INFO_FAIL";
 export const MEALS_LOADING = "MEALS_LOADING";
 
 // ERROR ACTION TYPES

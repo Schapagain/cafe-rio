@@ -9,6 +9,8 @@ import Typography from "@material-ui/core/Typography";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import { makeStyles } from "@material-ui/styles";
 
+import { ROOT_ENDPOINT } from "../constants";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     [theme.breakpoints.up("md")]: {
@@ -60,8 +62,8 @@ const MealCard = ({ meal }) => {
         <Grid item xs={5} sm={12}>
           <CardMedia
             component="img"
-            alt="Cheese Burger"
-            image="https://images2.minutemediacdn.com/image/upload/c_crop,h_1126,w_2000,x_0,y_181/f_auto,q_auto,w_1100/v1554932288/shape/mentalfloss/12531-istock-637790866.jpg"
+            alt={meal.name}
+            image={`${ROOT_ENDPOINT}/api/meals/${meal.id}/picture`}
             className={classes.media}
           />
         </Grid>
