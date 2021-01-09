@@ -9,7 +9,7 @@ import {
   //   ADD_MEAL_FAIL,
   //   GET_MEAL_INFO,
   //   GET_MEAL_PHOTO,
-  //   DELETE_MEAL,
+  DELETE_MEAL,
 } from "../actions/types";
 
 const rootEndpoint =
@@ -17,4 +17,8 @@ const rootEndpoint =
 
 export const getMeals = () => {
   return { type: GET_MEALS };
+};
+
+export const deleteMeal = (id) => {
+  return { type: DELETE_MEAL, payload: id };
 };

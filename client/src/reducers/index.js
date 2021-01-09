@@ -6,5 +6,5 @@ import mealReducer from "./mealReducer";
 export default combineReducers({
   error: errorReducer,
   auth: authReducer,
-  meals: mealReducer,
+  meal: mealReducer,
 });

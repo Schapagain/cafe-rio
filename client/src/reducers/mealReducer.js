@@ -1,5 +1,6 @@
 import {
   ADD_MEAL,
+  DELETE_MEAL,
   GET_MEALS,
   //   GET_MEAL_INFO,
   //   GET_MEAL_PHOTO,
@@ -29,6 +30,11 @@ export default function reducer(state = initialState, action) {
     case GET_MEALS:
       return {
         ...state,
+      };
+    case DELETE_MEAL:
+      return {
+        ...state,
+        meals: state.meals.filter((meal) => meal.id !== action.payload),
       };
     default:
       return state;
