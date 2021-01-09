@@ -3,9 +3,11 @@ import {
   DELETE_MEAL,
   GET_MEALS,
   MEALS_LOADING,
+  GET_MEALS_FAIL,
+  ADD_MEAL_FAIL,
+  DELETE_MEAL_FAIL,
   //   GET_MEAL_INFO,
   //   GET_MEAL_PHOTO,
-  //   DELETE_MEAL,
 } from "../actions/types";
 
 const initialState = {
@@ -19,12 +21,12 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         meals: [action.payload, ...state.meals],
-        loading: false,
       };
     case GET_MEALS:
       return {
         ...state,
         meals: action.payload,
+        loading: false,
       };
     case DELETE_MEAL:
       return {
@@ -35,6 +37,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    case GET_MEALS_FAIL:
+    case ADD_MEAL_FAIL:
+    case DELETE_MEAL_FAIL:
+      return {
+        ...state,
+        loading: false,
       };
     default:
       return state;

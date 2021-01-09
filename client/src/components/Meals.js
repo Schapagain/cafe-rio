@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { connect } from "react-redux";
@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
 const Meals = ({ meal, getMeals }) => {
   // load meals
   useEffect(() => {
-    console.log(meal);
     getMeals();
   }, []);
 
