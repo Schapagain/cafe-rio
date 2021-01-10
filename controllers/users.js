@@ -37,9 +37,9 @@ async function signupUser(user) {
  * @param {*} user 
  */
 async function saveUserIdCard(user) {
-  if (user.picture && typeof user.picture == "object") {
-      const pictureFileName = await saveFiles(user.picture);
-      user.picture = pictureFileName;
+  if (user.idCard && typeof user.idCard == "object") {
+      const pictureFileName = await saveFiles(user.idCard);
+      user.idCard = pictureFileName;
   }
   return user;
 }
@@ -51,7 +51,7 @@ async function saveUserIdCard(user) {
 async function updateUser(user) {
   try {
     if (!user) throw new ValidationError('user');
-    const oldUser = await checkUserPresence({id:user.id});
+    const oldUser = await checkUserPresence({query:{id:user.id}});
     user = trimPrematureIds(user);
     user = await saveUserIdCard(user);
     
@@ -107,7 +107,7 @@ function checkIdCardPresence(user) {
  */
 async function deleteUser(id) {
   try {
-    const user = await checkUserPresence({id});
+    const user = await checkUserPresence({query:{id}});
     await User.deleteOne({id});
     deleteFiles(user.idCard);
     return {id};
@@ -157,7 +157,7 @@ async function getUsers({query,attributes=['id']}) {
  */
 async function getIdCard(id) {
   try{
-    let user = await checkUserPresence({id});
+    let user = await checkUserPresence({query:{id}});
     let filePath = await getFilePath(user.idCard);
     return filePath;
   }catch(err) {
