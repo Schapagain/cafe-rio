@@ -1,5 +1,5 @@
 const { ValidationError, getError, NotAuthorizedError, NotActiveError } = require("./errors");
-const { checkUserPresence, makeUser } = require("./users");
+const { checkUserPresence, makeUser, getUser } = require("./users");
 const njwt = require('njwt');
 require('dotenv').config();
 const signingKey = process.env.SECRET_KEY;
@@ -49,7 +49,7 @@ async function authenticate(user) {
         if (!user.password) throw new ValidationError('password');
 
         const givenPassword = user.password;
-        user = await checkUserPresence({query:{email:user.email}});
+        user = await getUser({query:{email:user.email},attributes:["id","password","name","email"]});
         let isMatch = await user.validatePassword(givenPassword)
         
         if (!isMatch) throw new NotAuthorizedError();
@@ -72,13 +72,13 @@ async function authenticate(user) {
 async function activateAccount(activationCode){
     try{
         if (!activationCode) throw new Error();
-        let user = await checkUserPresence({query:{activationCode}});
+        let user = await getUser({query:{activationCode},attributes:["_id","activationCode"]});
         if (!user) throw new Error();
         user.activationCode = null;
         user.save();
 
     }catch(err){
-        throw new ValidationError('activation codd','code has expired');
+        throw new ValidationError('activation code','code has expired');
     }
 }
 
