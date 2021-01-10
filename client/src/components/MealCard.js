@@ -38,17 +38,17 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "0.5em",
   },
   orderButton: {
-    fontSize: "0.6rem",
+    // fontSize: "0.6rem",
   },
   priceText: {
     lineHeight: "1em",
   },
   foodName: {
     ...theme.typography,
-    fontSize: "0.8rem",
+    fontSize: "1rem",
   },
   foodPrice: {
-    fontSize: "0.7rem",
+    fontSize: "0.9rem",
     lineHeight: ".9rem",
   },
 }));
