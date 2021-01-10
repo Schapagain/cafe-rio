@@ -71,14 +71,14 @@ async function authenticate(user) {
  */
 async function activateAccount(activationCode){
     try{
-        if (!activationCode) throw new ValidationError('activation code');
+        if (!activationCode) throw new Error();
         let user = await checkUserPresence({activationCode});
-        if (!user) throw new ValidationError('activation code','code has expired');
+        if (!user) throw new Error();
         user.activationCode = null;
         user.save();
 
     }catch(err){
-        throw await getError(err);
+        throw new ValidationError('activation codd','code has expired');
     }
 }
 
