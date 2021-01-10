@@ -49,7 +49,6 @@ const UserSchema = new Schema({
     },
     activationCode: {
         type: String,
-        unique: true,
     }
 },{timestamps: true})
 
