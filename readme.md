@@ -58,8 +58,8 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
 | /signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user } | idCard must be an image file <br/> Activation link sent via email |
-| / | Fetch all users | GET | Admin |  | { count, data : [ User ] } |  |
-| /:id | Fetch user info | GET | Private |  | { count, data : [ User ] } | |
+| / | Fetch all users | GET | Admin | {attributes} | { count, data : [ User ] } | attributes is a list of desired fields |
+| /:id | Fetch user info | GET | Private | {attributes} | { count, data : [ User ] } | |
 | /:id/id_card | Fetch user id card | GET | Private |  | image file | |
 | /:id | Update user info | PATCH | Private | {name, email, phone, password, organization, employeeId, idcard} | {user } | idCard must be an image file |
 | /:id | Delete a user | DELETE | Admin |  | { id } | |
