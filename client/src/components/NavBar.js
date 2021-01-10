@@ -2,14 +2,13 @@ import React, { Fragment } from "react";
 import { makeStyles } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-// import Menu from "@material-ui/core/Menu";
-// import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import OrderDrawer from "./OrderDrawer";
 
 // setting up how the AppBar behaves when scrolling
 function ElevationScroll(props) {
@@ -98,6 +97,7 @@ const NavBar = ({ isAuthenticated, user }) => {
           <Toolbar>
             <Typography variant="h6">Cafe Rio</Typography>
             {isAuthenticated ? <AuthLinks /> : <UnauthLinks />}
+            <OrderDrawer />
             {/* <Button>Logout</Button> */}
           </Toolbar>
         </AppBar>
