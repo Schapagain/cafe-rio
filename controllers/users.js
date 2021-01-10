@@ -119,13 +119,14 @@ async function deleteUser(id) {
 /**
  * Check if the user with the given parameters exists in the database
  * @param {object} query
+ * @param {String[]} attributes
  */
-async function checkUserPresence(query) {
+async function checkUserPresence(query,attributes=['id']) {
   try{
     if (!query || (query.id && !isValidMongooseId(query.id))){
       throw new NotFoundError('user');
     }
-    const exists = await User.findOne(query) 
+    const exists = await User.findOne(query,attributes.join(' ')) 
     if (!exists) throw new NotFoundError('user');
     return exists
   }catch(err){
@@ -136,11 +137,12 @@ async function checkUserPresence(query) {
 /**
  * Get users info from database
  * @param {String} id
+ * @param {String[]} attributes 
  */
-async function getUsers(id=null,attributes=['id','active','name','email','phone','registrationDate']) {
+async function getUsers(id,attributes=['id']) {
   let users =[];
   if (!id) {
-    users = await User.find();
+    users = await User.find({id},attributes.join(' '));
   }else {
     users = [await checkUserPresence({id})]
   }
