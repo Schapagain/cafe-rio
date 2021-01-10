@@ -3,7 +3,13 @@ const router = express.Router();
 
 const auth = require("../../middlewares/auth");
 const formParser = require("../../middlewares/formParser");
-const { signupUser, updateUser, deleteUser, getUsers, getIdCard } = require("../../controllers/users");
+const {
+  signupUser,
+  updateUser,
+  deleteUser,
+  getUsers,
+  getIdCard,
+} = require("../../controllers/users");
 const { ADMIN, CUSTOMER } = require("../../controllers/roles");
 
 /**
@@ -16,19 +22,18 @@ const { ADMIN, CUSTOMER } = require("../../controllers/roles");
  * @param {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.get("/", auth([ADMIN]) , async (req, res) => {
- 
-  try{
-    const result = await getUsers({attributes:req.body.attributes});
+router.get("/", auth([ADMIN]), async (req, res) => {
+  try {
+    const result = await getUsers({ attributes: req.body.attributes });
     res.status(200).json(result);
-  }catch(err) {
+  } catch (err) {
     res.status(err.httpCode || 500).json({
       error: {
-        msg: err.message
-      }
-    })
+        msg: err.message,
+      },
+    });
   }
-);
+});
 
 /**
  * Route to sigup a user
@@ -65,16 +70,19 @@ router.post("/signup", formParser, async (req, res) => {
  * @param {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.get("/:id", auth([ADMIN,CUSTOMER]), async (req, res) => {
-  try{
-    let result = await getUsers({query:{id:req.params.id},attributes:req.body.attributes});
+router.get("/:id", auth([ADMIN, CUSTOMER]), async (req, res) => {
+  try {
+    let result = await getUsers({
+      query: { id: req.params.id },
+      attributes: req.body.attributes,
+    });
     res.status(200).json(result);
-  }catch(err){
+  } catch (err) {
     return res.status(err.httpCode || 500).json({
-      error: {msg:err.message}
-    })
+      error: { msg: err.message },
+    });
   }
-);
+});
 
 /**
  * Route to fetch user idCard
@@ -108,18 +116,17 @@ router.get(
  * @param   {string} path
  * @param   {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
-*/
-router.patch('/:id', auth([ADMIN,CUSTOMER]), formParser, async (req,res) => {
-  try{
-      let result = await updateUser({...req.body,id:req.params.id});
-      res.status(200).json(result);
-  }catch(err){
-      res.status(err.httpCode || 500).json({ 
-        error: {msg: err.message}
-      })
+ */
+router.patch("/:id", auth([ADMIN, CUSTOMER]), formParser, async (req, res) => {
+  try {
+    let result = await updateUser({ ...req.body, id: req.params.id });
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(err.httpCode || 500).json({
+      error: { msg: err.message },
+    });
   }
-}
-);
+});
 
 /**
  * Route to delete a user
