@@ -1,5 +1,6 @@
 import axios from "axios";
 import { returnErrors } from "./errorActions";
+import { ROOT_ENDPOINT } from "../constants";
 import {
   USER_LOADED,
   USER_LOADING,
@@ -11,15 +12,12 @@ import {
   LOGOUT_SUCCESS,
 } from "./types";
 
-const rootEndpoint =
-  process.env.NODE_ENV === "production" ? "https://cafe-rio.herokuapp.com" : "";
-
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
   try {
     const userId = getState().auth.userId;
-    const endpoint = `${rootEndpoint}/api/users/${userId ? userId : ""}`;
+    const endpoint = `${ROOT_ENDPOINT}/api/users/${userId ? userId : ""}`;
     const res = await axios.get(endpoint, tokenConfig(getState));
     dispatch({ type: USER_LOADED, payload: res.data.data[0] });
   } catch (err) {
@@ -44,7 +42,7 @@ export const signUp = (newUser) => async (dispatch) => {
   // const body = JSON.stringify(newUser);
   const body = newUser;
 
-  const endpoint = `${rootEndpoint}/api/users/signup`;
+  const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
 
   try {
     const res = await axios.post(endpoint, body, config);
@@ -75,7 +73,7 @@ export const signIn = ({ email, password }) => async (dispatch) => {
     },
   };
 
-  const endpoint = `${rootEndpoint}/api/auth`;
+  const endpoint = `${ROOT_ENDPOINT}/api/auth/`;
   const body = JSON.stringify({ email, password });
 
   try {
@@ -87,12 +85,9 @@ export const signIn = ({ email, password }) => async (dispatch) => {
     });
   } catch (err) {
     if (err.response) {
+      console.log(err.response);
       dispatch(
-        returnErrors(
-          err.response.data.error.msg,
-          err.response.status,
-          "LOGIN_FAIL"
-        )
+        returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
       );
     }
     dispatch({ type: LOGIN_FAIL });
