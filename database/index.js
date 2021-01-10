@@ -13,13 +13,22 @@ mongoose
   })
   .catch((err) => console.log(err));
 
+  /**
+   * Check if the given id is a valid Mongoose id
+   * @param {String} id 
+   */
 const isValidMongooseId = id => mongoose.Types.ObjectId.isValid(id);
 
+/**
+ * Find from the given model, using given query filters and attributes
+ * @param {mongoose.Model} model
+ * @param {Object} query
+ * @param {String []} attributes 
+ */
 const queryDatabase = async ({model,query,attributes}) => {
   if (query && query.id && !isValidMongooseId(query.id)) {
     throw new ValidationError('id');
   }
-
   return model.find(query,'-_id '.concat(attributes.join(' ')));
 }
 
