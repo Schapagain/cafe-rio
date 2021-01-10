@@ -74,12 +74,14 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   const [msg, setMsg] = useState("");
   useEffect(() => {
     if (error.id === "REGISTER_FAIL") setMsg(error.msg);
+
     // console.log("error message", error);
   }, [error]);
 
   // redirect once authenticated
   let history = useHistory();
   useEffect(() => {
+    // console.log(msg.msg);
     if (isAuthenticated) {
       clearErrors();
       history.push("/");
@@ -249,7 +251,7 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link component={RouterLink} to="/" variant="body2">
+              <Link component={RouterLink} to="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

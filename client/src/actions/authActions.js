@@ -21,8 +21,8 @@ export const loadUser = () => async (dispatch, getState) => {
     const res = await axios.get(endpoint, tokenConfig(getState));
     dispatch({ type: USER_LOADED, payload: res.data.data[0] });
   } catch (err) {
-    if (err.response)
-      dispatch(returnErrors(err.response.error, err.response.status));
+    if (err)
+      dispatch(returnErrors(err.response.data.error, err.response.status));
     dispatch({ type: AUTH_ERROR });
   }
 };
@@ -51,7 +51,7 @@ export const signUp = (newUser) => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
-    if (err.response) {
+    if (err) {
       dispatch(
         returnErrors(
           err.response.data.error,
@@ -60,6 +60,7 @@ export const signUp = (newUser) => async (dispatch) => {
         )
       );
     }
+
     dispatch({ type: REGISTER_FAIL });
   }
 };
@@ -85,7 +86,6 @@ export const signIn = ({ email, password }) => async (dispatch) => {
     });
   } catch (err) {
     if (err.response) {
-      console.log(err.response);
       dispatch(
         returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
       );

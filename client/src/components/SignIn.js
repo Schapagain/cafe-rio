@@ -63,7 +63,10 @@ const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
   // error msg state
   const [msg, setMsg] = useState("");
   useEffect(() => {
-    if (error.id === "LOGIN_FAIL") setMsg(error.msg);
+    if (error.id === "LOGIN_FAIL") {
+      console.log(error.msg);
+      setMsg(error.msg);
+    }
   }, [error]);
 
   // redirect if authenticated

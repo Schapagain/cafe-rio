@@ -47,6 +47,7 @@ router.get("/", auth([ADMIN]), async (req, res) => {
 router.post("/signup", formParser, async (req, res) => {
   try {
     const result = await signupUser(req.body);
+    console.log(result);
     res.status(201).json(result);
   } catch (err) {
     return res.status(err.httpCode || 500).json({

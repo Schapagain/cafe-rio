@@ -57,6 +57,7 @@ export default function reducer(state = initialState, action) {
         userId: null,
         isAuthenticated: false,
         isLoading: false,
+        user: {},
       };
 
     default:
