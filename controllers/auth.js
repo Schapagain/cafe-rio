@@ -49,7 +49,7 @@ async function authenticate(user) {
         if (!user.password) throw new ValidationError('password');
 
         const givenPassword = user.password;
-        user = await checkUserPresence({email:user.email});
+        user = await checkUserPresence({query:{email:user.email}});
         let isMatch = await user.validatePassword(givenPassword)
         
         if (!isMatch) throw new NotAuthorizedError();
@@ -72,7 +72,7 @@ async function authenticate(user) {
 async function activateAccount(activationCode){
     try{
         if (!activationCode) throw new Error();
-        let user = await checkUserPresence({activationCode});
+        let user = await checkUserPresence({query:{activationCode}});
         if (!user) throw new Error();
         user.activationCode = null;
         user.save();
