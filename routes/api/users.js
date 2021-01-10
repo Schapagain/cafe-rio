@@ -67,7 +67,8 @@ router.post("/signup", formParser, async (req, res) => {
  */
 router.get("/:id", auth([ADMIN,CUSTOMER]), async (req, res) => {
   try{
-    let result = await getUsers({query:{id:req.params.id},attributes:req.body.attributes});
+    const attributes = ["id","name","email","phone","organization","employeeId"];
+    let result = await getUsers({query:{id:req.params.id},attributes});
     res.status(200).json(result);
   }catch(err){
     return res.status(err.httpCode || 500).json({
