@@ -133,14 +133,14 @@ async function checkUserPresence({query,attributes=['id']}) {
 }
 /**
  * Get users info from database
- * @param {String} id
+ * @param {Object} query
  * @param {String[]} attributes 
  */
 async function getUsers({query,attributes=['id']}) {
-  let users =[];
+  let users;
   try {
     if (!query || !query.id) {
-      users = await queryDatabase({model:User,attributes});
+      users = await queryDatabase({model:User,query,attributes});
     }else {
       users = await checkUserPresence({query,attributes});
     }
@@ -149,6 +149,16 @@ async function getUsers({query,attributes=['id']}) {
   }
   
   return {count:users.length,data:users};
+}
+
+/**
+ * Get a single user from database
+ * @param {Object} query
+ * @param {String[]} attributes 
+ */
+async function getUser({query,attributes=["id"]}) {
+  const users = await getUsers({query,attributes})
+  return users.data[0];
 }
 
 /**
@@ -165,4 +175,4 @@ async function getIdCard(id) {
   }
 }
 
-module.exports = { signupUser, updateUser, deleteUser, getUsers, checkUserPresence, getIdCard };
+module.exports = { signupUser, updateUser, deleteUser, getUser, getUsers, checkUserPresence, getIdCard };
