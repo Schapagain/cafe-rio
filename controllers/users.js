@@ -1,4 +1,4 @@
-const { isValidMongooseId } = require('../database');
+const { isValidMongooseId, queryDatabase } = require('../database');
 
 // Import the user model
 const { User } = require("../database/models");
@@ -121,14 +121,11 @@ async function deleteUser(id) {
  * @param {object} query
  * @param {String[]} attributes
  */
-async function checkUserPresence(query,attributes=['id']) {
+async function checkUserPresence({query,attributes=['id']}) {
   try{
-    if (!query || (query.id && !isValidMongooseId(query.id))){
-      throw new NotFoundError('user');
-    }
-    const exists = await User.findOne(query,attributes.join(' ')) 
-    if (!exists) throw new NotFoundError('user');
-    return exists
+    const users = await queryDatabase({model:User,query,attributes});
+    if (!users || !users.length) throw new NotFoundError('user');
+    return users
   }catch(err){
     throw await getError(err);
   }
@@ -139,14 +136,19 @@ async function checkUserPresence(query,attributes=['id']) {
  * @param {String} id
  * @param {String[]} attributes 
  */
-async function getUsers(id,attributes=['id']) {
+async function getUsers({query,attributes=['id']}) {
   let users =[];
-  if (!id) {
-    users = await User.find({id},attributes.join(' '));
-  }else {
-    users = [await checkUserPresence({id})]
+  try {
+    if (!query || !query.id) {
+      users = await queryDatabase({model:User,attributes});
+    }else {
+      users = await checkUserPresence({query,attributes});
+    }
+  } catch (err) {
+    throw await getError(err);
   }
-  return {count:users.length,data:users.map(user => makeItem(user,attributes))};
+  
+  return {count:users.length,data:users};
 }
 
 /**
