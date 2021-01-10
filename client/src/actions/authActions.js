@@ -32,16 +32,16 @@ export const signUp = (newUser) => async (dispatch) => {
   // set content-type header
   const config = {
     headers: {
-      "Content-type": "application/json",
+      "Content-type": "multipart/form-data",
     },
   };
 
   //Request body
   // File objects can't be stringified,
   //  so we submit the body as FormData instead of JSON
-  // const body = JSON.stringify(newUser);
   const body = newUser;
-
+  console.log(body);
+  console.log("ds");
   const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
 
   try {

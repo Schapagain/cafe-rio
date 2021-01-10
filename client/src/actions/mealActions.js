@@ -13,6 +13,8 @@ import {
   GET_MEAL_INFO_FAIL,
 } from "../actions/types";
 
+console.log(ROOT_ENDPOINT);
+
 export const getMeals = () => async (dispatch) => {
   dispatch(setMealsLoading());
   try {

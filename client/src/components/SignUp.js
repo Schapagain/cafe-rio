@@ -99,8 +99,9 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
     newUser.append("employeeId", employeeId);
     newUser.append("phone", phone);
     newUser.append("idCard", idCard);
-
-    // //attempt to register user
+    console.log(newUser);
+    console.log("ddd");
+    //attempt to register user
     signUp(newUser);
     // console.log("error", error);
   };
