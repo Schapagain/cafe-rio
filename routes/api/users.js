@@ -104,20 +104,16 @@ router.get(
  * @param {string} path
  * @param   {callback} middleware - Handle HTTP response
  */
-router.get(
-  "/:id/id_card",
-  // auth([ADMIN, CUSTOMER]),
-  async (req, res) => {
-    try {
-      const idPath = await getIdCard(req.params.id);
-      res.status(200).sendFile(idPath, { root: "." });
-    } catch (err) {
-      return res.status(err.httpCode || 500).json({
-        error: { msg: err.message },
-      });
-    }
+router.get("/:id/id_card", auth([ADMIN, CUSTOMER]), async (req, res) => {
+  try {
+    const idPath = await getIdCard(req.params.id);
+    res.status(200).sendFile(idPath, { root: "." });
+  } catch (err) {
+    return res.status(err.httpCode || 500).json({
+      error: { msg: err.message },
+    });
   }
-);
+});
 
 /**
  * Route to update user info
@@ -129,21 +125,16 @@ router.get(
  * @param   {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.patch(
-  "/:id",
-  // auth([ADMIN, CUSTOMER]),
-  formParser,
-  async (req, res) => {
-    try {
-      let result = await updateUser({ ...req.body, id: req.params.id });
-      res.status(200).json(result);
-    } catch (err) {
-      res.status(err.httpCode || 500).json({
-        error: { msg: err.message },
-      });
-    }
+router.patch("/:id", auth([ADMIN, CUSTOMER]), formParser, async (req, res) => {
+  try {
+    let result = await updateUser({ ...req.body, id: req.params.id });
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(err.httpCode || 500).json({
+      error: { msg: err.message },
+    });
   }
-);
+});
 
 /**
  * Route to delete a user
@@ -155,20 +146,15 @@ router.patch(
  * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
  */
-router.delete(
-  "/:id",
-  // auth([ADMIN]),
-  formParser,
-  async (req, res) => {
-    try {
-      const result = await deleteUser(req.params.id);
-      res.status(200).json(result);
-    } catch (err) {
-      return res.status(err.httpCode || 500).json({
-        error: { msg: err.message },
-      });
-    }
+router.delete("/:id", auth([ADMIN]), formParser, async (req, res) => {
+  try {
+    const result = await deleteUser(req.params.id);
+    res.status(200).json(result);
+  } catch (err) {
+    return res.status(err.httpCode || 500).json({
+      error: { msg: err.message },
+    });
   }
-);
+});
 
 module.exports = router;
