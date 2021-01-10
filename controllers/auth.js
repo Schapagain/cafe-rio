@@ -21,10 +21,14 @@ function getAuthToken(id, role) {
     scope: role,
   };
   const token = njwt.create(claims, signingKey);
-  token.setExpiration(new Date().getTime() + 60 * 60 * 1000);
+  token.setExpiration(new Date().getTime() + 24 * 60 * 60 * 1000);
   return token.compact();
 }
 
+/**
+ * Validates the given admin password against the environment
+ * @param {*} Credentials.password
+ */
 async function authenticateAdmin({ password }) {
   const correctPassword = process.env.ADMINPASSWORD;
   try {
@@ -49,11 +53,9 @@ async function authenticate(user) {
 
     const givenPassword = user.password;
     user = await checkUserPresence({ email: user.email });
-
     let isMatch = await user.validatePassword(givenPassword);
 
-    if (!isMatch) new NotAuthorizedError();
-
+    if (!isMatch) throw new NotAuthorizedError();
     if (!user.active) throw new NotActiveError("account");
 
     return {
@@ -65,16 +67,27 @@ async function authenticate(user) {
   }
 }
 
+/**
+ * Activate the associated user account given valid activation code
+ * @param {String} activationCode
+ */
 async function activateAccount(activationCode) {
   try {
-    if (!activationCode) throw new ValidationError("activation code");
+    if (!activationCode) throw new Error();
     let user = await checkUserPresence({ activationCode });
-    if (!user) throw new ValidationError("activation code", "code has expired");
+    if (!user) throw new Error();
     user.activationCode = null;
     user.save();
   } catch (err) {
-    throw await getError(err);
+    throw new ValidationError("activation codd", "code has expired");
   }
+}
+
+/**
+ * Return accepted token authorization methods
+ */
+function getValidAuthMethods() {
+  return ["bearer"];
 }
 
 module.exports = {
@@ -82,4 +95,5 @@ module.exports = {
   authenticateAdmin,
   activateAccount,
   getAuthToken,
+  getValidAuthMethods,
 };

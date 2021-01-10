@@ -3,12 +3,12 @@ const router = express.Router();
 
 const auth = require('../../middlewares/auth');
 const formParser = require("../../middlewares/formParser");
-const { getMeals, addMeal, getPicture, updateMeal, deleteMeal } = require("../../controllers/meals");
-const { ADMIN } = require("../../controllers/roles");
+const { getOrders, addOrder, deleteOrder } = require("../../controllers/orders");
+const { ADMIN, CUSTOMER } = require("../../controllers/roles");
 
 /**
- * Route to fetch all meals
- * @name api/meals
+ * Route to fetch all orders
+ * @name api/orders
  * @method GET
  * @access Public 
  * @inner
@@ -18,7 +18,7 @@ const { ADMIN } = require("../../controllers/roles");
 router.get("/", async (req, res) => {
  
   try{
-    const result = await getMeals();
+    const result = await getOrders({queries:{...req.query}});
     res.status(200).json(result);
   }catch(err) {
     res.status(err.httpCode || 500).json({
@@ -30,19 +30,20 @@ router.get("/", async (req, res) => {
 });
 
 /**
- * Route to add a new meal
- * @name api/meals
+ * Route to add a new order
+ * @name api/orders
  * @method POST
- * @access Admin 
+ * @access Public 
  * @inner
  * @param {string} path
  * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
  */
-router.post("/",auth([ADMIN]), formParser, async (req, res) => {
+router.post("/", auth([ADMIN,CUSTOMER]), async (req, res) => {
  
     try{
-      const result = await addMeal(req.body);
+      const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
+      const result = await addOrder({...req.body,user});
       res.status(201).json(result);
     }catch(err) {
       res.status(err.httpCode || 500).json({
@@ -55,8 +56,8 @@ router.post("/",auth([ADMIN]), formParser, async (req, res) => {
   });
 
 /**
- * Route to fetch meal details
- * @name api/meals/:id
+ * Route to fetch order details
+ * @name api/orders/:id
  * @method GET
  * @access Public
  * @inner
@@ -65,7 +66,7 @@ router.post("/",auth([ADMIN]), formParser, async (req, res) => {
  */
 router.get("/:id", async (req, res) => {
   try{
-    let result = await getMeals(req.params.id);
+    let result = await getOrders({id:req.params.id});
     res.status(200).json(result);
   }catch(err){
     return res.status(err.httpCode || 500).json({
@@ -127,7 +128,7 @@ router.patch('/:id', auth([ADMIN]), formParser, async (req,res) => {
  */
 router.delete("/:id", auth([ADMIN]), async (req, res) => {
   try {
-    const result = await deleteMeal(req.params.id);
+    const result = await deleteOrder(req.params.id);
     res.status(200).json(result);
   } catch (err) {
     return res.status(err.httpCode || 500 ).json({

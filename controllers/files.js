@@ -85,6 +85,10 @@ async function deleteFiles() {
     }
 }
 
+/**
+ * Given valid filenName, return the full file path
+ * @param {String} fileName 
+ */
 async function getFilePath(fileName) {
     try{
         const fullPath = path.join(uploadPath,fileName);

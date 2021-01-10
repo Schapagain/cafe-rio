@@ -105,4 +105,4 @@ async function generatePasswordHash(passwordPlain) {
     }
 }
 
-module.exports = User = mongoose.model('users',UserSchema);
+module.exports = User = mongoose.model('User',UserSchema);

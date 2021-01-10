@@ -1,6 +1,6 @@
 class ValidationError extends Error {
     constructor(field,message) {
-        super(`Invalid ${field} : ${message}`);
+        super(`Invalid ${field || 'field'} : ${message}`);
         this.message = message? `Invalid ${field} : ${message}`: `Invalid ${field}` ;
         this.field = field;
         this.name = this.constructor.name;
@@ -51,13 +51,15 @@ class ServerError extends Error {
 }
 
 async function getError(err) {
-    console.log(err)
+   
     if (err) {
-        let firstError = {properties:{}};
+        let firstError;
         let errorName = err.name;
         if (err.errors) {
             firstError = err.errors[Object.keys(err.errors)[0]];
             errorName = firstError.name
+        }else{
+            firstError = err;
         }
         switch (errorName) {
             case 'NotActiveError':
@@ -65,18 +67,20 @@ async function getError(err) {
             case 'NotFoundError':
             case 'NotAuthorizedError':
                 return err;
+            case 'CastError':
+                return new ValidationError(firstError['$originalErrorPath'] || firstError.path)
             case 'ValidatorError':
                 return new ValidationError(firstError.properties.path, firstError.properties.message);
             case 'MongoError':
                 return new NotUniqueError(Object.keys(err.keyValue)[0]);
-            case 'SequelizeDatabaseError':
-                return new ValidationError('field',err.message) 
             case 'JwtParseError':
                 return new NotAuthorizedError('Invalid token')
             default:
+                console.log(err);
                 return new ServerError();
         }
     }
+    console.log(err);
     return new ServerError();
 }
 

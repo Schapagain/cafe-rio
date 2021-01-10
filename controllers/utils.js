@@ -12,7 +12,7 @@ function getRandomCode(size) {
 }
 
 /**
- * Returns server address considering production status
+ * Return server address considering production status
  */
 function getServerURL() {
     const production = 'https://cafe-rio.herokuapp.com';
@@ -38,4 +38,9 @@ function makeItem(item, attributes = ['id','name']) {
     return attributes.reduce((obj,attr) => ({...obj,[attr]:item[attr]}),{})
 }
 
-module.exports = {getRandomCode,getServerURL,trimPrematureIds,makeItem};
+module.exports = {
+    getRandomCode,
+    getServerURL,
+    trimPrematureIds,
+    makeItem,
+};

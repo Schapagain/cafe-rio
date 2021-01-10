@@ -5,7 +5,7 @@ const { trimPrematureIds, makeItem } = require("./utils");
 const { saveFiles, deleteFiles, getFilePath } = require("./files");
 
 /**
- * Add new meal to the database
+ * Add a new meal to the database
  * @param {*} meal
  */
 async function addMeal(meal) {
@@ -22,6 +22,42 @@ async function addMeal(meal) {
   }
 }
 
+/**
+ * Update given properties for the meal
+ * @param {*} meal
+ */
+async function updateMeal(meal) {
+  try {
+    if (!meal) throw new ValidationError("meal");
+    const oldMeal = await checkMealPresence({ id: meal.id });
+    meal = trimPrematureIds(meal);
+    meal = await saveMealPicture(meal);
+
+    // update key values
+    const keysToUpdate = Object.keys(meal);
+    keysToUpdate.forEach((key) => {
+      oldMeal[key] = meal[key];
+    });
+    meal = await oldMeal.save();
+    return {
+      meal: makeItem(meal, [
+        "id",
+        "name",
+        "price",
+        "category",
+        ...keysToUpdate,
+      ]),
+    };
+  } catch (err) {
+    deleteFiles(meal.picture);
+    throw await getError(err);
+  }
+}
+
+/**
+ * If a picture is provided, save it to the disk
+ * @param {*} meal
+ */
 async function saveMealPicture(meal) {
   if (meal.picture && typeof meal.picture == "object") {
     const pictureFileName = await saveFiles(meal.picture);
@@ -96,4 +132,4 @@ async function deleteMeal(id) {
   }
 }
 
-module.exports = { getMeals, addMeal, getPicture, deleteMeal };
+module.exports = { getMeals, addMeal, getPicture, updateMeal, deleteMeal };

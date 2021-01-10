@@ -1,4 +1,4 @@
-const { isValidMongooseId } = require('../database');
+const { isValidMongooseId, queryDatabase } = require('../database');
 
 // Import the user model
 const { User } = require("../database/models");
@@ -13,33 +13,66 @@ const { getRandomCode, getServerURL, trimPrematureIds, makeItem } = require('./u
  * @param {*} user
  */
 async function signupUser(user) {
-  let idCardFileName, newUser, activationLink;
   try {
 
     checkIdCardPresence(user); 
     user = trimPrematureIds(user);
-
-    // save file and replace file with a random fileName
-    idCardFileName = await saveFiles(user.idCard);
-    user.idCard = idCardFileName;
-
-    // save user to database
-    newUser = new User(user);
+    user = await saveUserIdCard(user);
+    const newUser = new User(user);
     user = await newUser.save();
 
     // generate activation link for the user and send email
-    activationLink = generateActivationLink(user);
+    const activationLink = generateActivationLink(user);
     sendActivationEmail(user.name,user.email,activationLink);
 
     return { user: makeItem(user,['id','name','email']) };
   } catch (err) {
-    deleteFiles(idCardFileName);
+    deleteFiles(user.idCard);
     throw await getError(err);
   }
 }
 
 /**
- * Generates an activation link for the new user
+ * If an id card is provided, save it to the disk
+ * @param {*} user 
+ */
+async function saveUserIdCard(user) {
+  if (user.picture && typeof user.picture == "object") {
+      const pictureFileName = await saveFiles(user.picture);
+      user.picture = pictureFileName;
+  }
+  return user;
+}
+
+/**
+ * Update given properties for the user
+ * @param {*} user 
+ */
+async function updateUser(user) {
+  try {
+    if (!user) throw new ValidationError('user');
+    const oldUser = await checkUserPresence({id:user.id});
+    user = trimPrematureIds(user);
+    user = await saveUserIdCard(user);
+    
+    // update key values
+    let keysToUpdate = Object.keys(user);
+    keysToUpdate.forEach(key => {
+      oldUser[key] = user[key];
+    })
+    user = await oldUser.save();
+
+    // do not return password in response
+    keysToUpdate = keysToUpdate.filter(key => key !== 'password');
+    return {user: makeItem(user,['id','name','email',...keysToUpdate])}
+  }catch(err) {
+    deleteFiles(user.picture);
+    throw await getError(err);
+  }
+}
+
+/**
+ * Generate an activation link for the new user
  * @param {*} user 
  */
 function generateActivationLink(user) {
@@ -48,7 +81,7 @@ function generateActivationLink(user) {
 }
 
 /**
- * Generates a random code and persist it as activationCode
+ * Generate a random code and persist it as activationCode
  * @param {*} user 
  */
 function generateActivationCode(user) {
@@ -86,15 +119,13 @@ async function deleteUser(id) {
 /**
  * Check if the user with the given parameters exists in the database
  * @param {object} query
+ * @param {String[]} attributes
  */
-async function checkUserPresence(query) {
+async function checkUserPresence({query,attributes=['id']}) {
   try{
-    if (!query || (query.id && !isValidMongooseId(query.id))){
-      throw new NotFoundError('user');
-    }
-    const exists = await User.findOne(query) 
-    if (!exists) throw new NotFoundError('user');
-    return exists
+    const users = await queryDatabase({model:User,query,attributes});
+    if (!users || !users.length) throw new NotFoundError('user');
+    return users
   }catch(err){
     throw await getError(err);
   }
@@ -103,19 +134,25 @@ async function checkUserPresence(query) {
 /**
  * Get users info from database
  * @param {String} id
+ * @param {String[]} attributes 
  */
-async function getUsers(id=null,attributes=['id','active','name','email','phone','registrationDate']) {
+async function getUsers({query,attributes=['id']}) {
   let users =[];
-  if (!id) {
-    users = await User.find();
-  }else {
-    users = [await checkUserPresence({id})]
+  try {
+    if (!query || !query.id) {
+      users = await queryDatabase({model:User,attributes});
+    }else {
+      users = await checkUserPresence({query,attributes});
+    }
+  } catch (err) {
+    throw await getError(err);
   }
-  return {count:users.length,data:users.map(user => makeItem(user,attributes))};
+  
+  return {count:users.length,data:users};
 }
 
 /**
- * Returns file path for idcard of the user with the given id
+ * Return file path for idcard of the user with the given id
  * @param {String} id 
  */
 async function getIdCard(id) {
@@ -128,4 +165,4 @@ async function getIdCard(id) {
   }
 }
 
-module.exports = { signupUser, deleteUser, getUsers, checkUserPresence, getIdCard };
+module.exports = { signupUser, updateUser, deleteUser, getUsers, checkUserPresence, getIdCard };
