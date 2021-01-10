@@ -19,10 +19,10 @@ const { ADMIN, CUSTOMER } = require("../../controllers/roles");
 router.get("/", auth([ADMIN]) , async (req, res) => {
  
   try{
-    const result = await getUsers();
+    const result = await getUsers({attributes:req.body.attributes});
     res.status(200).json(result);
   }catch(err) {
-    res.status(httpCode || 500).json({
+    res.status(err.httpCode || 500).json({
       error: {
         msg: err.message
       }
@@ -67,7 +67,7 @@ router.post("/signup", formParser, async (req, res) => {
  */
 router.get("/:id", auth([ADMIN,CUSTOMER]), async (req, res) => {
   try{
-    let result = await getUsers(req.params.id);
+    let result = await getUsers({query:{id:req.params.id},attributes:req.body.attributes});
     res.status(200).json(result);
   }catch(err){
     return res.status(err.httpCode || 500).json({
