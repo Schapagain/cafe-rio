@@ -74,14 +74,11 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   const [msg, setMsg] = useState("");
   useEffect(() => {
     if (error.id === "REGISTER_FAIL") setMsg(error.msg);
-
-    // console.log("error message", error);
   }, [error]);
 
   // redirect once authenticated
   let history = useHistory();
   useEffect(() => {
-    // console.log(msg.msg);
     if (isAuthenticated) {
       clearErrors();
       history.push("/");
@@ -99,11 +96,8 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
     newUser.append("employeeId", employeeId);
     newUser.append("phone", phone);
     newUser.append("idCard", idCard);
-    console.log(newUser);
-    console.log("ddd");
     //attempt to register user
     signUp(newUser);
-    // console.log("error", error);
   };
 
   return (

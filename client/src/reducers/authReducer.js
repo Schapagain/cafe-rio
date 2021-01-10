@@ -23,13 +23,14 @@ export default function reducer(state = initialState, action) {
       return { ...state, isLoading: true };
 
     case USER_LOADED:
+      const user = action.payload;
       return {
         ...state,
         token: localStorage.getItem("token"),
         userId: localStorage.getItem("userId"),
         isAuthenticated: true,
         isLoading: false,
-        user: action.payload,
+        user: { name: user.name, email: user.email, id: user.id },
       };
 
     case LOGIN_SUCCESS:

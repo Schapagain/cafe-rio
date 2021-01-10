@@ -18,12 +18,7 @@ export const loadUser = () => async (dispatch, getState) => {
   try {
     const userId = getState().auth.userId;
     const endpoint = `${ROOT_ENDPOINT}/api/users/${userId ? userId : ""}`;
-    const res = await axios.get(
-      endpoint,
-      { attributes: ["id", "name", "email"] },
-      tokenConfig(getState)
-    );
-    console.log(res.data);
+    const res = await axios.get(endpoint, tokenConfig(getState));
     dispatch({ type: USER_LOADED, payload: res.data.data[0] });
   } catch (err) {
     if (err)
@@ -45,8 +40,6 @@ export const signUp = (newUser) => async (dispatch) => {
   // File objects can't be stringified,
   //  so we submit the body as FormData instead of JSON
   const body = newUser;
-  console.log(body);
-  console.log("ds");
   const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
 
   try {
@@ -84,7 +77,6 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 
   try {
     const res = await axios.post(endpoint, body, config);
-    console.log(res.data);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
