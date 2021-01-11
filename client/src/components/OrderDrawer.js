@@ -1,8 +1,14 @@
 import React, { Fragment, useState } from "react";
 import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
+import Badge from "@material-ui/core/Badge";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
+
+import OrderCard from "./OrderCard";
 
 const useStyles = makeStyles((theme) => ({
   shoppingCart: {
@@ -14,6 +20,7 @@ const OrderDrawer = () => {
   const classes = useStyles();
 
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [orderCount, setOrderCount] = useState(1);
 
   const toggleDrawer = (open) => {
     setOpenDrawer(open);
@@ -30,7 +37,9 @@ const OrderDrawer = () => {
         disableRipple
         disableFocusRipple
       >
-        <ShoppingCartIcon />
+        <Badge badgeContent={orderCount} color="secondary">
+          <ShoppingCartIcon />
+        </Badge>
       </IconButton>
       <Drawer
         anchor="right"
@@ -39,7 +48,7 @@ const OrderDrawer = () => {
           setOpenDrawer(false);
         }}
       >
-        dd
+        <OrderCard />
       </Drawer>
     </Fragment>
   );
