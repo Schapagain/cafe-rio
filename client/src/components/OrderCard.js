@@ -25,7 +25,7 @@ const OrderCard = () => {
         <Grid container justify="flex-start" alignItems="center">
           <Grid item xs={1}>
             <CardContent>
-              <Typography variant="subtitle2">x2</Typography>
+              <Typography variant="button">x1</Typography>
             </CardContent>
           </Grid>
           <Grid item xs={9}>
