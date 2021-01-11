@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "25em",
+    width: "20em",
     padding: "0.5em",
     margin: "0.25em",
   },
@@ -21,36 +21,38 @@ const useStyles = makeStyles((theme) => ({
 const OrderCard = () => {
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
-      <Grid container justify="flex-start" alignItems="center">
-        <Grid item xs={1}>
-          <CardContent>
-            <Typography variant="subtitle2">x2</Typography>
-          </CardContent>
-        </Grid>
-        <Grid item xs={9}>
-          <Grid container direction="column">
-            <Grid item xs={12}>
-              <CardContent classes={classes.mealNameContainer} id="ddd">
-                <Typography variant="h6">Apple Pie</Typography>
-              </CardContent>
-            </Grid>
-            <Grid item xs={12}>
-              <CardActions>
-                <Link component="button" variant="body2">
-                  Remove
-                </Link>
-              </CardActions>
+    <Grid item xs={12}>
+      <Card className={classes.root}>
+        <Grid container justify="flex-start" alignItems="center">
+          <Grid item xs={1}>
+            <CardContent>
+              <Typography variant="subtitle2">x2</Typography>
+            </CardContent>
+          </Grid>
+          <Grid item xs={9}>
+            <Grid container direction="column">
+              <Grid item xs={12}>
+                <CardContent classes={classes.mealNameContainer} id="ddd">
+                  <Typography variant="h6">Apple Pie</Typography>
+                </CardContent>
+              </Grid>
+              <Grid item xs={12}>
+                <CardActions>
+                  <Link component="button" variant="body2">
+                    Remove
+                  </Link>
+                </CardActions>
+              </Grid>
             </Grid>
           </Grid>
+          <Grid item xs={2}>
+            <CardContent>
+              <Typography variant="body1">$9.19</Typography>
+            </CardContent>{" "}
+          </Grid>
         </Grid>
-        <Grid item xs={2}>
-          <CardContent>
-            <Typography variant="body1">$9.19</Typography>
-          </CardContent>{" "}
-        </Grid>
-      </Grid>
-    </Card>
+      </Card>
+    </Grid>
   );
 };
 
