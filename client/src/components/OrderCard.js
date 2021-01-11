@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "20em",
     padding: "0.5em",
     margin: "0.25em",
   },

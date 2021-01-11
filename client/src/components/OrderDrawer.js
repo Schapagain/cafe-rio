@@ -1,8 +1,10 @@
 import React, { Fragment, useState } from "react";
-import Drawer from "@material-ui/core/Drawer";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
+import Drawer from "@material-ui/core/Drawer";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
 import Badge from "@material-ui/core/Badge";
+import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -10,6 +12,9 @@ import OrderCard from "./OrderCard";
 import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "20em",
+  },
   shoppingCart: {
     color: "white",
   },
@@ -17,9 +22,23 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: "flex-start",
   },
   yourOrder: {
-    paddingLeft: ".5rem",
+    paddingLeft: ".8rem",
     fontSize: "1.5rem",
     fontWeight: "bolder",
+  },
+  checkoutButtonContainer: {
+    justifyContent: "center",
+  },
+  checkoutButton: {
+    width: "100%",
+    textAlign: "left",
+  },
+  checkoutText: {
+    marginRight: "auto",
+    fontSize: "1rem",
+  },
+  subPriceText: {
+    fontSize: "0.8rem",
   },
 }));
 
@@ -55,9 +74,33 @@ const OrderDrawer = () => {
           setOpenDrawer(false);
         }}
       >
-        <Grid container direction="column" alignItems="center" spacing={1}>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          spacing={1}
+          className={classes.root}
+        >
           <Grid item xs={12} className={classes.yourOrderContainer}>
             <Typography className={classes.yourOrder}>Your Order</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={11} className={classes.checkoutButtonContainer}>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.checkoutButton}
+              size="large"
+            >
+              <Typography variant="button" className={classes.checkoutText}>
+                CHECKOUT
+              </Typography>
+              <Typography variant="subtitle2" className={classes.subPriceText}>
+                $45.96
+              </Typography>
+            </Button>
           </Grid>
           <OrderCard />
           <OrderCard />
