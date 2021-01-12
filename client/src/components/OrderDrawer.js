@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
@@ -7,9 +7,11 @@ import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 
 import OrderCard from "./OrderCard";
 import { Typography } from "@material-ui/core";
+import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,11 +44,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OrderDrawer = () => {
+const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
   const classes = useStyles();
 
   const [openDrawer, setOpenDrawer] = useState(false);
   const [orderCount, setOrderCount] = useState(1);
+
+  useEffect(() => {
+    console.log(order);
+    console.log(meals);
+  });
 
   const toggleDrawer = (open) => {
     setOpenDrawer(open);
@@ -102,15 +109,24 @@ const OrderDrawer = () => {
               </Typography>
             </Button>
           </Grid>
+          {}
+          <OrderCard />
+          {/*<OrderCard />
           <OrderCard />
           <OrderCard />
-          <OrderCard />
-          <OrderCard />
-          <OrderCard />
+          <OrderCard /> */}
         </Grid>
       </Drawer>
     </Fragment>
   );
 };
 
-export default OrderDrawer;
+const mapStateToProps = (state) => ({
+  order: state.order.order,
+  meals: state.meal.meals,
+});
+
+export default connect(mapStateToProps, {
+  addMealToOrder,
+  removeMealFromOrder,
+})(OrderDrawer);

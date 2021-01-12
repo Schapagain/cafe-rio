@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MealCard = ({ meal }) => {
+const MealCard = ({ meal, handleOnClick }) => {
   const classes = useStyles();
 
   return (
@@ -97,6 +97,9 @@ const MealCard = ({ meal }) => {
                 color="secondary"
                 size="small"
                 className={classes.orderButton}
+                onClick={() => {
+                  handleOnClick(meal);
+                }}
               >
                 ADD TO ORDER
               </Button>

@@ -31,7 +31,7 @@ const OrderCard = () => {
           <Grid item xs={9}>
             <Grid container direction="column">
               <Grid item xs={12}>
-                <CardContent classes={classes.mealNameContainer} id="ddd">
+                <CardContent className={classes.mealNameContainer} id="ddd">
                   <Typography variant="h6">Apple Pie</Typography>
                 </CardContent>
               </Grid>
@@ -47,7 +47,7 @@ const OrderCard = () => {
           <Grid item xs={2}>
             <CardContent>
               <Typography variant="body1">$9.19</Typography>
-            </CardContent>{" "}
+            </CardContent>
           </Grid>
         </Grid>
       </Card>
