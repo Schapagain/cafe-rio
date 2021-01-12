@@ -58,6 +58,11 @@ const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
     setOpenDrawer(open);
   };
 
+  const totalPrice = order.reduce(
+    (accumulator, currentVal) => accumulator + currentVal.price,
+    0
+  );
+
   return (
     <Fragment>
       <IconButton
@@ -104,7 +109,7 @@ const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
                 CHECKOUT
               </Typography>
               <Typography variant="subtitle2" className={classes.subPriceText}>
-                $45.96
+                ${totalPrice}
               </Typography>
             </Button>
           </Grid>
