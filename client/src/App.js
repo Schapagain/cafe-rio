@@ -8,6 +8,7 @@ import NavBar from "./components/NavBar";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import HomePage from "./components/HomePage";
+import Checkout from "./components/Checkout";
 import store from "./store";
 import { loadUser } from "./actions/authActions";
 import theme from "./components/Theme";
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route path="/signup">
             <SignUp />
+          </Route>
+          <Route path="/checkout">
+            <Checkout />
           </Route>
           {/* <PrivateRoute path="/">
             <HomePage />

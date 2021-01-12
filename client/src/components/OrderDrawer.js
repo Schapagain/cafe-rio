@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
@@ -15,7 +16,7 @@ import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "20em",
+    width: "25em",
   },
   shoppingCart: {
     color: "white",
@@ -101,6 +102,8 @@ const OrderDrawer = ({ order, meals, removeMealFromOrder }) => {
               color="secondary"
               className={classes.checkoutButton}
               size="large"
+              component={Link}
+              to="/checkout"
             >
               <Typography variant="button" className={classes.checkoutText}>
                 CHECKOUT
