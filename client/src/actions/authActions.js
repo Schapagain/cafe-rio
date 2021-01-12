@@ -40,8 +40,6 @@ export const signUp = (newUser) => async (dispatch) => {
   // File objects can't be stringified,
   //  so we submit the body as FormData instead of JSON
   const body = newUser;
-  console.log(body);
-  console.log("ds");
   const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
 
   try {
@@ -74,12 +72,11 @@ export const signIn = ({ email, password }) => async (dispatch) => {
     },
   };
 
-  const endpoint = `${ROOT_ENDPOINT}/api/auth/`;
+  const endpoint = `${ROOT_ENDPOINT}/api/auth`;
   const body = JSON.stringify({ email, password });
 
   try {
     const res = await axios.post(endpoint, body, config);
-
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,

@@ -64,7 +64,6 @@ const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
   const [msg, setMsg] = useState("");
   useEffect(() => {
     if (error.id === "LOGIN_FAIL") {
-      console.log(error.msg);
       setMsg(error.msg);
     }
   }, [error]);

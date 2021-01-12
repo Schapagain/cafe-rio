@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   media: {
-    height: "100%",
-    // paddingTop: "56.25%",
+    // height: "15rem",
+    paddingTop: "56.25%",
   },
   content: {
     padding: 0,
@@ -53,15 +53,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MealCard = ({ meal }) => {
+const MealCard = ({ meal, handleOnClick }) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} id="mealCard">
       <Grid container justify="center" alignItems="center">
         <Grid item xs={5} sm={12}>
           <CardMedia
-            component="img"
+            // component="img"
             alt={meal.name}
             image={`${ROOT_ENDPOINT}/api/meals/${meal.id}/picture`}
             className={classes.media}
@@ -97,6 +97,9 @@ const MealCard = ({ meal }) => {
                 color="secondary"
                 size="small"
                 className={classes.orderButton}
+                onClick={() => {
+                  handleOnClick(meal);
+                }}
               >
                 ADD TO ORDER
               </Button>

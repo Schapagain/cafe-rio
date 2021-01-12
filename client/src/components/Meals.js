@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 
 import MealCard from "./MealCard";
 import { getMeals } from "../actions/mealActions";
+import { addMealToOrder } from "../actions/orderActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Meals = ({ meal, getMeals }) => {
+const Meals = ({ meal, getMeals, addMealToOrder }) => {
   // load meals
   // eslint-disable-next-line
   useEffect(
@@ -39,7 +40,12 @@ const Meals = ({ meal, getMeals }) => {
     >
       {meals.map((meal) => (
         <Grid item key={meal.id} xs={12} sm={4}>
-          <MealCard meal={meal} />
+          <MealCard
+            meal={meal}
+            handleOnClick={(meal) => {
+              addMealToOrder(meal);
+            }}
+          />
         </Grid>
       ))}
     </Grid>
@@ -54,6 +60,7 @@ Meals.propTypes = {
 
 const mapStateToProps = (state) => ({
   meal: state.meal,
+  order: state.order.order,
 });
 
-export default connect(mapStateToProps, { getMeals })(Meals);
+export default connect(mapStateToProps, { getMeals, addMealToOrder })(Meals);

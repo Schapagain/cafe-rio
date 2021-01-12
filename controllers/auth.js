@@ -1,5 +1,7 @@
 
 const { checkUserPresence, makeUser, getUser } = require("./users");
+const { CUSTOMER, ADMIN } = require("./roles");
+const { makeItem } = require("./utils");
 const njwt = require('njwt');
 require('dotenv').config();
 const {
@@ -8,9 +10,6 @@ const {
   NotAuthorizedError,
   NotActiveError,
 } = require("./errors");
-const { CUSTOMER, ADMIN } = require("./roles");
-const { makeItem } = require("./utils");
-
 const signingKey = process.env.SECRET_KEY;
 
 /**
@@ -54,11 +53,14 @@ async function authenticate(user) {
     if (!user.password) throw new ValidationError("password");
 
     const givenPassword = user.password;
-    user = await getUser({query:{email:user.email},attributes:["id","password","name","email"]});
-    let isMatch = await user.validatePassword(givenPassword)
-    
+    user = await getUser({
+      query: { email: user.email },
+      attributes: ["id", "password", "name", "email"],
+    });
+    let isMatch = await user.validatePassword(givenPassword);
+
     if (!isMatch) throw new NotAuthorizedError();
-    if (!user.active) throw new NotActiveError('account')
+    if (!user.active) throw new NotActiveError("account");
 
     return {
       token: getAuthToken(user.id, CUSTOMER),
@@ -73,17 +75,19 @@ async function authenticate(user) {
  * Activate the associated user account given valid activation code
  * @param {String} activationCode
  */
-async function activateAccount(activationCode){
-    try{
-        if (!activationCode) throw new Error();
-        let user = await getUser({query:{activationCode},attributes:["_id","activationCode"]});
-        if (!user) throw new Error();
-        user.activationCode = null;
-        user.save();
-
-    }catch(err){
-        throw new ValidationError('activation code','code has expired');
-    }
+async function activateAccount(activationCode) {
+  try {
+    if (!activationCode) throw new Error();
+    let user = await getUser({
+      query: { activationCode },
+      attributes: ["_id", "activationCode"],
+    });
+    if (!user) throw new Error();
+    user.activationCode = null;
+    user.save();
+  } catch (err) {
+    throw new ValidationError("activation code", "code has expired");
+  }
 }
 
 /**
