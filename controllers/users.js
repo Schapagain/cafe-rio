@@ -175,4 +175,12 @@ async function getIdCard(id) {
   }
 }
 
-module.exports = { signupUser, updateUser, deleteUser, getUser, getUsers, checkUserPresence, getIdCard };
+module.exports = { 
+  signupUser, 
+  updateUser, 
+  deleteUser, 
+  getUser, 
+  getUsers, 
+  checkUserPresence, 
+  getIdCard 
+};

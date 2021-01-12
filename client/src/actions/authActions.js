@@ -1,5 +1,6 @@
 import axios from "axios";
 import { returnErrors } from "./errorActions";
+import { ROOT_ENDPOINT } from "../constants";
 import {
   USER_LOADED,
   USER_LOADING,
@@ -14,13 +15,14 @@ import {
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
-
   try {
-    const res = axios.get("/api/auth/user", tokenConfig(getState));
-    dispatch({ type: USER_LOADED, payload: res });
+    const userId = getState().auth.userId;
+    const endpoint = `${ROOT_ENDPOINT}/api/users/${userId ? userId : ""}`;
+    const res = await axios.get(endpoint, tokenConfig(getState));
+    dispatch({ type: USER_LOADED, payload: res.data.data[0] });
   } catch (err) {
-    if (err.response)
-      dispatch(returnErrors(err.response.error, err.response.status));
+    if (err)
+      dispatch(returnErrors(err.response.data.error, err.response.status));
     dispatch({ type: AUTH_ERROR });
   }
 };
@@ -30,20 +32,17 @@ export const signUp = (newUser) => async (dispatch) => {
   // set content-type header
   const config = {
     headers: {
-      "Content-type": "application/json",
+      "Content-type": "multipart/form-data",
     },
   };
 
   //Request body
   // File objects can't be stringified,
   //  so we submit the body as FormData instead of JSON
-  // const body = JSON.stringify(newUser);
   const body = newUser;
-
-  const endpoint =
-    process.env.NODE_ENV === "production"
-      ? "https://cafe-rio.herokuapp.com/api/users/signup"
-      : "http://localhost:5000/api/users/signup";
+  console.log(body);
+  console.log("ds");
+  const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
 
   try {
     const res = await axios.post(endpoint, body, config);
@@ -52,9 +51,7 @@ export const signUp = (newUser) => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
-    // console.log("error", err.response);
-    if (err.response) {
-      console.log("error", err);
+    if (err) {
       dispatch(
         returnErrors(
           err.response.data.error,
@@ -63,6 +60,7 @@ export const signUp = (newUser) => async (dispatch) => {
         )
       );
     }
+
     dispatch({ type: REGISTER_FAIL });
   }
 };
@@ -76,23 +74,18 @@ export const signIn = ({ email, password }) => async (dispatch) => {
     },
   };
 
-  const endpoint =
-    process.env.NODE_ENV === "production"
-      ? "/api/users"
-      : "http://localhost:5000/api/auth";
-
+  const endpoint = `${ROOT_ENDPOINT}/api/auth/`;
   const body = JSON.stringify({ email, password });
 
   try {
     const res = await axios.post(endpoint, body, config);
+
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
   } catch (err) {
-    // console.log("error", err.response);
     if (err.response) {
-      console.log("error", err);
       dispatch(
         returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
       );

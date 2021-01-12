@@ -1,8 +1,8 @@
-const axios = require('axios');
-const { getError } = require('./errors');
-require('dotenv').config();
-const nodemailer = require('nodemailer');
-const { google } = require('googleapis');
+const axios = require("axios");
+const { getError } = require("./errors");
+require("dotenv").config();
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
 /**
@@ -20,10 +20,10 @@ async function getGoogleMailTransporter() {
     clientId,
     clientSecret,
     "https://developers.google.com/oauthplayground"
-    )
-  
+  );
+
   authClient.setCredentials({
-    refresh_token: refreshToken
+    refresh_token: refreshToken,
   });
   let accessToken,transporter;
   try{
@@ -84,4 +84,4 @@ function getEmailBody(senderEmail,receiverEmail,receiverName,activationLink) {
   return mailBody;
 }
 
-module.exports = { sendActivationEmail }
+module.exports = { sendActivationEmail };

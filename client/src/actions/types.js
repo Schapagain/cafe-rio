@@ -1,3 +1,4 @@
+//USER ACTION TYPES
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
@@ -6,5 +7,18 @@ export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
+
+// MEAL ACTION TYPES
+export const ADD_MEAL = "ADD_MEAL";
+export const GET_MEALS = "GET_MEALS";
+export const GET_MEAL_INFO = "GET_MEAL_INFO";
+export const DELETE_MEAL = "DELETE_MEAL";
+export const ADD_MEAL_FAIL = "ADD_MEAL_FAIL";
+export const GET_MEALS_FAIL = "GET_MEALS_FAIL";
+export const DELETE_MEAL_FAIL = "DELETE_MEAL_FAIL";
+export const GET_MEAL_INFO_FAIL = "GET_MEAL_INFO_FAIL";
+export const MEALS_LOADING = "MEALS_LOADING";
+
+// ERROR ACTION TYPES
 export const GET_ERRORS = "GET_ERRORS";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";

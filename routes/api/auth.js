@@ -2,8 +2,16 @@ const express = require("express");
 const router = express.Router();
 
 const formParser = require("../../middlewares/formParser");
-const { authenticate, activateAccount, authenticateAdmin } = require('../../controllers/auth');
-const appAddress = 'https://cafe-rio.netlify.app/activate'
+const {
+  authenticate,
+  activateAccount,
+  authenticateAdmin,
+} = require("../../controllers/auth");
+const rootEndpoint =
+  process.env.NODE_ENV === "production"
+    ? "https://cafe-rio.netlify.app"
+    : "http://localhost:3000";
+const appAddress = `${rootEndpoint}/activate`;
 
 /**
  * Route to active account
@@ -15,7 +23,6 @@ const appAddress = 'https://cafe-rio.netlify.app/activate'
  * @param   {callback} middleware - Handle HTTP response
  */
 router.get("/activate/:activationCode", async (req, res) => {
-
   try {
     await activateAccount(req.params.activationCode);
     res.redirect(appAddress);
@@ -35,7 +42,6 @@ router.get("/activate/:activationCode", async (req, res) => {
  * @param   {callback} middleware - Handle HTTP response
  */
 router.post("/admin", formParser, async (req, res) => {
-
   try {
     const result = await authenticateAdmin(req.body);
     res.status(200).json(result);
@@ -55,7 +61,6 @@ router.post("/admin", formParser, async (req, res) => {
  * @param   {callback} middleware - Handle HTTP response
  */
 router.post("/", formParser, async (req, res) => {
-
   try {
     const result = await authenticate(req.body);
     res.status(200).json(result);

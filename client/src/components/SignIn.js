@@ -63,8 +63,10 @@ const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
   // error msg state
   const [msg, setMsg] = useState("");
   useEffect(() => {
-    if (error.id === "LOGIN_FAIL") setMsg(error.msg);
-    console.log("error message", error);
+    if (error.id === "LOGIN_FAIL") {
+      console.log(error.msg);
+      setMsg(error.msg);
+    }
   }, [error]);
 
   // redirect if authenticated
@@ -87,7 +89,7 @@ const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.container}>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
