@@ -10,7 +10,7 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
-import OrderCard from "./OrderCard";
+import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
 
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OrderDrawer = ({ order, meals, removeMealFromOrder }) => {
+const Cart = ({ order, meals, removeMealFromOrder }) => {
   const classes = useStyles();
 
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -114,7 +114,7 @@ const OrderDrawer = ({ order, meals, removeMealFromOrder }) => {
             </Button>
           </Grid>
           {order.map((meal, index) => (
-            <OrderCard
+            <CartSingleMeal
               key={index}
               meal={meal}
               handleRemove={() => {
@@ -136,4 +136,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   addMealToOrder,
   removeMealFromOrder,
-})(OrderDrawer);
+})(Cart);

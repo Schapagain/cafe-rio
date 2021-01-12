@@ -8,7 +8,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
-import OrderDrawer from "./OrderDrawer";
+import Cart from "./Cart";
 
 // setting up how the AppBar behaves when scrolling
 function ElevationScroll(props) {
@@ -97,7 +97,7 @@ const NavBar = ({ isAuthenticated, user }) => {
           <Toolbar>
             <Typography variant="h6">Cafe Rio</Typography>
             {isAuthenticated ? <AuthLinks /> : <UnauthLinks />}
-            <OrderDrawer />
+            <Cart />
             {/* <Button>Logout</Button> */}
           </Toolbar>
         </AppBar>

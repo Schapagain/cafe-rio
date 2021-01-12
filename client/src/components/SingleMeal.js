@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MealCard = ({ meal, handleOnClick }) => {
+const SingleMeal = ({ meal, handleOnClick }) => {
   const classes = useStyles();
 
   return (
@@ -111,4 +111,4 @@ const MealCard = ({ meal, handleOnClick }) => {
   );
 };
 
-export default MealCard;
+export default SingleMeal;
