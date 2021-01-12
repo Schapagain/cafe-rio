@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
@@ -44,19 +44,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
+const OrderDrawer = ({ order, meals, removeMealFromOrder }) => {
   const classes = useStyles();
 
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [orderCount, setOrderCount] = useState(1);
+  // const [mealSet, setMealSet] =
+  // const [orderCount, setOrderCount] = useState(1);
 
-  useEffect(() => {
-    console.log(order);
-  });
-
-  const toggleDrawer = (open) => {
-    setOpenDrawer(open);
-  };
+  // const toggleDrawer = (open) => {
+  //   setOpenDrawer(open);
+  // };
 
   const totalPrice = order.reduce(
     (accumulator, currentVal) => accumulator + currentVal.price,
@@ -64,7 +61,7 @@ const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
   );
 
   return (
-    <Fragment>
+    <>
       <IconButton
         className={classes.shoppingCart}
         aria-label="open shopping cart"
@@ -74,7 +71,7 @@ const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
         disableRipple
         disableFocusRipple
       >
-        <Badge badgeContent={orderCount} color="secondary">
+        <Badge badgeContent={order.length} color="secondary">
           <ShoppingCartIcon />
         </Badge>
       </IconButton>
@@ -113,17 +110,18 @@ const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
               </Typography>
             </Button>
           </Grid>
-          {order.map((meal) => (
-            <OrderCard meal={meal} />
+          {order.map((meal, index) => (
+            <OrderCard
+              key={index}
+              meal={meal}
+              handleRemove={() => {
+                removeMealFromOrder(index);
+              }}
+            />
           ))}
-          {/* <OrderCard /> */}
-          {/*<OrderCard />
-          <OrderCard />
-          <OrderCard />
-          <OrderCard /> */}
         </Grid>
       </Drawer>
-    </Fragment>
+    </>
   );
 };
 

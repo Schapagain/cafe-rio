@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OrderCard = ({ meal }) => {
+const OrderCard = ({ meal, handleRemove }) => {
   const classes = useStyles();
 
   return (
@@ -43,7 +43,11 @@ const OrderCard = ({ meal }) => {
               </Grid>
               <Grid item xs={12}>
                 <CardActions>
-                  <Link component="button" variant="body2">
+                  <Link
+                    component="button"
+                    variant="body2"
+                    onClick={handleRemove}
+                  >
                     Remove
                   </Link>
                 </CardActions>
