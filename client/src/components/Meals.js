@@ -44,7 +44,6 @@ const Meals = ({ meal, getMeals, addMealToOrder }) => {
             meal={meal}
             handleOnClick={(meal) => {
               addMealToOrder(meal);
-              console.log("after add", meal);
             }}
           />
         </Grid>

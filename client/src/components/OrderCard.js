@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import CardActions from "@material-ui/core/CardActions";
@@ -15,10 +15,18 @@ const useStyles = makeStyles((theme) => ({
   mealNameContainer: {
     padding: 0,
   },
+  mealName: {
+    fontSize: "1rem",
+  },
 }));
 
-const OrderCard = () => {
+const OrderCard = ({ meal }) => {
   const classes = useStyles();
+
+  useEffect(() => {
+    console.log(meal);
+  });
+
   return (
     <Grid item xs={12}>
       <Card className={classes.root}>
@@ -31,8 +39,10 @@ const OrderCard = () => {
           <Grid item xs={9}>
             <Grid container direction="column">
               <Grid item xs={12}>
-                <CardContent className={classes.mealNameContainer} id="ddd">
-                  <Typography variant="h6">Apple Pie</Typography>
+                <CardContent className={classes.mealNameContainer}>
+                  <Typography variant="h6" className={classes.mealName}>
+                    {meal.name}
+                  </Typography>
                 </CardContent>
               </Grid>
               <Grid item xs={12}>
@@ -46,7 +56,7 @@ const OrderCard = () => {
           </Grid>
           <Grid item xs={2}>
             <CardContent>
-              <Typography variant="body1">$9.19</Typography>
+              <Typography variant="body1">${meal.price}</Typography>
             </CardContent>
           </Grid>
         </Grid>

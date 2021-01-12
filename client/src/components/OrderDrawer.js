@@ -52,7 +52,6 @@ const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
 
   useEffect(() => {
     console.log(order);
-    console.log(meals);
   });
 
   const toggleDrawer = (open) => {
@@ -109,8 +108,10 @@ const OrderDrawer = ({ order, meals, addMealToOrder, removeMealFromOrder }) => {
               </Typography>
             </Button>
           </Grid>
-          {}
-          <OrderCard />
+          {order.map((meal) => (
+            <OrderCard meal={meal} />
+          ))}
+          {/* <OrderCard /> */}
           {/*<OrderCard />
           <OrderCard />
           <OrderCard />

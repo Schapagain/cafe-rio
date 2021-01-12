@@ -11,8 +11,6 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_MEAL_TO_ORDER:
     case REMOVE_MEAL_FROM_ORDER:
-      console.log("payload");
-      console.log(action.payload);
       localStorage.setItem("order", JSON.stringify(action.payload));
       return {
         ...initialState,
