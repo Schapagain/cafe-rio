@@ -6,21 +6,34 @@
 
 <br/>
 
-### Environment Variables
-> Should remove this after we're done with MVP development
-```
-DBNAME=cafe_rio
-DBPASSWORD=Ambrosia77%23
+### Pre-deployment requirements
+* Mongodb - Obtain database name, and password
+    - Either install it locally or signup for MongoDB Atlas
+* Gmail - Signup for an account, create an application, and obtain:
+    - client id
+    - client secret
+    - refresh token
+* Stripe -
+* Paypal - 
 
-SECRET_KEY=39agk215mknfa3kj2749k3
-
-EMAILUSER=activation.cafe.rio@gmail.com
-CLIENTID=474103696367-1h33cjcs67mjl1k7tf9bjm5m4je9rvab.apps.googleusercontent.com
-CLIENTSECRET=bUDnXAmN4b6q_hWm9peblBDF
-REFRESHTOKEN=1//048xOaMyYmH8pCgYIARAAGAQSNwF-L9IrJI9K-X8JPfP_Xz1gtYPIffxsxO0u18AmrTJcmS1UqPFU6HtBvPh2vjL2yMzQBguGW2U
-
-ADMINPASSWORD=admin123
-```
+### Deployment instructions
+* clone repository: ```https://github.com/Schapagain/cafe-rio.git```
+* Install server dependencies: ```npm install``` at project root
+* Install client dependencies: ```npm run client-install``` at project root
+* Setup environment variables:
+    - Used to connect to MongoDB
+        - ```DBNAME```
+        - ```DBPASSWORD```
+    - Used to send emails via gmail server
+        - ```EMAILUSER```
+        - ```CLIENTID```
+        - ```CLIENTSECRET```
+        - ```REFRESHTOKEN```
+    - Used to issue JWTs
+        - ```SECRET_KEY```
+* Start the application: ```npm run dev``` at project root
+<br/>
+<br/>
 
 ### Responses and Error Codes
 All responses are JSON objects. In cases of failure, an 'error' property shall always exist with an appropriate error message. The following are all possible http response types:

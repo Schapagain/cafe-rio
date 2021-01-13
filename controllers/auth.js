@@ -1,15 +1,16 @@
+
+const { checkUserPresence, makeUser, getUser } = require("./users");
+const { CUSTOMER, ADMIN } = require("./roles");
+const { makeItem } = require("./utils");
+const njwt = require('njwt');
+require('dotenv').config();
 const {
   ValidationError,
   getError,
   NotAuthorizedError,
   NotActiveError,
 } = require("./errors");
-const { checkUserPresence, makeUser, getUser } = require("./users");
-const njwt = require("njwt");
-require("dotenv").config();
 const signingKey = process.env.SECRET_KEY;
-const { CUSTOMER, ADMIN } = require("./roles");
-const { makeItem } = require("./utils");
 
 /**
  * Generate a JWT for the given id

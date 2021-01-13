@@ -73,28 +73,27 @@ router.post("/signup", formParser, async (req, res) => {
  * @param {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.get(
-  "/:id",
-  // auth([ADMIN, CUSTOMER]),
-  async (req, res) => {
-    try {
-      const attributes = [
-        "id",
-        "name",
-        "email",
-        "phone",
-        "organization",
-        "employeeId",
-      ];
-      let result = await getUsers({ query: { id: req.params.id }, attributes });
-      res.status(200).json(result);
-    } catch (err) {
-      return res.status(err.httpCode || 500).json({
-        error: { msg: err.message },
-      });
-    }
+router.get("/:id", auth([ADMIN,CUSTOMER]), async (req, res) => {
+  try{
+    const attributes = [
+      "id",
+      "name",
+      "email",
+      "phone",
+      "organization",
+      "employeeId"
+    ];
+    let result = await getUsers({
+      query:{ id: req.params.id},
+      attributes,
+    });
+    res.status(200).json(result);
+  } catch (err) {
+    return res.status(err.httpCode || 500).json({
+      error: { msg: err.message },
+    });
   }
-);
+});
 
 /**
  * Route to fetch user idCard
