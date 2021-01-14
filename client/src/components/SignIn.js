@@ -89,7 +89,7 @@ const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
 
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

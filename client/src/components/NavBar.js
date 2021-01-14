@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
-import { Link as RouterLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Cart from "./Cart";
 
 // setting up how the AppBar behaves when scrolling
@@ -80,7 +80,7 @@ const NavBar = ({ isAuthenticated, user }) => {
   const UnauthLinks = () => (
     <Button
       //   color="secondary"
-      component={RouterLink}
+      component={Link}
       to="/login"
       className={classes.button}
       size="medium"
@@ -95,7 +95,16 @@ const NavBar = ({ isAuthenticated, user }) => {
       <ElevationScroll>
         <AppBar>
           <Toolbar>
-            <Typography variant="h6">Cafe Rio</Typography>
+            <Button
+              component={Link}
+              to="/"
+              color="inherit"
+              disableFocusRipple
+              disableTouchRipple
+              disableRipple
+            >
+              <Typography variant="h6">Cafe Rio</Typography>
+            </Button>
             {isAuthenticated ? <AuthLinks /> : <UnauthLinks />}
             <Cart />
             {/* <Button>Logout</Button> */}

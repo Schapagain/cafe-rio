@@ -102,6 +102,9 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
               color="secondary"
               className={classes.checkoutButton}
               size="large"
+              onClick={() => {
+                setOpenDrawer(false);
+              }}
               component={Link}
               to="/checkout"
             >

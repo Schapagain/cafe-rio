@@ -3,7 +3,15 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  buttons: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  button: {
+    margin: theme.spacing(3, 0, 0, 1),
+  },
+}));
 
 const CheckoutButtons = ({
   isFinalStep,
@@ -12,31 +20,24 @@ const CheckoutButtons = ({
   activeStep,
 }) => {
   const classes = useStyles();
+
   return (
-    <Grid
-      container
-      spacing={0}
-      justify="flex-end"
-      className={classes.buttonsContainer}
-    >
+    <div className={classes.buttons}>
       {activeStep > 0 && (
-        <Grid item xs={2}>
-          <Button onClick={handleBack} className={classes.button}>
-            Back
-          </Button>
-        </Grid>
-      )}
-      <Grid item xs={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleNext}
-          className={classes.button}
-        >
-          {isFinalStep ? "Place Order" : "Next"}
+        <Button onClick={handleBack} className={classes.button}>
+          Back
         </Button>
-      </Grid>
-    </Grid>
+      )}
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleNext}
+        className={classes.button}
+      >
+        {isFinalStep ? "Place Order" : "Next"}
+      </Button>
+    </div>
   );
 };
 
