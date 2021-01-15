@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OrderCard = ({ meal, handleRemove }) => {
+const CartSingleMeal = ({ meal, handleRemove }) => {
   const classes = useStyles();
 
   return (
@@ -65,4 +65,4 @@ const OrderCard = ({ meal, handleRemove }) => {
   );
 };
 
-export default OrderCard;
+export default CartSingleMeal;

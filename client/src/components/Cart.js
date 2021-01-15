@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
@@ -9,13 +10,13 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
-import OrderCard from "./OrderCard";
+import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "20em",
+    width: "25em",
   },
   shoppingCart: {
     color: "white",
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OrderDrawer = ({ order, meals, removeMealFromOrder }) => {
+const Cart = ({ order, meals, removeMealFromOrder }) => {
   const classes = useStyles();
 
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -101,6 +102,8 @@ const OrderDrawer = ({ order, meals, removeMealFromOrder }) => {
               color="secondary"
               className={classes.checkoutButton}
               size="large"
+              component={Link}
+              to="/checkout"
             >
               <Typography variant="button" className={classes.checkoutText}>
                 CHECKOUT
@@ -111,7 +114,7 @@ const OrderDrawer = ({ order, meals, removeMealFromOrder }) => {
             </Button>
           </Grid>
           {order.map((meal, index) => (
-            <OrderCard
+            <CartSingleMeal
               key={index}
               meal={meal}
               handleRemove={() => {
@@ -133,4 +136,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   addMealToOrder,
   removeMealFromOrder,
-})(OrderDrawer);
+})(Cart);

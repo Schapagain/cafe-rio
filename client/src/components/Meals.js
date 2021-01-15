@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import MealCard from "./MealCard";
+import SingleMeal from "./SingleMeal";
 import { getMeals } from "../actions/mealActions";
 import { addMealToOrder } from "../actions/orderActions";
 
@@ -40,7 +40,7 @@ const Meals = ({ meal, getMeals, addMealToOrder }) => {
     >
       {meals.map((meal) => (
         <Grid item key={meal.id} xs={12} sm={4}>
-          <MealCard
+          <SingleMeal
             meal={meal}
             handleOnClick={(meal) => {
               addMealToOrder(meal);
