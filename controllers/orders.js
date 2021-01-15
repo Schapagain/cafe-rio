@@ -1,8 +1,10 @@
-const { Order } = require("../database/models");
-const { isValidMongooseId } = require('../database');
+const { Order, Meal } = require("../database/models");
+const { isValidMongooseId, queryDatabase } = require('../database');
 const { getError, ValidationError, NotFoundError } = require("./errors");
 const { trimPrematureIds, makeItem } = require('./utils');
 const { saveFiles, deleteFiles, getFilePath } = require("./files");
+const { makePayment } = require("./payments");
+const meal = require("../database/models/meal");
 
 /**
  * Add a new order to the database
@@ -14,7 +16,14 @@ async function addOrder(order) {
         if (!order) throw new ValidationError('order');
         order = trimPrematureIds(order);
         newOrder = new Order(order);
-        order = await (await newOrder.save()).populate('user');
+        await newOrder.validate();
+
+        const amount = await calculateTotalAmount(newOrder.meals);
+        console.log('meals:',order.meals);
+        console.log('total:',amount);
+        const payment = await makePayment({amount})
+        console.log(payment)
+        // order = await (await newOrder.save());
         
         return {order};
     }catch(err) {
@@ -23,16 +32,24 @@ async function addOrder(order) {
 }
 
 /**
+ * Calculate gross total price for the meals with given ids
+ * @param {String[]} mealIds 
+ */
+async function calculateTotalAmount(mealIds) {
+    if (!mealIds || !mealIds.length) throw new ValidationError('meals');
+    const meals = await Meal.find({id:mealIds});
+    return meals.reduce((s,meal) => s + meal.price,0);
+}
+
+/**
  * Check if the order with the given parameters exists in the database
  * @param {object} query
  */
-async function checkOrderPresence(query) {
+async function checkOrderPresence({query,attributes=["id"]}) {
     try{
-        if (!query || (query.id && !isValidMongooseId(query.id))){
-        throw new NotFoundError('order');
-        }
-        const exists = await Order.find(query).populate('user').populate('meals') ;
-        if (!exists) throw new NotFoundError('order');
+        
+        const exists = await queryDatabase({model:Order,query,attributes});
+        if (!exists || !exists.length) throw new NotFoundError('order');
         return exists
     }catch(err){
         throw await getError(err);
@@ -43,42 +60,14 @@ async function checkOrderPresence(query) {
  * Get orders info from database
  * @param {String} id
  */
-async function getOrders({id=null,attributes=['id','user','meals','delivered'],queries={}}) {
+async function getOrders({attributes=['id','user','meals','delivered'],query={}}) {
     try{
-        let orders =[];
-        if (!id) {
-            orders = 
-            await 
-            Order
-            .find(queries)
-            .populate('meals')
-            .populate('user');
-        }else {
-            orders = await checkOrderPresence({id})
-        }
-        return {count:orders.length,data:cleanOrders(orders).map(order=>makeItem(order,attributes))};
+        orders = await checkOrderPresence({query,attributes})
+        return {count:orders.length,data:orders.map(order=>makeItem(order,attributes))};
     }catch(err) {
         throw await getError(err);
     }
     
-}
-
-/**
- * Remove extraneous keys from order, user, and each meals
- * @param {object[]} orders
- */
-function cleanOrders(orders) {
-    if (!orders) return [];
-    return orders.map(order => {
-        order = order.toObject();
-        if (order.user) {
-            order.user = makeItem(order.user,['id','name','phone','email']);
-        }
-        if (order.meals) {
-            order.meals = order.meals.map(meal => makeItem(meal,['id','name','price','category']))
-        }
-        return order;
-    })
 }
 
 /**
@@ -88,7 +77,7 @@ function cleanOrders(orders) {
  */
 async function deleteOrder(id) {
     try {
-      const order = await checkOrderPresence({id});
+      const order = await checkOrderPresence({query:{id}});
       await Order.deleteOne({id});
       deleteFiles(order.picture);
       return {id};
@@ -97,4 +86,4 @@ async function deleteOrder(id) {
     }
   }
 
-module.exports = { getOrders, addOrder, deleteOrder}
+module.exports = { getOrders, addOrder, deleteOrder }
