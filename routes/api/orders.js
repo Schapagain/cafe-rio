@@ -66,7 +66,7 @@ router.post("/", auth([ADMIN,CUSTOMER]), async (req, res) => {
  */
 router.get("/:id", async (req, res) => {
   try{
-    let result = await getOrders({id:req.params.id});
+    let result = await getOrders({query:{id:req.params.id}});
     res.status(200).json(result);
   }catch(err){
     return res.status(err.httpCode || 500).json({
