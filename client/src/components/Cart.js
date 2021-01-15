@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { useStripe } from "@stripe/react-stripe-js";
 
 import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
@@ -56,6 +57,29 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
   //   setOpenDrawer(open);
   // };
 
+  const stripe = useStripe();
+  const handleCheckout = async (event) => {
+    setOpenDrawer(false);
+
+    // Call your backend to create the Checkout Session
+    const response = await fetch("/create-checkout-session", {
+      method: "POST",
+    });
+
+    const session = await response.json();
+
+    // When the customer clicks on the button, redirect them to Checkout.
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      // If `redirectToCheckout` fails due to a browser or network
+      // error, display the localized error message to your customer
+      // using `result.error.message`.
+    }
+  };
+
   const totalPrice = order.reduce(
     (accumulator, currentVal) => accumulator + currentVal.price,
     0
@@ -102,9 +126,7 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
               color="secondary"
               className={classes.checkoutButton}
               size="large"
-              onClick={() => {
-                setOpenDrawer(false);
-              }}
+              onClick={handleCheckout}
               component={Link}
               to="/checkout"
             >

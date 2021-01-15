@@ -3,6 +3,10 @@ import "./App.css";
 import { Provider } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import NavBar from "./components/NavBar";
 import SignUp from "./components/SignUp";
@@ -13,32 +17,40 @@ import store from "./store";
 import { loadUser } from "./actions/authActions";
 import theme from "./components/Theme";
 
+const stripePromise = loadStripe(
+  "pk_test_51I9vjxG8iwDJeXMuTa3a3eWZaDQmLnQHxu1Nz2hdvYqrkW1rInfWsZeoqMaXIx4aiI2s8SRYNoyDUZRpudKGyT6600UGYFL0MR"
+);
+
 function App() {
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <NavBar />
-        <Switch>
-          <Route path="/login">
-            <SignIn />
-          </Route>
-          <Route path="/signup">
-            <SignUp />
-          </Route>
-          <Route path="/checkout">
-            <Checkout />
-          </Route>
-          {/* <PrivateRoute path="/">
+      <Elements stripe={stripePromise}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <ThemeProvider theme={theme}>
+            <NavBar />
+            <Switch>
+              <Route path="/login">
+                <SignIn />
+              </Route>
+              <Route path="/signup">
+                <SignUp />
+              </Route>
+              <Route path="/checkout">
+                <Checkout />
+              </Route>
+              {/* <PrivateRoute path="/">
             <HomePage />
           </PrivateRoute> */}
-          <Route path="/">
-            <HomePage />
-          </Route>
-        </Switch>
-      </ThemeProvider>
+              <Route path="/">
+                <HomePage />
+              </Route>
+            </Switch>
+          </ThemeProvider>
+        </MuiPickersUtilsProvider>
+      </Elements>
     </Provider>
   );
 }
