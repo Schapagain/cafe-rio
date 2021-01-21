@@ -71,7 +71,7 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
 | /signup | Signup a user | POST | Public | {name, email, phone, password, organization, employeeId, idCard } | { user } | idCard must be an image file <br/> Activation link sent via email |
-| / | Fetch all users | GET | Admin | {attributes} | { count, data : [ User ] } | attributes is a list of desired fields |
+| / | Fetch all users | GET | Admin | {attributes} | { count, data : [ User ] } | ```attributes``` is a list of desired fields |
 | /:id | Fetch user info | GET | Private | {attributes} | { count, data : [ User ] } | |
 | /:id/id_card | Fetch user id card | GET | Private |  | image file | |
 | /:id | Update user info | PATCH | Private | {name, email, phone, password, organization, employeeId, idcard} | {user } | idCard must be an image file |
@@ -97,8 +97,8 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
-| /crate_intent | Create a payment intent | POST | Public | { user*, meals* } | { secret, amount } | user is id of the user, and meals is an array of meal ids |
-| / | Add a new order | POST | Public | {user*, meals*, payment*, amount*, type(dinein)} | { order } | user is id of the user<br/>meals is an array of meal ids<br/>payment is payment method id|
+| /create_intent | Create a payment intent | POST | Public | { user*, meals* } | { secret, amount } | ```user``` is id of the user, and ```meals``` is an array of meal ids |
+| / | Add a new order | POST | Public | {user*, meals*, payment*, amount*, type(dinein)} | { order } | ```user``` is id of the user<br/>```meals``` is an array of meal ids<br/>```payment``` is payment method id|
 | / | Fetch all orders | GET | Public |  | { count, data : [ Meal ] } |  |
 | /:id | Fetch order info | GET | Public |  | { count, data : [ Meal ] } | |
 | /:id | Update order info | PATCH | Public | {name, price, category, available} | { order } | |
