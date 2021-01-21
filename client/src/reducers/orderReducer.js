@@ -1,4 +1,8 @@
-import { ADD_MEAL_TO_ORDER, REMOVE_MEAL_FROM_ORDER } from "../actions/types";
+import {
+  ADD_ORDER,
+  ADD_MEAL_TO_ORDER,
+  REMOVE_MEAL_FROM_ORDER,
+} from "../actions/types";
 
 const initialState = {
   order: localStorage.getItem("order")
@@ -9,6 +13,8 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    // case ADD_ORDER:
+    //   return
     case ADD_MEAL_TO_ORDER:
     case REMOVE_MEAL_FROM_ORDER:
       localStorage.setItem("order", JSON.stringify(action.payload));

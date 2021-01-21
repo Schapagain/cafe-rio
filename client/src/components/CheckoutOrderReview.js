@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+
+import { removeMealFromOrder } from "../actions/orderActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,14 +21,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CheckoutOrderReview = ({ order }) => {
+const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
   const classes = useStyles();
   useEffect(() => {
     console.log(order);
   });
-  const handleRemove = () => {};
   return (
-    <Paper>
+    <div>
       {order.map((meal, index) => (
         <Grid container key={index} className={classes.root}>
           <Grid container item xs={10}>
@@ -37,7 +37,13 @@ const CheckoutOrderReview = ({ order }) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Link component="button" variant="body2" onClick={handleRemove}>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={() => {
+                  removeMealFromOrder(index);
+                }}
+              >
                 Remove
               </Link>
             </Grid>
@@ -50,7 +56,7 @@ const CheckoutOrderReview = ({ order }) => {
           </Grid>
         </Grid>
       ))}
-    </Paper>
+    </div>
   );
 };
 
@@ -58,4 +64,6 @@ const mapStateToProps = (state) => ({
   order: state.order.order,
   meals: state.meal.meals,
 });
-export default connect(mapStateToProps)(CheckoutOrderReview);
+export default connect(mapStateToProps, { removeMealFromOrder })(
+  CheckoutOrderReview
+);
