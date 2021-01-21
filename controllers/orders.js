@@ -3,34 +3,39 @@ const { isValidMongooseId, queryDatabase } = require("../database");
 const { getError, ValidationError, NotFoundError } = require("./errors");
 const { trimPrematureIds, makeItem } = require("./utils");
 const { saveFiles, deleteFiles, getFilePath } = require("./files");
-const { makePayment } = require("./payments");
-const meal = require("../database/models/meal");
 
 /**
  * Add a new order to the database
- * @param {*} order
+ * @param {{meals: String[], amount: Number, user: String, paymentId: String}} order
  */
-async function addOrder({ meals, user, cardId }) {
+async function addOrder(order) {
   try {
-    let order = { meals, user };
     if (!order) throw new ValidationError("order");
     order = trimPrematureIds(order);
-    console.log("before new order");
-    newOrder = new Order(order);
-    await newOrder.validate();
+    const newOrder = await validateOrder(order);
+    if (!newOrder.payment) throw new ValidationError('payment');
+    if (!newOrder.amount) throw new ValidationError('amount');
 
-    const amount = await calculateTotalAmount(newOrder.meals);
-    console.log("after new order");
-    console.log("meals:", order.meals);
-    console.log("total:", amount);
-    const payment = await makePayment({ amount, cardId, currency: "usd" });
-    console.log(payment);
-    // order = await (await newOrder.save());
-
-    return { order };
+    order = await newOrder.save();
+    return { order:makeItem(order,["id","user","meals","amount"]) };
   } catch (err) {
     throw await getError(err);
   }
+}
+
+/**
+ * Validate the given order
+ * @param {*} order 
+ */
+async function validateOrder(order) {
+  try {
+    const newOrder = new Order(order);
+    await newOrder.validate();
+    return newOrder;
+  } catch (err) {
+    throw await getError(err);
+  }
+  
 }
 
 /**
@@ -92,4 +97,4 @@ async function deleteOrder(id) {
   }
 }
 
-module.exports = { getOrders, addOrder, deleteOrder };
+module.exports = { getOrders, addOrder, deleteOrder, validateOrder, calculateTotalAmount };
