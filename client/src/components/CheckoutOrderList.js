@@ -1,5 +1,4 @@
 import React from "react";
-import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -50,19 +49,25 @@ const CheckoutOrderList = ({ order, handleRemove }) => {
               <Grid container direction="column">
                 <CardContent className={classes.mealNameContainer}>
                   <Typography variant="h6" className={classes.mealName}>
-                    {order[0].name}
+                    {meal.name}
                   </Typography>
                 </CardContent>
               </Grid>
             </Grid>
             <Grid item xs={1}>
               <CardContent>
-                <Typography variant="body1">${order[0].price}</Typography>
+                <Typography variant="body1">${meal.price}</Typography>
               </CardContent>
             </Grid>
             <Grid item xs={1}>
               <CardActions>
-                <Link component="button" variant="body2" onClick={handleRemove}>
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => {
+                    handleRemove(index);
+                  }}
+                >
                   Remove
                 </Link>
               </CardActions>

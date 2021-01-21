@@ -1,11 +1,21 @@
+import React, { useEffect } from "react";
+import Button from "@material-ui/core/Button";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { connect } from "react-redux";
 
-const CheckoutForm = () => {
+import { addOrder } from "../actions/orderActions";
+
+const CheckoutForm = ({ order, user, addOrder }) => {
   const stripe = useStripe();
   const elements = useElements();
+  useEffect(() => {
+    console.log(order);
+    console.log(user);
+    console.log(addOrder);
+  });
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleClick = async (e) => {
+    e.preventDefault();
 
     if (!stripe || !elements) {
       return;
@@ -23,16 +33,31 @@ const CheckoutForm = () => {
     } else {
       console.log("[PaymentMethod]", paymentMethod);
     }
+    addOrder(
+      paymentMethod.id,
+      order.map((meal) => meal.id),
+      user.id
+    );
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <CardElement />
-      <button type="submit" disabled={!stripe}>
-        Pay
-      </button>
-    </form>
+      <Button
+        variant="contained"
+        color="secondary"
+        disabled={!stripe}
+        onClick={handleClick}
+      >
+        Pay Now
+      </Button>
+    </div>
   );
 };
 
-export default CheckoutForm;
+const mapStateToProps = (state) => ({
+  order: state.order.order,
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps, { addOrder })(CheckoutForm);
