@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('./user');
 const Meal = require('./meal');
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 const Schema = mongoose.Schema;
 const OrderSchema = new Schema({
@@ -31,6 +32,16 @@ const OrderSchema = new Schema({
             message: 'Invalid array of meal ids'
         }
     }],
+    amount: {
+        type: Number,
+    },
+    payment: {
+        type: String,
+        validate: {
+            validator: verifyStripePaymentMethod,
+            message: "Payment could not be verified"
+        }
+    },
     delivered: {
         type: Boolean,
         default: false,
@@ -45,5 +56,20 @@ OrderSchema.pre('save',async function(next) {
     order.id = this._id;
     return next();
 })
+
+/**
+ * Verify the given paymentId (payment method id)
+ * @param {String} paymentId 
+ */
+async function verifyStripePaymentMethod(paymentId) {
+    try {
+      if (!paymentId) return false;
+      const paymentMethod = await stripe.paymentMethods.retrieve(paymentId);
+      console.log(paymentMethod)
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
 
 module.exports = Order = mongoose.model('Order',OrderSchema);
