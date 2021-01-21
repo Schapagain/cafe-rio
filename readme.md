@@ -97,7 +97,8 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
-| / | Add a new order | POST | Public | {user*, meals*, type(dinein)} | { order } | user is id of the user, and meals is an array of meal ids |
+| /crate_intent | Create a payment intent | POST | Public | { user*, meals* } | { secret, amount } | user is id of the user, and meals is an array of meal ids |
+| / | Add a new order | POST | Public | {user*, meals*, payment*, amount*, type(dinein)} | { order } | user is id of the user<br/>meals is an array of meal ids<br/>payment is payment method id|
 | / | Fetch all orders | GET | Public |  | { count, data : [ Meal ] } |  |
 | /:id | Fetch order info | GET | Public |  | { count, data : [ Meal ] } | |
 | /:id | Update order info | PATCH | Public | {name, price, category, available} | { order } | |
