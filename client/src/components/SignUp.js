@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
+const SignUp = ({ signUp, error, clearErrors }) => {
   const classes = useStyles();
   // create state to hold form values
   const [name, setName] = useState("");
@@ -71,19 +71,20 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   const [idCard, setIdCard] = useState(null);
 
   // showing errors if they exist
+  let history = useHistory();
   const [msg, setMsg] = useState("");
   useEffect(() => {
     if (error.id === "REGISTER_FAIL") setMsg(error.msg);
-  }, [error]);
-
-  // redirect once authenticated
-  let history = useHistory();
-  useEffect(() => {
-    if (isAuthenticated) {
+    if (error.id === "REGISTER_SUCCESS") {
+      history.push({
+        pathname: "/login",
+        state: {signUpSuccess:true}
+      });
       clearErrors();
-      history.push("/");
     }
-  });
+    
+  }, [error,history,clearErrors]);
+
   // posts form data to server
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -260,10 +261,12 @@ const SignUp = ({ signUp, error, isAuthenticated, clearErrors }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error,
-});
+const mapStateToProps = (state) => {
+  return ({
+    isAuthenticated: state.auth.isAuthenticated,
+    error: state.error,
+  })
+};
 
 SignUp.propTypes = {
   isAuthenticated: PropTypes.bool,

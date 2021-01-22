@@ -5,7 +5,6 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
-  REGISTER_SUCCESS,
   REGISTER_FAIL,
 } from "../actions/types";
 
@@ -34,7 +33,6 @@ export default function reducer(state = initialState, action) {
       };
 
     case LOGIN_SUCCESS:
-    case REGISTER_SUCCESS:
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("userId", action.payload.user.id);
       return {

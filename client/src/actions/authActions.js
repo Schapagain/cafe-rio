@@ -17,6 +17,7 @@ export const loadUser = () => async (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
   try {
     const userId = getState().auth.userId;
+    if (!userId) return;
     const endpoint = `${ROOT_ENDPOINT}/api/users/${userId ? userId : ""}`;
     const res = await axios.get(endpoint, tokenConfig(getState));
     dispatch({ type: USER_LOADED, payload: res.data.data[0] });
@@ -43,11 +44,12 @@ export const signUp = (newUser) => async (dispatch) => {
   const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
 
   try {
-    const res = await axios.post(endpoint, body, config);
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
+    await axios.post(endpoint, body, config);
+    dispatch({ type: REGISTER_SUCCESS });
+    dispatch(
+      returnErrors("Signed up successfully!", null, REGISTER_SUCCESS)
+    ); 
+
   } catch (err) {
     if (err) {
       dispatch(
@@ -77,6 +79,7 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 
   try {
     const res = await axios.post(endpoint, body, config);
+    console.log(res.data);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
@@ -84,7 +87,7 @@ export const signIn = ({ email, password }) => async (dispatch) => {
   } catch (err) {
     if (err.response) {
       dispatch(
-        returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
+        returnErrors(err.response.data.error, err.response.status, LOGIN_FAIL)
       );
     }
     dispatch({ type: LOGIN_FAIL });
