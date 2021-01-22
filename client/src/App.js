@@ -32,7 +32,7 @@ function App() {
           <ThemeProvider theme={theme}>
             <NavBar />
             <Switch>
-              <Route exact path="/login" render={ props => <SignIn signUpSuccess={props.location.state? props.location.state.signUpSuccess : null} />} /> 
+              <Route exact path="/login" render={ props => <SignIn {...props.location.state} />} /> 
               <Route exact path="/signup">
                 <SignUp />
               </Route>
