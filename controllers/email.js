@@ -27,7 +27,7 @@ async function getGoogleMailTransporter() {
   });
   let accessToken,transporter;
   try{
-    accessToken = authClient.getAccessToken();
+    accessToken = await authClient.getAccessToken();
     transporter = nodemailer.createTransport({
       service:"gmail",
       auth: {
