@@ -27,11 +27,6 @@ const CartSingleMeal = ({ meal, quantity, handleRemove }) => {
     <Grid item xs={12}>
       <Card className={classes.root}>
         <Grid container justify="flex-start" alignItems="center">
-          {/* <Grid item xs={1}>
-            <CardContent>
-              <Typography variant="button">x1</Typography>
-            </CardContent>
-          </Grid> */}
           <Grid item xs={10}>
             <Grid container direction="column">
               <Grid item xs={12}>

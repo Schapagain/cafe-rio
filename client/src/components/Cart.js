@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Cart = ({ order, meals, removeMealFromOrder }) => {
   const classes = useStyles();
-
   const [openDrawer, setOpenDrawer] = useState(false);
   // const [mealSet, setMealSet] =
   // const [orderCount, setOrderCount] = useState(1);
@@ -80,13 +79,11 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
     }
   };
 
-  const totalPrice = (function findTotalPrice(order) {
-    return [...order.values()]
-    .reduce((accumulator,currentVal) => accumulator + currentVal[0].price * currentVal[1],
-      0
-    );
-
-  })(order);
+  const [mealsOrdered, totalPrice, totalMeals] = [
+    order.meals,
+    order.totalPrice,
+    order.totalMeals,
+  ];
 
   return (
     <>
@@ -99,7 +96,7 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
         disableRipple
         disableFocusRipple
       >
-        <Badge badgeContent={[...order.values()].reduce((acc,item) => acc + item[1],0)} color="secondary">
+        <Badge badgeContent={totalMeals} color="secondary">
           <ShoppingCartIcon />
         </Badge>
       </IconButton>
@@ -141,13 +138,13 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
               </Typography>
             </Button>
           </Grid>
-          {[...order.entries()].map(cartItem => (
+          {Array.from(mealsOrdered.keys()).map((mealId) => (
             <CartSingleMeal
-              key={cartItem[0]}
-              meal={cartItem[1][0]}
-              quantity ={cartItem[1][1]}
+              key={mealId}
+              meal={mealsOrdered.get(mealId).meal}
+              quantity={mealsOrdered.get(mealId).quantity}
               handleRemove={() => {
-                removeMealFromOrder(cartItem[1][0].id);
+                removeMealFromOrder(mealId);
               }}
             />
           ))}

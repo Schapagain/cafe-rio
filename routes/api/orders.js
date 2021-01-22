@@ -163,15 +163,19 @@ router.patch("/:id", auth([ADMIN]), formParser, async (req, res) => {
  * @param   {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.delete("/:id", auth([ADMIN]), async (req, res) => {
-  try {
-    const result = await deleteOrder(req.params.id);
-    res.status(200).json(result);
-  } catch (err) {
-    return res.status(err.httpCode || 500).json({
-      error: { msg: err.message },
-    });
+router.delete(
+  "/:id",
+  // auth([ADMIN]),
+  async (req, res) => {
+    try {
+      const result = await deleteOrder(req.params.id);
+      res.status(200).json(result);
+    } catch (err) {
+      return res.status(err.httpCode || 500).json({
+        error: { msg: err.message },
+      });
+    }
   }
-});
+);
 
 module.exports = router;
