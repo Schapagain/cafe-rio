@@ -96,7 +96,7 @@ function generateActivationCode(user) {
  */
 function checkIdCardPresence(user) {
   if (!user.idCard || !(typeof user.idCard == "object")) {
-    if (user.idCard === "null")
+    if (user.idCard === "null" || user.idCard === "undefined")
       user.idCard = null;
     throw new ValidationError("idCard", "Upload a picture of an Id card");
   }
