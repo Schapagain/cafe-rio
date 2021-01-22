@@ -16,11 +16,14 @@ export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
   try {
-    const userId = getState().auth.userId;
-    if (!userId) return;
-    const endpoint = `${ROOT_ENDPOINT}/api/users/${userId ? userId : ""}`;
-    const res = await axios.get(endpoint, tokenConfig(getState));
-    dispatch({ type: USER_LOADED, payload: res.data.data[0] });
+    const token = getState().auth.token;
+    if (!token) {
+      dispatch({type: AUTH_ERROR});
+    } else {
+      const endpoint = `${ROOT_ENDPOINT}/api/users`;
+      const res = await axios.get(endpoint, tokenConfig(getState));
+      dispatch({ type: USER_LOADED, payload: res.data.data[0] });
+    }
   } catch (err) {
     if (err)
       dispatch(returnErrors(err.response.data.error, err.response.status));
@@ -113,7 +116,7 @@ export const tokenConfig = (getState) => {
   };
 
   // pass along token, if it exists
-  if (token) config.headers["authorization"] = token;
+  if (token) config.headers["authorization"] = 'Bearer ' + token;
 
   return config;
 };
