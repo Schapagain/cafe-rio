@@ -139,7 +139,7 @@ async function checkUserPresence({query,attributes=['id']}) {
  * @param {Object} query
  * @param {String[]} attributes 
  */
-async function getUsers({query,attributes=['id']}) {
+async function getUsers({query,attributes=["id","name","email","phone","organization"]}) {
   let users;
   try {
     if (!query || !query.id) {
@@ -152,16 +152,6 @@ async function getUsers({query,attributes=['id']}) {
   }
   
   return {count:users.length,data:users};
-}
-
-/**
- * Get a single user from database
- * @param {Object} query
- * @param {String[]} attributes 
- */
-async function getUser({query,attributes=["id"]}) {
-  const users = await getUsers({query,attributes})
-  return users.data[0];
 }
 
 /**
@@ -182,7 +172,6 @@ module.exports = {
   signupUser, 
   updateUser, 
   deleteUser, 
-  getUser, 
   getUsers, 
   checkUserPresence, 
   getIdCard 
