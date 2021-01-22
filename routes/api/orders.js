@@ -9,6 +9,7 @@ const {
   deleteOrder,
 } = require("../../controllers/orders");
 const { ADMIN, CUSTOMER } = require("../../controllers/roles");
+const { createPaymentIntent } = require("../../controllers/payments");
 
 /**
  * Route to fetch all orders
@@ -31,6 +32,35 @@ router.get("/", async (req, res) => {
     });
   }
 });
+
+/**
+ * Route to create a payment-intent
+ * @name api/orders/create_intent
+ * @method POST
+ * @access Public
+ * @inner
+ * @param {string} path
+ * @param   {callback} middleware - Handle HTTP response
+ */
+router.post(
+  "/create_intent",
+  // auth([ADMIN,CUSTOMER]),
+  async (req, res) => {
+    try {
+      // const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
+      const user = req.body.user;
+      const result = await createPaymentIntent({ ...req.body, user });
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(err.httpCode || 500).json({
+        error: {
+          field: err.field,
+          msg: err.message,
+        },
+      });
+    }
+  }
+);
 
 /**
  * Route to add a new order

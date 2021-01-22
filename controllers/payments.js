@@ -1,44 +1,38 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
+const { validateOrder, calculateTotalAmount } = require("./orders");
+const { ValidationError, getError } = require("./errors");
 
-const { ValidationError } = require("./errors");
-const public_key =
-  "pk_test_51I8QurI5qzReycR9FSYytJ8iPoxfXFQwYObAZC0x8jXsHY6K6XOCZ8AtF6N8NDiDpPC58I090d88Q0i0Y4PudyZo00AFJEaifB";
+/**
+   * Creates payment intent for the given order
+   * @param {{meals: String[],currency: String}} order 
+   * @param {String} currency 
+   */
+async function createPaymentIntent(order,currency="usd") {
+  try {
+    if (!order || !order.meals || !order.user) throw new ValidationError('order');
+    await validateOrder(order);
+    const amount = await calculateTotalAmount(order.meals);
+    const intent = await getStripePaymentIntent({amount:amount*100,currency});
+    return {amount,secret:intent.client_secret};
+  } catch(err) {
+    throw await getError(err);
+  }
+  
+}
 
-async function createPaymentIntent({ amount, currency = "usd", customer }) {
+/**
+ * 
+ * @param {{amount: Number,currency: String}} 
+ */
+async function getStripePaymentIntent({ amount, currency = "usd"}) {
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
     currency,
-    customer,
     payment_method_types: ["card"],
   });
-
   return paymentIntent;
-}
-
-async function makePayment({ amount, cardId, currency = "usd" }) {
-  try {
-    // Create new PaymentIntent with a PaymentMethod ID from the client.
-    const intent = await stripe.paymentIntents.create({
-      amount: amount * 100,
-      currency,
-      payment_method: cardId,
-      error_on_requires_action: true,
-      confirm: true,
-    });
-    console.log("💰 Payment received!");
-    return intent;
-    // The payment is complete and the money has been moved
-    // You can add any post-payment code here (e.g. shipping, fulfillment, etc)
-
-    // Send the client secret to the client to use in the demo
-  } catch (err) {
-    // Handle "hard declines" e.g. insufficient funds, expired card, card authentication etc
-    // See https://stripe.com/docs/declines/codes for more
-    throw new ValidationError("card");
-  }
 }
 
 module.exports = {
   createPaymentIntent,
-  makePayment,
 };
