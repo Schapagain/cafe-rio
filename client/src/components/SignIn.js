@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -53,20 +52,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
+const SignIn = ({ signIn, error, signUpSuccess, isAuthenticated, clearErrors }) => {
   const classes = useStyles();
-
   // state to hold input fields data
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   // error msg state
   const [msg, setMsg] = useState("");
+  const [errorFlag, setErrorFlag] = useState("ERROR");
+
   useEffect(() => {
+    if(signUpSuccess) {
+      setErrorFlag("SUCCESS");
+      setMsg("Signed up successfully! An activation link has been sent via email.");
+    }
     if (error.id === "LOGIN_FAIL") {
+      setErrorFlag("ERROR");
       setMsg(error.msg);
     }
-  }, [error]);
+  }, [error,signUpSuccess]);
+
 
   // redirect if authenticated
   let history = useHistory();
@@ -97,7 +102,7 @@ const SignIn = ({ signIn, error, isAuthenticated, clearErrors }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        {msg !== "" ? <Alert severity="error">{msg}</Alert> : null}
+        {msg !== "" ? <Alert severity={errorFlag.toLowerCase()}>{msg}</Alert> : null}
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
