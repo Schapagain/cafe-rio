@@ -10,10 +10,9 @@ import {
 
 const initialState = {
   token: localStorage.getItem("token"),
-  userId: localStorage.getItem("userId"),
   isAuthenticated: false,
   isLoading: false,
-  user: {},
+  user: JSON.parse(localStorage.getItem("user"))
 };
 
 export default function reducer(state = initialState, action) {
@@ -23,10 +22,10 @@ export default function reducer(state = initialState, action) {
 
     case USER_LOADED:
       const user = action.payload;
+      localStorage.setItem("user",JSON.stringify(user));
       return {
         ...state,
         token: localStorage.getItem("token"),
-        userId: localStorage.getItem("userId"),
         isAuthenticated: true,
         isLoading: false,
         user: { name: user.name, email: user.email, id: user.id },
@@ -34,7 +33,7 @@ export default function reducer(state = initialState, action) {
 
     case LOGIN_SUCCESS:
       localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("userId", action.payload.user.id);
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
       return {
         ...state,
         token: action.payload.token,
@@ -49,7 +48,7 @@ export default function reducer(state = initialState, action) {
     case LOGOUT_SUCCESS:
     case REGISTER_FAIL:
       localStorage.removeItem("token");
-      localStorage.removeItem("userId");
+      localStorage.removeItem("user");
       return {
         ...state,
         token: null,
