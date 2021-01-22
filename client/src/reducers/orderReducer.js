@@ -6,8 +6,8 @@ import {
 
 const initialState = {
   order: localStorage.getItem("order")
-    ? JSON.parse(localStorage.getItem("order"))
-    : [],
+    ? new Map(JSON.parse(localStorage.getItem("order")))
+    : new Map(),
   userId: localStorage.getItem("userId"),
 };
 
@@ -17,7 +17,7 @@ export default function reducer(state = initialState, action) {
     //   return
     case ADD_MEAL_TO_ORDER:
     case REMOVE_MEAL_FROM_ORDER:
-      localStorage.setItem("order", JSON.stringify(action.payload));
+      localStorage.setItem("order", JSON.stringify(Array.from((action.payload).entries())));
       return {
         ...initialState,
         order: action.payload,
