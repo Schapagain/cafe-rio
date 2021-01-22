@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = ({ signIn, error, signUpSuccess, isAuthenticated, clearErrors }) => {
+const SignIn = ({ signIn, error, signUpSuccess, checkoutFail, isAuthenticated, clearErrors }) => {
   const classes = useStyles();
   // state to hold input fields data
   const [email, setEmail] = useState("");
@@ -62,6 +62,10 @@ const SignIn = ({ signIn, error, signUpSuccess, isAuthenticated, clearErrors }) 
   const [errorFlag, setErrorFlag] = useState("ERROR");
 
   useEffect(() => {
+    if (checkoutFail) {
+      setErrorFlag("WARNING");
+      setMsg("You must login before checking out!")
+    }
     if(signUpSuccess) {
       setErrorFlag("SUCCESS");
       setMsg("Signed up successfully! An activation link has been sent via email.");
@@ -70,7 +74,7 @@ const SignIn = ({ signIn, error, signUpSuccess, isAuthenticated, clearErrors }) 
       setErrorFlag("ERROR");
       setMsg(error.msg);
     }
-  }, [error,signUpSuccess]);
+  }, [error,signUpSuccess,checkoutFail]);
 
 
   // redirect if authenticated
@@ -78,7 +82,7 @@ const SignIn = ({ signIn, error, signUpSuccess, isAuthenticated, clearErrors }) 
   useEffect(() => {
     if (isAuthenticated) {
       clearErrors();
-      history.push("/");
+      checkoutFail ? history.push("/checkout") : history.push("/");
     }
   });
 
