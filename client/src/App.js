@@ -32,13 +32,11 @@ function App() {
           <ThemeProvider theme={theme}>
             <NavBar />
             <Switch>
-              <Route path="/login">
-                <SignIn />
-              </Route>
-              <Route path="/signup">
+              <Route exact path="/login" render={ props => <SignIn signUpSuccess={props.location.state? props.location.state.signUpSuccess : null} />} /> 
+              <Route exact path="/signup">
                 <SignUp />
               </Route>
-              <Route path="/checkout">
+              <Route exact path="/checkout">
                 <Checkout />
               </Route>
               {/* <PrivateRoute path="/">
