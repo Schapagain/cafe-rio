@@ -14,7 +14,6 @@ const { getRandomCode, getServerURL, trimPrematureIds, makeItem } = require('./u
  */
 async function signupUser(user) {
   try {
-
     checkIdCardPresence(user); 
     user = trimPrematureIds(user);
     user = await saveUserIdCard(user);
@@ -27,7 +26,7 @@ async function signupUser(user) {
 
     return { user: makeItem(user,['id','name','email']) };
   } catch (err) {
-    deleteFiles(user.idCard);
+    if (user.idCard) deleteFiles(user.idCard);
     throw await getError(err);
   }
 }
@@ -96,8 +95,12 @@ function generateActivationCode(user) {
  * @param {Object} user 
  */
 function checkIdCardPresence(user) {
-  if (!user.idCard || !(typeof user.idCard == "object"))
-      throw new ValidationError("idCard", "Upload a picture of an Id card");
+  if (!user.idCard || !(typeof user.idCard == "object")) {
+    if (user.idCard === "null")
+      user.idCard = null;
+    throw new ValidationError("idCard", "Upload a picture of an Id card");
+  }
+      
 }
 
 /**
