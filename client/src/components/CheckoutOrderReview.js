@@ -28,12 +28,12 @@ const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
   });
   return (
     <div>
-      {order.map((meal, index) => (
-        <Grid container key={index} className={classes.root}>
+      {[...order.values()].map( mealItem => (
+        <Grid container key={mealItem[0].id} className={classes.root}>
           <Grid container item xs={10}>
             <Grid item xs={12}>
               <Typography variant="h6" className={classes.mealName}>
-                {meal.name}
+                {mealItem[0].name} {mealItem[1] > 1 && `(x${mealItem[1]})`}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -41,7 +41,7 @@ const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
                 component="button"
                 variant="body2"
                 onClick={() => {
-                  removeMealFromOrder(index);
+                  removeMealFromOrder(mealItem[0].id);
                 }}
               >
                 Remove
@@ -49,7 +49,7 @@ const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
             </Grid>
           </Grid>
           <Grid item xs={2}>
-            <Typography variant="body1">${meal.price}</Typography>
+            <Typography variant="body1">${mealItem[0].price * mealItem[1]}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Divider />
