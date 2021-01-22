@@ -55,10 +55,11 @@ async function authenticate(user) {
     const givenPassword = user.password;
     user = await getUser({
       query: { email: user.email },
-      attributes: ["id", "password", "name", "email"],
+      attributes: ["id", "password", "name", "email", "activationCode"],
     });
+    
+    if (!user) throw new NotAuthorizedError();
     let isMatch = await user.validatePassword(givenPassword);
-
     if (!isMatch) throw new NotAuthorizedError();
     if (!user.active) throw new NotActiveError("account");
 
