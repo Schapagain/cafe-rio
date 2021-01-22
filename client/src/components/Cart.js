@@ -80,10 +80,13 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
     }
   };
 
-  const totalPrice = order.reduce(
-    (accumulator, currentVal) => accumulator + currentVal.price,
-    0
-  );
+  const totalPrice = (function findTotalPrice(order) {
+    return [...order.values()]
+    .reduce((accumulator,currentVal) => accumulator + currentVal[0].price * currentVal[1],
+      0
+    );
+
+  })(order);
 
   return (
     <>
@@ -96,7 +99,7 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
         disableRipple
         disableFocusRipple
       >
-        <Badge badgeContent={order.length} color="secondary">
+        <Badge badgeContent={[...order.values()].reduce((acc,item) => acc + item[1],0)} color="secondary">
           <ShoppingCartIcon />
         </Badge>
       </IconButton>
@@ -138,12 +141,13 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
               </Typography>
             </Button>
           </Grid>
-          {order.map((meal, index) => (
+          {[...order.entries()].map(cartItem => (
             <CartSingleMeal
-              key={index}
-              meal={meal}
+              key={cartItem[0]}
+              meal={cartItem[1][0]}
+              quantity ={cartItem[1][1]}
               handleRemove={() => {
-                removeMealFromOrder(index);
+                removeMealFromOrder(cartItem[1][0].id);
               }}
             />
           ))}

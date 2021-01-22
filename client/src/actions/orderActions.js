@@ -27,18 +27,29 @@ export const addOrder = (cardId, order, user) => async (dispatch, getState) => {
 };
 
 export const addMealToOrder = (meal) => (dispatch, getState) => {
-  let newOrder = [...getState().order.order];
-  newOrder.push(meal);
+  let newOrder = new Map(getState().order.order);
+  const newQuantity = newOrder.has(meal.id) 
+    ? newOrder.get(meal.id)[1] + 1 
+    : 1;
+  newOrder.set(meal.id,[meal,newQuantity]);
   dispatch({
     type: ADD_MEAL_TO_ORDER,
     payload: newOrder,
   });
 };
 
-export const removeMealFromOrder = (index) => (dispatch, getState) => {
-  let newOrder = [...getState().order.order];
-  console.log(index);
-  newOrder.splice(index, 1);
+export const removeMealFromOrder = (id) => (dispatch, getState) => {
+  let newOrder = new Map(getState().order.order);
+  if (!newOrder.has(id)) return;
+  
+  const meal = newOrder.get(id);
+  const oldQuantity = meal[1];
+  if (oldQuantity > 1) {
+    newOrder.set(id,[meal[0],oldQuantity - 1]);
+  }else {
+    newOrder.delete(id);
+  }
+
   return dispatch({
     type: REMOVE_MEAL_FROM_ORDER,
     payload: newOrder,
