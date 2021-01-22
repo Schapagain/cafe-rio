@@ -2,7 +2,6 @@ import axios from "axios";
 import { ROOT_ENDPOINT } from "../constants";
 import { returnErrors } from "./errorActions";
 import {
-  ADD_ORDER,
   ADD_MEAL_TO_ORDER,
   REMOVE_MEAL_FROM_ORDER,
 } from "../actions/types";
@@ -17,7 +16,7 @@ export const addOrder = (cardId, order, user) => async (dispatch, getState) => {
       cardId,
     };
     const endpoint = `${ROOT_ENDPOINT}/api/orders`;
-    const res = await axios.post(endpoint, body, tokenConfig(getState));
+    await axios.post(endpoint, body, tokenConfig(getState));
   } catch (err) {
     console.log(err.response);
     if (err)
