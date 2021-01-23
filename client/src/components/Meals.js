@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import SingleMeal from "./SingleMeal";
-import { getMeals } from "../actions/mealActions";
+import Typography from "@material-ui/core/Typography";
 import { addMealToOrder } from "../actions/orderActions";
 // import Spinner from "./Spinner";
 import Skeleton from "@material-ui/lab/Skeleton";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,32 +17,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Meals = ({ meal, getMeals, addMealToOrder }) => {
-  // load meals
-  // eslint-disable-next-line
-  useEffect(
-    () => {
-      getMeals();
-    },
-    // eslint-disable-next-line
-    []
-  );
+const Meals = ({ meal, filter, addMealToOrder }) => {
 
   const classes = useStyles();
-
-  const { meals, isLoading } = meal;
+  
+  let { meals, isLoading } = meal;
+  meals = meals.filter(meal => meal.category === filter.toLowerCase());
   return (
     // <Container maxWidth="md">
+    <>
+    <Typography variant="h5" className={classes.todaysMenuText}>
+        {filter}
+        </Typography >
     <Grid
-      // justify="center"
-      // alignItems="center"
+
       direction="row"
       container
       spacing={2}
       className={classes.root}
     >
-
-      {(isLoading ? Array.from(new Array(6)) : meals).map((meal,index) => (
+      {(isLoading ? Array.from(new Array(4)) : meals).map((meal,index) => (
         <Grid item key={index} xs={12} sm={4}>
         {meal ? ( 
           <SingleMeal
@@ -56,12 +51,11 @@ const Meals = ({ meal, getMeals, addMealToOrder }) => {
         </Grid>
       ))}
     </Grid>
-    // </Container>
+    </>
   );
 };
 
 Meals.propTypes = {
-  getMeals: PropTypes.func.isRequired,
   meal: PropTypes.object.isRequired,
 };
 
@@ -70,4 +64,4 @@ const mapStateToProps = (state) => ({
   order: state.order.order,
 });
 
-export default connect(mapStateToProps, { getMeals, addMealToOrder })(Meals);
+export default connect(mapStateToProps, { addMealToOrder })(Meals);
