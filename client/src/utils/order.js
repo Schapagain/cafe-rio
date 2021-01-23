@@ -57,7 +57,7 @@ export class Order {
     this.order.forEach(({ meal, quantity }) => {
       orderPrice += meal.price * quantity;
     });
-    return orderPrice;
+    return orderPrice.toFixed(2);
   }
 
   get jsonStringifiedOrder() {
