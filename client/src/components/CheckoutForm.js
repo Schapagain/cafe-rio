@@ -31,7 +31,7 @@ const CheckoutForm = ({
 
   useEffect(() => {
     createPaymentIntent();
-  }, []);
+  });
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -56,6 +56,7 @@ const CheckoutForm = ({
       >
         Pay Now
       </Button>
+      {errorMsg}
     </div>
   );
 };
