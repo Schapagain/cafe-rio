@@ -1,6 +1,7 @@
 
 
 const formidable = require('formidable');
+const { file } = require('googleapis/build/src/apis/file');
 
 const formParser = async (req,res,next) => {
     const form = formidable({multiples:true})
@@ -13,10 +14,15 @@ const formParser = async (req,res,next) => {
         }
 
         Object.keys(files).forEach(fileName => {
-            file = files[fileName]
-            if (!acceptedFormats.has(file.type)) {
-                return next(new Error('Unacceptable file format'))
+            const file = files[fileName]
+            if (file.type) {
+                if (!acceptedFormats.has(file.type)) {
+                    return next(new Error('Unacceptable file format'))
+                }
+            } else {
+                delete files[fileName];
             }
+            
         })
         
         req.body = {...files,...fields,...req.body};
