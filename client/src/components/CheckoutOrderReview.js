@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
   mealName: {
     fontSize: "1rem",
   },
+  review: {
+    fontSize: "1.8rem",
+  },
 }));
 
 const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
@@ -24,6 +27,9 @@ const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
   const mealIds = Array.from(order.meals.keys());
   return (
     <Grid container className={classes.root}>
+      <Grid item xs={12}>
+        <Typography className={classes.review}>Review Your Order</Typography>
+      </Grid>
       <Grid item xs={12}>
         {mealIds.map((mealId) => (
           <CheckoutSingleMeal

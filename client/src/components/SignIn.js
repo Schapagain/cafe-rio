@@ -16,20 +16,8 @@ import { useHistory, Link as RouterLink } from "react-router-dom";
 
 import { signIn } from "../actions/authActions";
 import { clearErrors } from "../actions/errorActions";
-import Spinner from './Spinner';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="/">
-        Cafe Rio
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Spinner from "./Spinner";
+import Copyright from "./Copyright";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,7 +39,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = ({ signIn, error, isLoading, signUpSuccess, checkoutFail, isAuthenticated, clearErrors }) => {
+const SignIn = ({
+  signIn,
+  error,
+  isLoading,
+  signUpSuccess,
+  checkoutFail,
+  isAuthenticated,
+  clearErrors,
+}) => {
   const classes = useStyles();
   // state to hold input fields data
   const [email, setEmail] = useState("");
@@ -63,18 +59,19 @@ const SignIn = ({ signIn, error, isLoading, signUpSuccess, checkoutFail, isAuthe
   useEffect(() => {
     if (checkoutFail) {
       setErrorFlag("WARNING");
-      setMsg("You must login before checking out!")
+      setMsg("You must login before checking out!");
     }
-    if(signUpSuccess) {
+    if (signUpSuccess) {
       setErrorFlag("SUCCESS");
-      setMsg("Signed up successfully! An activation link has been sent via email.");
+      setMsg(
+        "Signed up successfully! An activation link has been sent via email."
+      );
     }
     if (error.id === "LOGIN_FAIL") {
       setErrorFlag("ERROR");
       setMsg(error.msg);
     }
-  }, [error,signUpSuccess,checkoutFail]);
-
+  }, [error, signUpSuccess, checkoutFail]);
 
   // redirect if authenticated
   let history = useHistory();
@@ -97,7 +94,6 @@ const SignIn = ({ signIn, error, isLoading, signUpSuccess, checkoutFail, isAuthe
 
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
-      {/* <CssBaseline /> */}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -105,7 +101,9 @@ const SignIn = ({ signIn, error, isLoading, signUpSuccess, checkoutFail, isAuthe
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        {msg !== "" ? <Alert severity={errorFlag.toLowerCase()}>{msg}</Alert> : null}
+        {msg !== "" ? (
+          <Alert severity={errorFlag.toLowerCase()}>{msg}</Alert>
+        ) : null}
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
@@ -137,10 +135,10 @@ const SignIn = ({ signIn, error, isLoading, signUpSuccess, checkoutFail, isAuthe
               setPassword(e.target.value);
             }}
           />
-          {
-            isLoading
-            ? <Spinner/>
-            : <>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <>
               <Button
                 type="submit"
                 fullWidth
@@ -151,20 +149,19 @@ const SignIn = ({ signIn, error, isLoading, signUpSuccess, checkoutFail, isAuthe
                 Sign In
               </Button>
               <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link component={RouterLink} to="/signup" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link component={RouterLink} to="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
             </>
-          }
-          
+          )}
         </form>
       </div>
       <Box mt={8}>
@@ -183,7 +180,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, { signIn, clearErrors })(SignIn);
 
 SignIn.propTypes = {
-  isLoading: PropTypes.bool, 
+  isLoading: PropTypes.bool,
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,

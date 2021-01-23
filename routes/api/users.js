@@ -22,23 +22,19 @@ const { ADMIN, CUSTOMER } = require("../../controllers/roles");
  * @param {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.get(
-  "/",
-  auth([ADMIN,CUSTOMER]),
-  async (req, res) => {
-    try {
-      const query = req.auth.role === ADMIN ? {} : {id:req.auth.id};
-      const result = await getUsers({query, attributes: req.body.attributes });
-      res.status(200).json(result);
-    } catch (err) {
-      res.status(err.httpCode || 500).json({
-        error: {
-          msg: err.message,
-        },
-      });
-    }
+router.get("/", auth([ADMIN, CUSTOMER]), async (req, res) => {
+  try {
+    const query = req.auth.role === ADMIN ? {} : { id: req.auth.id };
+    const result = await getUsers({ query, attributes: req.body.attributes });
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(err.httpCode || 500).json({
+      error: {
+        msg: err.message,
+      },
+    });
   }
-);
+});
 
 /**
  * Route to sigup a user
@@ -74,18 +70,18 @@ router.post("/signup", formParser, async (req, res) => {
  * @param {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.get("/:id", auth([ADMIN,CUSTOMER]), async (req, res) => {
-  try{
+router.get("/:id", auth([ADMIN, CUSTOMER]), async (req, res) => {
+  try {
     const attributes = [
       "id",
       "name",
       "email",
       "phone",
       "organization",
-      "employeeId"
+      "employeeId",
     ];
     let result = await getUsers({
-      query:{ id: req.params.id},
+      query: { id: req.params.id },
       attributes,
     });
     res.status(200).json(result);
@@ -146,15 +142,20 @@ router.patch("/:id", auth([ADMIN, CUSTOMER]), formParser, async (req, res) => {
  * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
  */
-router.delete("/:id", auth([ADMIN]), formParser, async (req, res) => {
-  try {
-    const result = await deleteUser(req.params.id);
-    res.status(200).json(result);
-  } catch (err) {
-    return res.status(err.httpCode || 500).json({
-      error: { msg: err.message },
-    });
+router.delete(
+  "/:id",
+  // auth([ADMIN]),
+  formParser,
+  async (req, res) => {
+    try {
+      const result = await deleteUser(req.params.id);
+      res.status(200).json(result);
+    } catch (err) {
+      return res.status(err.httpCode || 500).json({
+        error: { msg: err.message },
+      });
+    }
   }
-});
+);
 
 module.exports = router;

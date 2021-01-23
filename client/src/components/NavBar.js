@@ -45,7 +45,7 @@ const NavBar = ({ isAuthenticated, user }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const hanldeOpenMenu = (e) => {
+  const handleOpenMenu = (e) => {
     setAnchorEl(e.currentTarget);
   };
 
@@ -76,14 +76,18 @@ const NavBar = ({ isAuthenticated, user }) => {
               <Typography variant="h6">Café Río</Typography>
             </Button>
             <Button
-              onClick={hanldeOpenMenu}
+              onClick={handleOpenMenu}
               className={classes.button}
               size="large"
               startIcon={<AccountCircle />}
               aria-controls={isAuthenticated ? "auth-menu" : "guest-menu"}
               aria-haspopup="true"
             ></Button>
-            {isAuthenticated && user.name}
+            {isAuthenticated && (
+              <Typography component="h3" variant="button">
+                {user.name}
+              </Typography>
+            )}
             {location.pathname !== "/checkout" && <Cart />}
           </Toolbar>
         </AppBar>
