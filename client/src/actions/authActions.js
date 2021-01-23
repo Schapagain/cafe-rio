@@ -11,6 +11,7 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
 } from "./types";
+import { tokenConfig } from "./shared";
 
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
@@ -18,7 +19,7 @@ export const loadUser = () => async (dispatch, getState) => {
   try {
     const token = getState().auth.token;
     if (!token) {
-      dispatch({type: AUTH_ERROR});
+      dispatch({ type: AUTH_ERROR });
     } else {
       const endpoint = `${ROOT_ENDPOINT}/api/users`;
       const res = await axios.get(endpoint, tokenConfig(getState));
@@ -33,7 +34,7 @@ export const loadUser = () => async (dispatch, getState) => {
 
 // Register User
 export const signUp = (newUser) => async (dispatch) => {
-  dispatch({type: USER_LOADING})
+  dispatch({ type: USER_LOADING });
   // set content-type header
   const config = {
     headers: {
@@ -50,10 +51,7 @@ export const signUp = (newUser) => async (dispatch) => {
   try {
     await axios.post(endpoint, body, config);
     dispatch({ type: REGISTER_SUCCESS });
-    dispatch(
-      returnErrors("Signed up successfully!", null, REGISTER_SUCCESS)
-    ); 
-
+    dispatch(returnErrors("Signed up successfully!", null, REGISTER_SUCCESS));
   } catch (err) {
     if (err) {
       dispatch(
@@ -71,7 +69,6 @@ export const signUp = (newUser) => async (dispatch) => {
 
 // log in
 export const signIn = ({ email, password }) => async (dispatch) => {
-  
   dispatch({ type: USER_LOADING });
   // set content-type header
   const config = {
@@ -104,21 +101,4 @@ export const logOut = () => (dispatch) => {
   dispatch({
     type: LOGOUT_SUCCESS,
   });
-};
-
-export const tokenConfig = (getState) => {
-  // get token from localStorage
-  const token = getState().auth.token;
-
-  // set header
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-
-  // pass along token, if it exists
-  if (token) config.headers["authorization"] = 'Bearer ' + token;
-
-  return config;
 };

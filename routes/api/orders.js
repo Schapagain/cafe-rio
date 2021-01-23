@@ -79,7 +79,6 @@ router.post(
     try {
       // const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
       const user = req.body.user;
-      console.log(req.body);
       const result = await addOrder({ ...req.body, user });
       res.status(201).json(result);
     } catch (err) {
@@ -163,15 +162,19 @@ router.patch("/:id", auth([ADMIN]), formParser, async (req, res) => {
  * @param   {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.delete("/:id", auth([ADMIN]), async (req, res) => {
-  try {
-    const result = await deleteOrder(req.params.id);
-    res.status(200).json(result);
-  } catch (err) {
-    return res.status(err.httpCode || 500).json({
-      error: { msg: err.message },
-    });
+router.delete(
+  "/:id",
+  // auth([ADMIN]),
+  async (req, res) => {
+    try {
+      const result = await deleteOrder(req.params.id);
+      res.status(200).json(result);
+    } catch (err) {
+      return res.status(err.httpCode || 500).json({
+        error: { msg: err.message },
+      });
+    }
   }
-});
+);
 
 module.exports = router;

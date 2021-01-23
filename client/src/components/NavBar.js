@@ -9,10 +9,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
+
 import Cart from "./Cart";
 import PropTypes from "prop-types";
-import Fade from '@material-ui/core/Fade';
+import Fade from "@material-ui/core/Fade";
 import Logout from "./Logout";
 // setting up how the AppBar behaves when scrolling
 function ElevationScroll(props) {
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = ({ isAuthenticated, user }) => {
   const classes = useStyles();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -53,16 +55,16 @@ const NavBar = ({ isAuthenticated, user }) => {
 
   let history = useHistory();
   const handleLogin = () => {
-    console.log('redirecting..')
+    console.log("redirecting..");
     history.push("/login");
     handleClose();
-  }
+  };
 
   return (
     <Fragment>
       <ElevationScroll>
         <AppBar>
-            <Toolbar>
+          <Toolbar>
             <Button
               component={Link}
               to="/"
@@ -78,14 +80,12 @@ const NavBar = ({ isAuthenticated, user }) => {
               className={classes.button}
               size="large"
               startIcon={<AccountCircle />}
-              aria-controls={isAuthenticated? "auth-menu" : "guest-menu"}
+              aria-controls={isAuthenticated ? "auth-menu" : "guest-menu"}
               aria-haspopup="true"
-            >
-            </Button>
-              {isAuthenticated && user.name}
-            <Cart />
+            ></Button>
+            {isAuthenticated && user.name}
+            {location.pathname !== "/checkout" && <Cart />}
           </Toolbar>
-          
         </AppBar>
       </ElevationScroll>
       <Menu
@@ -99,8 +99,8 @@ const NavBar = ({ isAuthenticated, user }) => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <Logout closeMenu={handleClose}/>
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <Logout closeMenu={handleClose} />
       </Menu>
 
       <Menu
@@ -111,7 +111,7 @@ const NavBar = ({ isAuthenticated, user }) => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-          <MenuItem onClick={handleLogin}>Login</MenuItem>
+        <MenuItem onClick={handleLogin}>Login</MenuItem>
       </Menu>
       <div className={classes.toolbarMargin} />
     </Fragment>
@@ -128,5 +128,4 @@ NavBar.propTypes = {
   user: PropTypes.object,
 };
 
-export default connect(mapStateToProps,{})(NavBar);
-
+export default connect(mapStateToProps, {})(NavBar);

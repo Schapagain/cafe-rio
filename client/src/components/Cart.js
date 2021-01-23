@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
@@ -10,6 +10,8 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { useStripe } from "@stripe/react-stripe-js";
+import axios from "axios";
+import { ROOT_ENDPOINT } from "../constants";
 
 import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
@@ -46,47 +48,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = ({ order, meals, removeMealFromOrder }) => {
+const Cart = ({ order, removeMealFromOrder }) => {
   const classes = useStyles();
-
-  const [openDrawer, setOpenDrawer] = useState(false);
-  // const [mealSet, setMealSet] =
-  // const [orderCount, setOrderCount] = useState(1);
-
-  // const toggleDrawer = (open) => {
-  //   setOpenDrawer(open);
-  // };
-
   const stripe = useStripe();
+  const [openDrawer, setOpenDrawer] = useState(false);
+
   const handleCheckout = async (event) => {
     setOpenDrawer(false);
 
     // Call your backend to create the Checkout Session
-    const response = await fetch("/create-checkout-session", {
-      method: "POST",
-    });
-
-    const session = await response.json();
-
-    // When the customer clicks on the button, redirect them to Checkout.
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      // If `redirectToCheckout` fails due to a browser or network
-      // error, display the localized error message to your customer
-      // using `result.error.message`.
-    }
+    const response = await axios.post(ROOT_ENDPOINT);
   };
 
-  const totalPrice = (function findTotalPrice(order) {
-    return [...order.values()]
-    .reduce((accumulator,currentVal) => accumulator + currentVal[0].price * currentVal[1],
-      0
-    );
-
-  })(order);
+  const [mealsOrdered, totalPrice, totalMeals] = [
+    order.meals,
+    order.totalPrice,
+    order.totalMeals,
+  ];
 
   return (
     <>
@@ -99,7 +77,7 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
         disableRipple
         disableFocusRipple
       >
-        <Badge badgeContent={[...order.values()].reduce((acc,item) => acc + item[1],0)} color="secondary">
+        <Badge badgeContent={totalMeals} color="secondary">
           <ShoppingCartIcon />
         </Badge>
       </IconButton>
@@ -141,13 +119,13 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
               </Typography>
             </Button>
           </Grid>
-          {[...order.entries()].map(cartItem => (
+          {Array.from(mealsOrdered.keys()).map((mealId) => (
             <CartSingleMeal
-              key={cartItem[0]}
-              meal={cartItem[1][0]}
-              quantity ={cartItem[1][1]}
+              key={mealId}
+              meal={mealsOrdered.get(mealId).meal}
+              quantity={mealsOrdered.get(mealId).quantity}
               handleRemove={() => {
-                removeMealFromOrder(cartItem[1][0].id);
+                removeMealFromOrder(mealId);
               }}
             />
           ))}
