@@ -17,16 +17,12 @@ export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
   try {
-    console.log("in load user");
-    console.log(getState().auth);
     const token = getState().auth.token;
     if (!token) {
       dispatch({ type: AUTH_ERROR });
     } else {
       const endpoint = `${ROOT_ENDPOINT}/api/users`;
       const res = await axios.get(endpoint, tokenConfig(getState));
-      console.log("laodUser");
-      console.log(res);
       dispatch({ type: USER_LOADED, payload: res.data.data[0] });
     }
   } catch (err) {
@@ -86,7 +82,6 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 
   try {
     const res = await axios.post(endpoint, body, config);
-    console.log(res.data);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,

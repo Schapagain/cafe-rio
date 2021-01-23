@@ -16,25 +16,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useHistory, Link as RouterLink } from "react-router-dom";
-import Spinner from './Spinner';
+import Spinner from "./Spinner";
 import { signUp } from "../actions/authActions";
 // import SignIn from "./SignIn";
 import { clearErrors } from "../actions/errorActions";
+import Copyright from "./Copyright";
 
 // TODO: show feedback for image upload
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="/">
-        Cafe Rio
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -78,12 +66,11 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
     if (error.id === "REGISTER_SUCCESS") {
       history.push({
         pathname: "/login",
-        state: {signUpSuccess:true}
+        state: { signUpSuccess: true },
       });
       clearErrors();
     }
-    
-  }, [error,history,clearErrors]);
+  }, [error, history, clearErrors]);
 
   // posts form data to server
   const handleSubmit = (e) => {
@@ -236,10 +223,10 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
               </label>
             </Grid>
           </Grid>
-          {
-            isLoading
-            ? <Spinner/>
-            : <>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <>
               <Button
                 type="submit"
                 fullWidth
@@ -256,9 +243,8 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
                   </Link>
                 </Grid>
               </Grid>
-              </>
-          }
-          
+            </>
+          )}
         </form>
       </div>
       <Box mt={5}>
@@ -269,11 +255,11 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
 };
 
 const mapStateToProps = (state) => {
-  return ({
+  return {
     isLoading: state.auth.isLoading,
     isAuthenticated: state.auth.isAuthenticated,
     error: state.error,
-  })
+  };
 };
 
 SignUp.propTypes = {

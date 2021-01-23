@@ -24,7 +24,6 @@ export const createPaymentIntent = () => async (dispatch, getState) => {
       payload: { amount: res.data.amount, clientSecret: res.data.secret },
     });
   } catch (err) {
-    console.log(err.response);
     if (err && err.response) {
       dispatch(
         returnErrors(
