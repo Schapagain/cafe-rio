@@ -78,7 +78,7 @@ const SingleMeal = ({ meal, handleOnClick }) => {
                 variant="body2"
                 className={classes.foodPrice}
               >
-                {`$${meal.price}`}
+                {`$${meal.price && Number(meal.price).toFixed(2)}`}
               </Typography>
             </CardContent>
           </Grid>
