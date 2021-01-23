@@ -1,21 +1,17 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { logout } from "../actions/authActions";
+import { logOut } from "../actions/authActions";
 import PropTypes from "prop-types";
-import Link from "@material-ui/core/Link";
+import { MenuItem } from "@material-ui/core";
 
-const Logout = ({ logout }) => {
+const Logout = ({ closeMenu, logOut }) => {
   return (
-    <Fragment>
-      <Link href="#" onClick={logout} variant="body2">
-        Click to Test Logout
-      </Link>
-    </Fragment>
+    <MenuItem onClick={()=>{logOut();closeMenu();}}>Log out</MenuItem>
   );
 };
 
-export default connect(null, { logout })(Logout);
+export default connect(null, { logOut })(Logout);
 
 Logout.propTypes = {
-  logout: PropTypes.func.isRequired,
+  logOut: PropTypes.func.isRequired,
 };
