@@ -10,7 +10,7 @@ export const tokenConfig = (getState) => {
   };
 
   // pass along token, if it exists
-  if (token) config.headers["authorization"] = token;
+  if (token) config.headers["authorization"] = 'Bearer ' + token;
 
   return config;
 };

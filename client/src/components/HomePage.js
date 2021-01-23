@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-
+import PropTypes from "prop-types";
 import Meals from "./Meals";
+import { connect } from "react-redux";
+import { getMeals } from '../actions/mealActions';
 
 const useStyles = makeStyles((theme) => ({
   todaysMenu: {
@@ -19,7 +21,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const HomePage = () => {
+const HomePage = ({getMeals}) => {
+
+  useEffect(() => {
+    getMeals();
+  })
+
   const classes = useStyles();
   return (
     <Container maxWidth="md">
@@ -30,11 +37,19 @@ const HomePage = () => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Meals />
+        <Meals filter="Hot Drinks"/>
+        <Meals filter="Cold Drinks"/>
+        <Meals filter="Pastries" />
+        <Meals filter="Starters" />
+        <Meals filter="Entrees" />
         </Grid>
       </Grid>
     </Container>
   );
 };
 
-export default HomePage;
+HomePage.propTypes = {
+  getMeals: PropTypes.func.isRequired
+};
+
+export default connect(null, { getMeals })(HomePage);

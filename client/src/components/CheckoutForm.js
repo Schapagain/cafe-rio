@@ -50,7 +50,7 @@ const CheckoutForm = ({
 
   useEffect(() => {
     createPaymentIntent();
-  }, []);
+  });
 
   const handleChange = async (e) => {
     // Listen for changes in the CardElement
@@ -94,6 +94,7 @@ const CheckoutForm = ({
       >
         Pay Now
       </Button>
+      {errorMsg}
     </div>
   );
 };

@@ -73,7 +73,7 @@ const NavBar = ({ isAuthenticated, user }) => {
               disableTouchRipple
               disableRipple
             >
-              <Typography variant="h6">Cafe Rio</Typography>
+              <Typography variant="h6">Café Río</Typography>
             </Button>
             <Button
               onClick={hanldeOpenMenu}
