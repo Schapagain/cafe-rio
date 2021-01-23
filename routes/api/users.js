@@ -24,10 +24,11 @@ const { ADMIN, CUSTOMER } = require("../../controllers/roles");
  */
 router.get(
   "/",
-  // auth([ADMIN]),
+  auth([ADMIN,CUSTOMER]),
   async (req, res) => {
     try {
-      const result = await getUsers({ attributes: req.body.attributes });
+      const query = req.auth.role === ADMIN ? {} : {id:req.auth.id};
+      const result = await getUsers({query, attributes: req.body.attributes });
       res.status(200).json(result);
     } catch (err) {
       res.status(err.httpCode || 500).json({

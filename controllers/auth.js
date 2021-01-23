@@ -1,5 +1,5 @@
 
-const { checkUserPresence, makeUser, getUser } = require("./users");
+const { getUsers } = require("./users");
 const { CUSTOMER, ADMIN } = require("./roles");
 const { makeItem } = require("./utils");
 const njwt = require('njwt');
@@ -53,12 +53,13 @@ async function authenticate(user) {
     if (!user.password) throw new ValidationError("password");
 
     const givenPassword = user.password;
-    user = await getUser({
+    const users = await getUsers({
       query: { email: user.email },
-      attributes: ["id", "password", "name", "email"],
+      attributes: ["id", "password", "name", "email", "activationCode"],
     });
+    user = users.data[0];
+    if (!user) throw new NotAuthorizedError();
     let isMatch = await user.validatePassword(givenPassword);
-
     if (!isMatch) throw new NotAuthorizedError();
     if (!user.active) throw new NotActiveError("account");
 
@@ -78,11 +79,12 @@ async function authenticate(user) {
 async function activateAccount(activationCode) {
   try {
     if (!activationCode) throw new Error();
-    let user = await getUser({
+    const users = await getUsers({
       query: { activationCode },
       attributes: ["_id", "activationCode"],
     });
-    if (!user) throw new Error();
+    if (!users.length) throw new Error();
+    const user = users[0];
     user.activationCode = null;
     user.save();
   } catch (err) {

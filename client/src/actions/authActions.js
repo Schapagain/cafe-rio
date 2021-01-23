@@ -17,10 +17,14 @@ export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
   dispatch({ type: USER_LOADING });
   try {
-    const userId = getState().auth.userId;
-    const endpoint = `${ROOT_ENDPOINT}/api/users/${userId ? userId : ""}`;
-    const res = await axios.get(endpoint, tokenConfig(getState));
-    dispatch({ type: USER_LOADED, payload: res.data.data[0] });
+    const token = getState().auth.token;
+    if (!token) {
+      dispatch({ type: AUTH_ERROR });
+    } else {
+      const endpoint = `${ROOT_ENDPOINT}/api/users`;
+      const res = await axios.get(endpoint, tokenConfig(getState));
+      dispatch({ type: USER_LOADED, payload: res.data.data[0] });
+    }
   } catch (err) {
     if (err)
       dispatch(returnErrors(err.response.data.error, err.response.status));
@@ -30,6 +34,7 @@ export const loadUser = () => async (dispatch, getState) => {
 
 // Register User
 export const signUp = (newUser) => async (dispatch) => {
+  dispatch({ type: USER_LOADING });
   // set content-type header
   const config = {
     headers: {
@@ -44,11 +49,9 @@ export const signUp = (newUser) => async (dispatch) => {
   const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
 
   try {
-    const res = await axios.post(endpoint, body, config);
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
+    await axios.post(endpoint, body, config);
+    dispatch({ type: REGISTER_SUCCESS });
+    dispatch(returnErrors("Signed up successfully!", null, REGISTER_SUCCESS));
   } catch (err) {
     if (err) {
       dispatch(
@@ -66,6 +69,7 @@ export const signUp = (newUser) => async (dispatch) => {
 
 // log in
 export const signIn = ({ email, password }) => async (dispatch) => {
+  dispatch({ type: USER_LOADING });
   // set content-type header
   const config = {
     headers: {
@@ -85,7 +89,7 @@ export const signIn = ({ email, password }) => async (dispatch) => {
   } catch (err) {
     if (err.response) {
       dispatch(
-        returnErrors(err.response.data.error, err.response.status, "LOGIN_FAIL")
+        returnErrors(err.response.data.error, err.response.status, LOGIN_FAIL)
       );
     }
     dispatch({ type: LOGIN_FAIL });
@@ -93,7 +97,7 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 };
 
 // logout
-export const logout = () => (dispatch) => {
+export const logOut = () => (dispatch) => {
   dispatch({
     type: LOGOUT_SUCCESS,
   });
