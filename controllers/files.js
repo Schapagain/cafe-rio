@@ -5,11 +5,49 @@ const { uploadPath, defaultPrefix } = require('../config');
 const { getError } = require('./errors');
 const { getRandomCode } = require('./utils');
 const { NotFoundError } = require('./errors');
+const cloudinary = require('cloudinary').v2;
+
+const uploadOptions = {
+    use_filename: false,
+    folder: 'cafe-rio',
+}
+
+cloudinary.config({
+    cloud_name: "skyimages",
+    api_key:"369875593241412",
+    api_secret:"RUYPNwOSTU3JwqOfdS2mDnMzo-c",
+});
+
+function uploadToCloudinary(image) {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(image, uploadOptions, (err, result) => {
+        if (err) return reject(err);
+        return resolve(result.url);
+      })
+    });
+  }
+
+function getPublicIdFromUrl(url) {
+    const publicId = url
+    .split('/')
+    .slice(-1)[0]
+    .split('.')[0];
+    return uploadOptions.folder ? uploadOptions.folder.concat('/',publicId) : publicId;
+}
+
 /**
- * Save given files to the disk
- * Return randomly generated filenames
- * 
+ * Delete image from cloudinary
+ * unless it's the default image
+ * @param {String} imageUrl 
  */
+function deleteFromCloudinary(imageUrl) {
+    const publicId = getPublicIdFromUrl(imageUrl);
+    console.log(publicId);
+    if (!publicId.includes(defaultPrefix)) {
+        cloudinary.uploader.destroy(getPublicIdFromUrl(imageUrl),()=>console.log('deleted'));
+    }
+}
+
 async function saveFiles() {
     const files = [...arguments];
     if (!files || !files[0]) return [];
@@ -17,42 +55,13 @@ async function saveFiles() {
     try{
         let fileName;
         await asyncForEach(files, async file => {
-            if (file.path) {
-                fileName = await writeFile(file);
-                fileNames.push(fileName);
-            }
+            fileName = await uploadToCloudinary(file.path);
+            fileNames.push(fileName);
         });
         return fileNames.length > 1 ? fileNames : fileNames[0];
     }catch(err){
         throw await getError(err) 
     }
-}
-
-/**
- * Write given file to the disk
- * @param {File} file 
- */
-async function writeFile(file) {
-    if (!file) return file;
-    const readFile = fs.promises.readFile;
-    const writeFile = fs.promises.writeFile;
-    let fileName = makeRandomFilename(file.name);
-    try{
-        let fileStream = await readFile(file.path);
-        let fullPath = path.join(uploadPath,fileName);
-        writeFile(fullPath,fileStream);
-        return fileName;
-    }catch(err){
-        throw await getError(err);
-    }
-}
-
-/**
- * Create a random fileName with the original extension
- * @param {String} orgName 
- */
-function makeRandomFilename(orgName) {
-    return getRandomCode(5).concat(path.extname(orgName))
 }
 
 /**
@@ -67,19 +76,15 @@ async function asyncForEach(array, callback) {
 }
 
 /**
- * Delete files by fileNames
- * unless they're default images
+ * Delete files by file urls
  */
 async function deleteFiles() {
-    fileNames = [...arguments]
-    if (!fileNames || !fileNames[0]) return;
+    fileUrls = [...arguments]
+    if (!fileUrls || !fileUrls[0]) return;
     try{
-        await asyncForEach(fileNames, async fileName => {
-            if (!fileName.includes(defaultPrefix)) {
-                const filePath = path.join(uploadPath,fileName);
-                await fs.promises.unlink(filePath);
-            }
-        })
+        fileUrls.forEach(async url => {
+            deleteFromCloudinary(url);
+        });
     }catch(err){
         throw await getError(err);
     }
