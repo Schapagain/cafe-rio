@@ -53,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SingleMeal = ({ meal, handleOnClick }) => {
   const classes = useStyles();
-  console.log(meal);
   return (
     <Card className={classes.root} id="mealCard">
       <Grid container justify="center" alignItems="center">
