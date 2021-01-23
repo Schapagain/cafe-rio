@@ -59,15 +59,6 @@ const NavBar = ({ isAuthenticated, user }) => {
     handleClose();
   }
 
-  const handleLogout = () => {
-    console.log('handling logout');
-    console.log(logOut)
-    logOut();
-    history.push("/");
-    handleClose();
-    console.log('done handling logout')
-  }
-
   return (
     <Fragment>
       <ElevationScroll>
