@@ -1,15 +1,20 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Cart from "./Cart";
-
+import { logOut } from "../actions/authActions";
+import PropTypes from "prop-types";
+import Fade from '@material-ui/core/Fade';
+import Logout from "./Logout";
 // setting up how the AppBar behaves when scrolling
 function ElevationScroll(props) {
   const { children } = props;
@@ -36,65 +41,38 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = ({ isAuthenticated, user }) => {
   const classes = useStyles();
-  // const [anchorEl, setAnchorEl] = useState(null);
-  // const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
-  // const handleClick = (e) => {
-  //   console.log(e.currentTarget);
-  //   setAnchorEl(e.currentTarget);
-  //   setOpen(true);
-  // };
+  const hanldeOpenMenu = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
 
-  // const handleClose = (e) => {
-  //   setAnchorEl(null);
-  //   setOpen(false);
-  // };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  const AuthLinks = () => (
-    <Fragment>
-      <Button
-        className={classes.button}
-        size="large"
-        startIcon={<AccountCircle />}
-        aria-controls="profile-menu"
-        aria-haspopup="true"
-        // onClick={handleClick}
-      >
-        {user ? user.name : "Why No Name"}
-      </Button>
-      {/* <Menu
-        id="profile-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={open}
-        onClose={handleClose}
-      >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>Payment</MenuItem>
-        <MenuItem>Order History</MenuItem>
-        <MenuItem>Logout</MenuItem>
-      </Menu> */}
-    </Fragment>
-  );
+  let history = useHistory();
+  const handleLogin = () => {
+    console.log('redirecting..')
+    history.push("/login");
+    handleClose();
+  }
 
-  const UnauthLinks = () => (
-    <Button
-      //   color="secondary"
-      component={Link}
-      to="/login"
-      className={classes.button}
-      size="medium"
-      startIcon={<AccountCircle />}
-    >
-      Login
-    </Button>
-  );
+  const handleLogout = () => {
+    console.log('handling logout');
+    console.log(logOut)
+    logOut();
+    history.push("/");
+    handleClose();
+    console.log('done handling logout')
+  }
 
   return (
     <Fragment>
       <ElevationScroll>
         <AppBar>
-          <Toolbar>
+            <Toolbar>
             <Button
               component={Link}
               to="/"
@@ -105,12 +83,46 @@ const NavBar = ({ isAuthenticated, user }) => {
             >
               <Typography variant="h6">Cafe Rio</Typography>
             </Button>
-            {isAuthenticated ? <AuthLinks /> : <UnauthLinks />}
+            <Button
+              onClick={hanldeOpenMenu}
+              className={classes.button}
+              size="large"
+              startIcon={<AccountCircle />}
+              aria-controls={isAuthenticated? "auth-menu" : "guest-menu"}
+              aria-haspopup="true"
+            >
+            </Button>
+              {isAuthenticated && user.name}
             <Cart />
-            {/* <Button>Logout</Button> */}
           </Toolbar>
+          
         </AppBar>
       </ElevationScroll>
+      <Menu
+        id="auth-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
+        open={isAuthenticated && open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <Logout closeMenu={handleClose}/>
+      </Menu>
+
+      <Menu
+        id="guest-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={!isAuthenticated && open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
+          <MenuItem onClick={handleLogin}>Login</MenuItem>
+      </Menu>
       <div className={classes.toolbarMargin} />
     </Fragment>
   );
@@ -121,4 +133,10 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps)(NavBar);
+NavBar.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  user: PropTypes.object,
+};
+
+export default connect(mapStateToProps,{})(NavBar);
+
