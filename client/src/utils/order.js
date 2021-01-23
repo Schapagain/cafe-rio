@@ -2,20 +2,19 @@ export class Order {
   constructor(order, type) {
     // this.user = user;
     this.order = new Map(order);
-    this.mealIds = Array.from(this.order.keys());
+    this.mealIds = this.createMealIdArray(this.order);
     // this.payment = payment;
     this.type = type ? type : "dinein";
   }
-  createOrderMap(order) {
-    let mealMap = new Map();
-    order.forEach((meal) => {
-      if (mealMap.has(meal.id)) {
-        mealMap.set(meal.id, { meal, quantity: this.order.quantity + 1 });
-      } else {
-        mealMap.set(meal.id, { meal, quantity: 0 });
-      }
-    });
-    return mealMap;
+
+  createMealIdArray(order) {
+    const mealIds = Array.from(order.keys());
+    return mealIds
+      .map((id) => {
+        const quantity = order.get(id).quantity;
+        return Array(quantity).fill(id);
+      })
+      .flat();
   }
 
   addMeal(meal) {
@@ -54,11 +53,11 @@ export class Order {
   }
 
   get totalPrice() {
-    let mealPrices = 0;
+    let orderPrice = 0;
     this.order.forEach(({ meal, quantity }) => {
-      mealPrices += +meal.price * +quantity;
+      orderPrice += meal.price * quantity;
     });
-    return mealPrices;
+    return orderPrice;
   }
 
   get jsonStringifiedOrder() {

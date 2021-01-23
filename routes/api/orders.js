@@ -79,11 +79,9 @@ router.post(
     try {
       // const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
       const user = req.body.user;
-      console.log(req.body);
       const result = await addOrder({ ...req.body, user });
       res.status(201).json(result);
     } catch (err) {
-      console.log(err);
       res.status(err.httpCode || 500).json({
         error: {
           field: err.field,

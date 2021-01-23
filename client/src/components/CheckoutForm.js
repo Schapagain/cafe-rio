@@ -30,7 +30,7 @@ const CheckoutForm = ({
   }, [error]);
 
   useEffect(() => {
-    createPaymentIntent(user.id, order.mealIds);
+    createPaymentIntent();
   }, []);
 
   const handleClick = async (e) => {
@@ -42,13 +42,7 @@ const CheckoutForm = ({
     await confirmCardPayment(stripe, payment.clientSecret, {
       card: elements.getElement(CardElement),
     });
-    console.log(payment.confirmedPaymentIntent.payment_method);
-    addOrder(
-      user.id,
-      order.mealIds,
-      payment.confirmedPaymentIntent.payment_method,
-      payment.amount
-    );
+    addOrder();
   };
 
   return (

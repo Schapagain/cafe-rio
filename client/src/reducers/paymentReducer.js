@@ -18,14 +18,12 @@ export default function reducer(state = initialState, action) {
     case PAYMENT_PROCESSING:
       return { ...state, isLoading: true };
     case CREATE_PAYMENT_INTENT_SUCCESS:
-      console.log(action.payload.clientSecret);
       return {
         ...state,
         clientSecret: action.payload.clientSecret,
         amount: action.payload.amount,
       };
     case CONFIRM_CARD_PAYMENT_SUCCESS:
-      console.log(action.payload.paymentIntent);
       return {
         ...state,
         confirmedPaymentIntent: action.payload.paymentIntent,

@@ -10,18 +10,14 @@ import {
 } from "../actions/types";
 import { tokenConfig } from "./shared";
 
-export const createPaymentIntent = (user, meals) => async (
-  dispatch,
-  getState
-) => {
+export const createPaymentIntent = () => async (dispatch, getState) => {
   try {
     const endpoint = `${ROOT_ENDPOINT}/api/orders/create_intent`;
     const res = await axios.post(
       endpoint,
-      { user, meals },
+      { user: getState().auth.user.id, meals: getState().order.order.mealIds },
       tokenConfig(getState)
     );
-    console.log(res);
     dispatch({
       type: CREATE_PAYMENT_INTENT_SUCCESS,
       payload: { amount: res.data.amount, clientSecret: res.data.secret },
@@ -47,13 +43,9 @@ export const confirmCardPayment = (
 ) => async (dispatch) => {
   try {
     dispatch({ type: PAYMENT_PROCESSING });
-    // console.log("dd");
-    // console.log(clientSecret);
     const res = await stripe.confirmCardPayment(clientSecret, {
       payment_method: paymentMethod,
     });
-
-    // console.log(res.paymentIntent);
 
     if (res.error) {
       dispatch(

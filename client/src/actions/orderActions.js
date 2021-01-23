@@ -10,21 +10,21 @@ import {
 import { tokenConfig } from "./shared";
 import { Order } from "../utils/order";
 
-export const addOrder = (user, meals, payment, amount) => async (
-  dispatch,
-  getState
-) => {
+export const addOrder = () => async (dispatch, getState) => {
   try {
     const endpoint = `${ROOT_ENDPOINT}/api/orders/`;
     const res = await axios.post(
       endpoint,
-      { user, meals, payment, amount },
+      {
+        user: getState().auth.user.id,
+        meals: getState().order.order.mealIds,
+        payment: getState().payment.confirmedPaymentIntent.payment_method,
+        amount: getState().payment.amount,
+      },
       tokenConfig(getState)
     );
-    console.log(res);
     dispatch({ type: ADD_ORDER, payload: res.order });
   } catch (err) {
-    console.log(err.response);
     if (err)
       dispatch(
         returnErrors(
