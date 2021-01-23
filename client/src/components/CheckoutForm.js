@@ -18,6 +18,7 @@ const CheckoutForm = ({
   createPaymentIntent,
   confirmCardPayment,
 }) => {
+  const [disabled, setDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
@@ -29,9 +30,34 @@ const CheckoutForm = ({
     }
   }, [error]);
 
+  const cardStyle = {
+    style: {
+      base: {
+        color: "#32325d",
+        fontFamily: "Roboto, sans-serif",
+        fontSmoothing: "antialiased",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#32325d",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a",
+      },
+    },
+  };
+
   useEffect(() => {
     createPaymentIntent();
   }, []);
+
+  const handleChange = async (e) => {
+    // Listen for changes in the CardElement
+    // and display any errors as the customer types their card details
+    setDisabled(e.empty);
+    setErrorMsg(e.error ? e.error.message : "");
+  };
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -47,12 +73,24 @@ const CheckoutForm = ({
 
   return (
     <div>
-      <CardElement />
+      <div
+        style={{
+          margin: "0.5rem",
+        }}
+      />
+      <CardElement
+        id="card-element"
+        options={cardStyle}
+        onChange={handleChange}
+      />
       <Button
         variant="contained"
         color="secondary"
-        disabled={!stripe || payment.isLoading || !payment.clientSecret}
+        disabled={
+          !stripe || payment.isLoading || !payment.clientSecret || disabled
+        }
         onClick={handleClick}
+        style={{ padding: "0.5rem", marginTop: "0.8rem" }}
       >
         Pay Now
       </Button>

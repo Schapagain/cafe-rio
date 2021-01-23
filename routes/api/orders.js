@@ -42,25 +42,20 @@ router.get("/", async (req, res) => {
  * @param {string} path
  * @param   {callback} middleware - Handle HTTP response
  */
-router.post(
-  "/create_intent",
-  // auth([ADMIN,CUSTOMER]),
-  async (req, res) => {
-    try {
-      // const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
-      const user = req.body.user;
-      const result = await createPaymentIntent({ ...req.body, user });
-      res.status(201).json(result);
-    } catch (err) {
-      res.status(err.httpCode || 500).json({
-        error: {
-          field: err.field,
-          msg: err.message,
-        },
-      });
-    }
+router.post("/create_intent", auth([ADMIN, CUSTOMER]), async (req, res) => {
+  try {
+    const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
+    const result = await createPaymentIntent({ ...req.body, user });
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(err.httpCode || 500).json({
+      error: {
+        field: err.field,
+        msg: err.message,
+      },
+    });
   }
-);
+});
 
 /**
  * Route to add a new order
@@ -72,25 +67,20 @@ router.post(
  * @param   {callback} middleware - Form Parser
  * @param   {callback} middleware - Handle HTTP response
  */
-router.post(
-  "/",
-  // auth([ADMIN,CUSTOMER]),
-  async (req, res) => {
-    try {
-      // const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
-      const user = req.body.user;
-      const result = await addOrder({ ...req.body, user });
-      res.status(201).json(result);
-    } catch (err) {
-      res.status(err.httpCode || 500).json({
-        error: {
-          field: err.field,
-          msg: err.message,
-        },
-      });
-    }
+router.post("/", auth([ADMIN, CUSTOMER]), async (req, res) => {
+  try {
+    const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
+    const result = await addOrder({ ...req.body, user });
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(err.httpCode || 500).json({
+      error: {
+        field: err.field,
+        msg: err.message,
+      },
+    });
   }
-);
+});
 
 /**
  * Route to fetch order details
@@ -162,19 +152,15 @@ router.patch("/:id", auth([ADMIN]), formParser, async (req, res) => {
  * @param   {callback} middleware - Authenticate
  * @param   {callback} middleware - Handle HTTP response
  */
-router.delete(
-  "/:id",
-  // auth([ADMIN]),
-  async (req, res) => {
-    try {
-      const result = await deleteOrder(req.params.id);
-      res.status(200).json(result);
-    } catch (err) {
-      return res.status(err.httpCode || 500).json({
-        error: { msg: err.message },
-      });
-    }
+router.delete("/:id", auth([ADMIN]), async (req, res) => {
+  try {
+    const result = await deleteOrder(req.params.id);
+    res.status(200).json(result);
+  } catch (err) {
+    return res.status(err.httpCode || 500).json({
+      error: { msg: err.message },
+    });
   }
-);
+});
 
 module.exports = router;

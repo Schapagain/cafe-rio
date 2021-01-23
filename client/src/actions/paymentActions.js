@@ -18,11 +18,13 @@ export const createPaymentIntent = () => async (dispatch, getState) => {
       { user: getState().auth.user.id, meals: getState().order.order.mealIds },
       tokenConfig(getState)
     );
+
     dispatch({
       type: CREATE_PAYMENT_INTENT_SUCCESS,
       payload: { amount: res.data.amount, clientSecret: res.data.secret },
     });
   } catch (err) {
+    console.log(err.response);
     if (err && err.response) {
       dispatch(
         returnErrors(

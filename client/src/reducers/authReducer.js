@@ -10,9 +10,10 @@ import {
 
 const initialState = {
   token: localStorage.getItem("token"),
+  userId: null,
   isAuthenticated: false,
   isLoading: false,
-  user: JSON.parse(localStorage.getItem("user"))
+  user: JSON.parse(localStorage.getItem("user")),
 };
 
 export default function reducer(state = initialState, action) {
@@ -22,10 +23,11 @@ export default function reducer(state = initialState, action) {
 
     case USER_LOADED:
       const user = action.payload;
-      localStorage.setItem("user",JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user));
       return {
         ...state,
         token: localStorage.getItem("token"),
+        userId: user.id,
         isAuthenticated: true,
         isLoading: false,
         user: { name: user.name, email: user.email, id: user.id },
