@@ -18,7 +18,7 @@ import { loadUser } from "./actions/authActions";
 import theme from "./components/Theme";
 
 const stripePromise = loadStripe(
-  "pk_test_51I9vjxG8iwDJeXMuTa3a3eWZaDQmLnQHxu1Nz2hdvYqrkW1rInfWsZeoqMaXIx4aiI2s8SRYNoyDUZRpudKGyT6600UGYFL0MR"
+  "pk_test_51I8QurI5qzReycR9FSYytJ8iPoxfXFQwYObAZC0x8jXsHY6K6XOCZ8AtF6N8NDiDpPC58I090d88Q0i0Y4PudyZo00AFJEaifB"
 );
 
 function App() {
