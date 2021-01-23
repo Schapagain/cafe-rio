@@ -12,7 +12,7 @@ import {
 
 const initialState = {
   meals: [],
-  loading: false,
+  isLoading: false,
   selectedMeal: {},
 };
 
@@ -27,13 +27,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         meals: action.payload,
-        loading: false,
+        isLoading: false,
       };
     case GET_MEAL_INFO:
       return {
         ...state,
         selectedMeal: action.payload,
-        loading: false,
+        isLoading: false,
       };
     case DELETE_MEAL:
       return {
@@ -43,7 +43,7 @@ export default function reducer(state = initialState, action) {
     case MEALS_LOADING:
       return {
         ...state,
-        loading: true,
+        isLoading: true,
       };
     case GET_MEALS_FAIL:
     case GET_MEAL_INFO_FAIL:
@@ -51,7 +51,7 @@ export default function reducer(state = initialState, action) {
     case DELETE_MEAL_FAIL:
       return {
         ...state,
-        loading: false,
+        isLoading: false,
       };
     default:
       return state;
