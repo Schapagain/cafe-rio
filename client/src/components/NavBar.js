@@ -7,7 +7,8 @@ import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 import Cart from "./Cart";
 
 // setting up how the AppBar behaves when scrolling
@@ -36,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = ({ isAuthenticated, user }) => {
   const classes = useStyles();
+  const location = useLocation();
+
   // const [anchorEl, setAnchorEl] = useState(null);
   // const [open, setOpen] = useState(false);
 
@@ -106,8 +109,7 @@ const NavBar = ({ isAuthenticated, user }) => {
               <Typography variant="h6">Cafe Rio</Typography>
             </Button>
             {isAuthenticated ? <AuthLinks /> : <UnauthLinks />}
-            <Cart />
-            {/* <Button>Logout</Button> */}
+            {location.pathname !== "/checkout" && <Cart />}
           </Toolbar>
         </AppBar>
       </ElevationScroll>

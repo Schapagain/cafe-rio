@@ -40,9 +40,7 @@ const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
           <Typography variant="h6">Total</Typography>
         </Grid>
         <Grid item xs={2}>
-          <Typography variant="h6" component="body">
-            ${order.totalPrice}
-          </Typography>
+          <Typography variant="h6">${order.totalPrice}</Typography>
         </Grid>
       </Grid>
     </Grid>

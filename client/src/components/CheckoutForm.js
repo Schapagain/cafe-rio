@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { connect } from "react-redux";
@@ -8,11 +8,6 @@ import { addOrder } from "../actions/orderActions";
 const CheckoutForm = ({ order, user, addOrder }) => {
   const stripe = useStripe();
   const elements = useElements();
-  useEffect(() => {
-    console.log(order);
-    console.log(user);
-    console.log(addOrder);
-  });
 
   const handleClick = async (e) => {
     e.preventDefault();
