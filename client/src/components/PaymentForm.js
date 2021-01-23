@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
+import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert";
+import { makeStyles } from "@material-ui/core/styles";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { connect } from "react-redux";
 
@@ -9,9 +13,16 @@ import {
   confirmCardPayment,
 } from "../actions/paymentActions";
 
-const CheckoutForm = ({
-  order,
-  user,
+const useStyles = makeStyles((theme) => ({
+  // root: {
+  //   marginTop: theme.spacing(2),
+  // },
+  payment: {
+    fontSize: "1.8rem",
+  },
+}));
+
+const PaymentForm = ({
   addOrder,
   payment,
   error,
@@ -22,6 +33,7 @@ const CheckoutForm = ({
   const [errorMsg, setErrorMsg] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
+  const classes = useStyles();
 
   // error msg state
   useEffect(() => {
@@ -68,40 +80,45 @@ const CheckoutForm = ({
     await confirmCardPayment(stripe, payment.clientSecret, {
       card: elements.getElement(CardElement),
     });
+
+    if (error.id !== "CONFIRM_CARD_PAYMENT_FAIL") return;
+
     addOrder();
   };
 
   return (
-    <div>
-      <div
-        style={{
-          margin: "0.5rem",
-        }}
-      />
-      <CardElement
-        id="card-element"
-        options={cardStyle}
-        onChange={handleChange}
-      />
-      <Button
-        variant="contained"
-        color="secondary"
-        disabled={
-          !stripe || payment.isLoading || !payment.clientSecret || disabled
-        }
-        onClick={handleClick}
-        style={{ padding: "0.5rem", marginTop: "0.8rem" }}
-      >
-        Pay Now
-      </Button>
-      {errorMsg}
-    </div>
+    <Grid container justify="center" className={classes.root} spacing={1}>
+      <Grid item xs={12}>
+        <Typography className={classes.payment}>Payment Details</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <CardElement
+          id="card-element"
+          options={cardStyle}
+          onChange={handleChange}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
+          disabled={
+            !stripe || payment.isLoading || !payment.clientSecret || disabled
+          }
+          onClick={handleClick}
+        >
+          Pay Now
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 
 const mapStateToProps = (state) => ({
-  order: state.order.order,
-  user: state.auth.user,
   payment: state.payment,
   error: state.error,
 });
@@ -110,4 +127,4 @@ export default connect(mapStateToProps, {
   addOrder,
   createPaymentIntent,
   confirmCardPayment,
-})(CheckoutForm);
+})(PaymentForm);

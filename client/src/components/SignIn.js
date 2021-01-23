@@ -94,7 +94,6 @@ const SignIn = ({
 
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
-      {/* <CssBaseline /> */}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
