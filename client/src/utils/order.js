@@ -49,7 +49,7 @@ export class Order {
   }
 
   get totalMeals() {
-    return this.order.size;
+    return [...(this.order.values())].reduce((acc,val)=>val.quantity + acc, 0);
   }
 
   get totalPrice() {
