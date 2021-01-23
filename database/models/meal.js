@@ -25,7 +25,7 @@ const MealSchema = new Schema({
     },
     picture: {
         type: String,
-        default: 'default_meal.png'
+        default: "http://res.cloudinary.com/skyimages/image/upload/v1611431049/cafe-rio/default_meal.jpg" 
     }
 });
 
