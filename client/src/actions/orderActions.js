@@ -3,26 +3,37 @@ import { ROOT_ENDPOINT } from "../constants";
 import { returnErrors } from "./errorActions";
 import {
   ADD_ORDER,
+  ADD_ORDER_FAIL,
   ADD_MEAL_TO_ORDER,
   REMOVE_MEAL_FROM_ORDER,
 } from "../actions/types";
 import { tokenConfig } from "./shared";
 import { Order } from "../utils/order";
 
-export const addOrder = (cardId, order, user) => async (dispatch, getState) => {
+export const addOrder = (user, meals, payment, amount) => async (
+  dispatch,
+  getState
+) => {
   try {
-    const body = {
-      meals: order,
-      user,
-      cardId,
-    };
-    const endpoint = `${ROOT_ENDPOINT}/api/orders`;
-    const res = await axios.post(endpoint, body, tokenConfig(getState));
+    const endpoint = `${ROOT_ENDPOINT}/api/orders/`;
+    const res = await axios.post(
+      endpoint,
+      { user, meals, payment, amount },
+      tokenConfig(getState)
+    );
+    console.log(res);
+    dispatch({ type: ADD_ORDER, payload: res.order });
   } catch (err) {
-    // console.log(err.response);
+    console.log(err.response);
     if (err)
-      dispatch(returnErrors(err.response.data.error, err.response.status));
-    // dispatch({ type: AUTH_ERROR });
+      dispatch(
+        returnErrors(
+          err.response.data.error,
+          err.response.status,
+          ADD_ORDER_FAIL
+        )
+      );
+    // dispatch({ type: ADD_ORDER_FAIL });
   }
 };
 

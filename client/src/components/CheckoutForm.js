@@ -42,12 +42,13 @@ const CheckoutForm = ({
     await confirmCardPayment(stripe, payment.clientSecret, {
       card: elements.getElement(CardElement),
     });
-
-    // addOrder(
-    //   payment.confirmedPaymentIntent.payment_method,
-    //   order.mealIds,
-    //   user.id
-    // );
+    console.log(payment.confirmedPaymentIntent.payment_method);
+    addOrder(
+      user.id,
+      order.mealIds,
+      payment.confirmedPaymentIntent.payment_method,
+      payment.amount
+    );
   };
 
   return (

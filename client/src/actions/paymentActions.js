@@ -27,7 +27,7 @@ export const createPaymentIntent = (user, meals) => async (
       payload: { amount: res.data.amount, clientSecret: res.data.secret },
     });
   } catch (err) {
-    if (err)
+    if (err && err.response) {
       dispatch(
         returnErrors(
           err.response.data.error,
@@ -35,6 +35,7 @@ export const createPaymentIntent = (user, meals) => async (
           CREATE_PAYMENT_INTENT_FAIL
         )
       );
+    }
     dispatch({ type: CREATE_PAYMENT_INTENT_FAIL });
   }
 };

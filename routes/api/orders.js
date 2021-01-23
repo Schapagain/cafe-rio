@@ -83,6 +83,7 @@ router.post(
       const result = await addOrder({ ...req.body, user });
       res.status(201).json(result);
     } catch (err) {
+      console.log(err);
       res.status(err.httpCode || 500).json({
         error: {
           field: err.field,

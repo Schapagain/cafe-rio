@@ -27,6 +27,7 @@ export const MEALS_LOADING = "MEALS_LOADING";
 export const GET_ORDERS = "GET_ALL_ORDERS";
 export const GET_ORDER_INFO = "GET_ORDER";
 export const ADD_ORDER = "ADD_ORDER";
+export const ADD_ORDER_FAIL = "ADD_ORDER_FAIL";
 export const UPDATE_ORDER = "UPDATE_ORDER";
 export const ADD_MEAL_TO_ORDER = "ADD_MEAL_TO_ORDER";
 export const REMOVE_MEAL_FROM_ORDER = "REMOVE_MEAL_FROM_ORDER";
