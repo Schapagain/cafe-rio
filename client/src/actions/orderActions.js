@@ -25,7 +25,7 @@ export const addOrder = () => async (dispatch, getState) => {
     );
     dispatch({ type: ADD_ORDER, payload: res.order });
   } catch (err) {
-    if (err)
+    if (err.response) {
       dispatch(
         returnErrors(
           err.response.data.error,
@@ -33,7 +33,8 @@ export const addOrder = () => async (dispatch, getState) => {
           ADD_ORDER_FAIL
         )
       );
-    // dispatch({ type: ADD_ORDER_FAIL });
+    }
+    dispatch({ type: ADD_ORDER_FAIL });
   }
 };
 

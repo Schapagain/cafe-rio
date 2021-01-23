@@ -81,7 +81,7 @@ const PaymentForm = ({
       card: elements.getElement(CardElement),
     });
 
-    if (error.id !== "CONFIRM_CARD_PAYMENT_FAIL") return;
+    if (error.id === "CONFIRM_CARD_PAYMENT_FAIL") return;
 
     addOrder();
   };
