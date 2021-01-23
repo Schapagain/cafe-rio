@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -18,6 +16,7 @@ import { useHistory, Link as RouterLink } from "react-router-dom";
 
 import { signIn } from "../actions/authActions";
 import { clearErrors } from "../actions/errorActions";
+import Spinner from './Spinner';
 
 function Copyright() {
   return (
@@ -52,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = ({ signIn, error, signUpSuccess, checkoutFail, isAuthenticated, clearErrors }) => {
+const SignIn = ({ signIn, error, isLoading, signUpSuccess, checkoutFail, isAuthenticated, clearErrors }) => {
   const classes = useStyles();
   // state to hold input fields data
   const [email, setEmail] = useState("");
@@ -138,31 +137,34 @@ const SignIn = ({ signIn, error, signUpSuccess, checkoutFail, isAuthenticated, c
               setPassword(e.target.value);
             }}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+          {
+            isLoading
+            ? <Spinner/>
+            : <>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link component={RouterLink} to="/signup" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link component={RouterLink} to="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+            </>
+          }
+          
         </form>
       </div>
       <Box mt={8}>
@@ -173,6 +175,7 @@ const SignIn = ({ signIn, error, signUpSuccess, checkoutFail, isAuthenticated, c
 };
 
 const mapStateToProps = (state) => ({
+  isLoading: state.auth.isLoading,
   isAuthenticated: state.auth.isAuthenticated,
   error: state.error,
 });
@@ -180,6 +183,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, { signIn, clearErrors })(SignIn);
 
 SignIn.propTypes = {
+  isLoading: PropTypes.bool, 
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,

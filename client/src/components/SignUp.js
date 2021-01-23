@@ -16,7 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useHistory, Link as RouterLink } from "react-router-dom";
-
+import Spinner from './Spinner';
 import { signUp } from "../actions/authActions";
 // import SignIn from "./SignIn";
 import { clearErrors } from "../actions/errorActions";
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ signUp, error, clearErrors }) => {
+const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   const classes = useStyles();
   // create state to hold form values
   const [name, setName] = useState("");
@@ -236,22 +236,29 @@ const SignUp = ({ signUp, error, clearErrors }) => {
               </label>
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link component={RouterLink} to="/login" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
+          {
+            isLoading
+            ? <Spinner/>
+            : <>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <Link component={RouterLink} to="/login" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+              </>
+          }
+          
         </form>
       </div>
       <Box mt={5}>
@@ -263,12 +270,14 @@ const SignUp = ({ signUp, error, clearErrors }) => {
 
 const mapStateToProps = (state) => {
   return ({
+    isLoading: state.auth.isLoading,
     isAuthenticated: state.auth.isAuthenticated,
     error: state.error,
   })
 };
 
 SignUp.propTypes = {
+  isLoading: PropTypes.bool,
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
   signUp: PropTypes.func.isRequired,

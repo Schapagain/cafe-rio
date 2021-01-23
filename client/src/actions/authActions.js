@@ -33,6 +33,7 @@ export const loadUser = () => async (dispatch, getState) => {
 
 // Register User
 export const signUp = (newUser) => async (dispatch) => {
+  dispatch({type: USER_LOADING})
   // set content-type header
   const config = {
     headers: {
@@ -70,6 +71,8 @@ export const signUp = (newUser) => async (dispatch) => {
 
 // log in
 export const signIn = ({ email, password }) => async (dispatch) => {
+  
+  dispatch({ type: USER_LOADING });
   // set content-type header
   const config = {
     headers: {
@@ -82,7 +85,6 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 
   try {
     const res = await axios.post(endpoint, body, config);
-    console.log(res.data);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
