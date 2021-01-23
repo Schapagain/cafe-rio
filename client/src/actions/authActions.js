@@ -98,7 +98,7 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 };
 
 // logout
-export const logout = () => (dispatch) => {
+export const logOut = () => (dispatch) => {
   dispatch({
     type: LOGOUT_SUCCESS,
   });
