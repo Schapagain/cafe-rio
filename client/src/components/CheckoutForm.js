@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 
 import { addOrder } from "../actions/orderActions";
 import {
-  createPaymentIntent,
   confirmCardPayment,
 } from "../actions/paymentActions";
 
@@ -15,7 +14,6 @@ const CheckoutForm = ({
   addOrder,
   payment,
   error,
-  createPaymentIntent,
   confirmCardPayment,
 }) => {
   const [errorMsg, setErrorMsg] = useState(null);
@@ -28,10 +26,6 @@ const CheckoutForm = ({
       setErrorMsg(error.msg);
     }
   }, [error]);
-
-  useEffect(() => {
-    createPaymentIntent();
-  });
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -70,6 +64,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   addOrder,
-  createPaymentIntent,
   confirmCardPayment,
 })(CheckoutForm);
