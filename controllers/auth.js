@@ -1,5 +1,5 @@
 
-const { checkUserPresence, makeUser } = require("./users");
+const { getUsers } = require("./users");
 const { CUSTOMER, ADMIN } = require("./roles");
 const { makeItem } = require("./utils");
 const njwt = require('njwt');
@@ -57,7 +57,7 @@ async function authenticate(user) {
       query: { email: user.email },
       attributes: ["id", "password", "name", "email", "activationCode"],
     });
-    user = users[0];
+    user = users.data[0];
     if (!user) throw new NotAuthorizedError();
     let isMatch = await user.validatePassword(givenPassword);
     if (!isMatch) throw new NotAuthorizedError();
