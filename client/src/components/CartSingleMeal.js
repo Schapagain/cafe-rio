@@ -20,24 +20,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CartSingleMeal = ({ meal, handleRemove }) => {
+const CartSingleMeal = ({ meal, quantity, handleRemove }) => {
   const classes = useStyles();
 
   return (
     <Grid item xs={12}>
       <Card className={classes.root}>
         <Grid container justify="flex-start" alignItems="center">
-          {/* <Grid item xs={1}>
-            <CardContent>
-              <Typography variant="button">x1</Typography>
-            </CardContent>
-          </Grid> */}
           <Grid item xs={10}>
             <Grid container direction="column">
               <Grid item xs={12}>
                 <CardContent className={classes.mealNameContainer}>
                   <Typography variant="h6" className={classes.mealName}>
-                    {meal.name}
+                    {meal.name} {quantity > 1 && `(x${quantity})`}
                   </Typography>
                 </CardContent>
               </Grid>
@@ -56,7 +51,7 @@ const CartSingleMeal = ({ meal, handleRemove }) => {
           </Grid>
           <Grid item xs={2}>
             <CardContent>
-              <Typography variant="body1">${meal.price}</Typography>
+              <Typography variant="body1">${meal.price * quantity}</Typography>
             </CardContent>
           </Grid>
         </Grid>

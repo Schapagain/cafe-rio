@@ -3,6 +3,7 @@ const { isValidMongooseId, queryDatabase } = require("../database");
 const { getError, ValidationError, NotFoundError } = require("./errors");
 const { trimPrematureIds, makeItem } = require("./utils");
 const { saveFiles, deleteFiles, getFilePath } = require("./files");
+const meal = require("../database/models/meal");
 
 /**
  * Add a new order to the database
@@ -13,11 +14,11 @@ async function addOrder(order) {
     if (!order) throw new ValidationError("order");
     order = trimPrematureIds(order);
     const newOrder = await validateOrder(order);
-    if (!newOrder.payment) throw new ValidationError('payment');
-    if (!newOrder.amount) throw new ValidationError('amount');
+    if (!newOrder.payment) throw new ValidationError("payment");
+    if (!newOrder.amount) throw new ValidationError("amount");
 
     order = await newOrder.save();
-    return { order:makeItem(order,["id","user","meals","amount"]) };
+    return { order: makeItem(order, ["id", "user", "meals", "amount"]) };
   } catch (err) {
     throw await getError(err);
   }
@@ -25,7 +26,7 @@ async function addOrder(order) {
 
 /**
  * Validate the given order
- * @param {*} order 
+ * @param {*} order
  */
 async function validateOrder(order) {
   try {
@@ -35,7 +36,6 @@ async function validateOrder(order) {
   } catch (err) {
     throw await getError(err);
   }
-  
 }
 
 /**
@@ -45,7 +45,11 @@ async function validateOrder(order) {
 async function calculateTotalAmount(mealIds) {
   if (!mealIds || !mealIds.length) throw new ValidationError("meals");
   const meals = await Meal.find({ id: mealIds });
-  return meals.reduce((s, meal) => s + meal.price, 0);
+  let mealPrices = {};
+  meals.forEach((meal) => {
+    mealPrices[meal.id] = meal.price;
+  });
+  return mealIds.reduce((s, id) => s + mealPrices[id], 0);
 }
 
 /**
@@ -97,4 +101,10 @@ async function deleteOrder(id) {
   }
 }
 
-module.exports = { getOrders, addOrder, deleteOrder, validateOrder, calculateTotalAmount };
+module.exports = {
+  getOrders,
+  addOrder,
+  deleteOrder,
+  validateOrder,
+  calculateTotalAmount,
+};

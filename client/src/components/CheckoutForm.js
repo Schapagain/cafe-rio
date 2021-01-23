@@ -1,43 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { connect } from "react-redux";
 
 import { addOrder } from "../actions/orderActions";
+import {
+  confirmCardPayment,
+} from "../actions/paymentActions";
 
-const CheckoutForm = ({ order, user, addOrder }) => {
+const CheckoutForm = ({
+  order,
+  user,
+  addOrder,
+  payment,
+  error,
+  confirmCardPayment,
+}) => {
+  const [errorMsg, setErrorMsg] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
+
+  // error msg state
   useEffect(() => {
-    console.log(order);
-    console.log(user);
-    console.log(addOrder);
-  });
+    if (error.id === "CONFIRM_CARD_PAYMENT_FAIL") {
+      setErrorMsg(error.msg);
+    }
+  }, [error]);
 
   const handleClick = async (e) => {
     e.preventDefault();
-
     if (!stripe || !elements) {
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
+    await confirmCardPayment(stripe, payment.clientSecret, {
+      card: elements.getElement(CardElement),
     });
-
-    if (error) {
-      console.log("[error]", error);
-    } else {
-      console.log("[PaymentMethod]", paymentMethod);
-    }
-    addOrder(
-      paymentMethod.id,
-      order.map((meal) => meal.id),
-      user.id
-    );
+    addOrder();
   };
 
   return (
@@ -46,11 +45,12 @@ const CheckoutForm = ({ order, user, addOrder }) => {
       <Button
         variant="contained"
         color="secondary"
-        disabled={!stripe}
+        disabled={!stripe || payment.isLoading || !payment.clientSecret}
         onClick={handleClick}
       >
         Pay Now
       </Button>
+      {errorMsg}
     </div>
   );
 };
@@ -58,6 +58,11 @@ const CheckoutForm = ({ order, user, addOrder }) => {
 const mapStateToProps = (state) => ({
   order: state.order.order,
   user: state.auth.user,
+  payment: state.payment,
+  error: state.error,
 });
 
-export default connect(mapStateToProps, { addOrder })(CheckoutForm);
+export default connect(mapStateToProps, {
+  addOrder,
+  confirmCardPayment,
+})(CheckoutForm);

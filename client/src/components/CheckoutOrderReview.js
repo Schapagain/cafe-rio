@@ -1,17 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { removeMealFromOrder } from "../actions/orderActions";
+import CheckoutSingleMeal from "./CheckoutSingleMeal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "0.5em",
-    margin: "0.25em",
   },
   mealNameContainer: {
     padding: 0,
@@ -23,40 +21,29 @@ const useStyles = makeStyles((theme) => ({
 
 const CheckoutOrderReview = ({ order, removeMealFromOrder }) => {
   const classes = useStyles();
-  useEffect(() => {
-    console.log(order);
-  });
+  const mealIds = Array.from(order.meals.keys());
   return (
-    <div>
-      {order.map((meal, index) => (
-        <Grid container key={index} className={classes.root}>
-          <Grid container item xs={10}>
-            <Grid item xs={12}>
-              <Typography variant="h6" className={classes.mealName}>
-                {meal.name}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => {
-                  removeMealFromOrder(index);
-                }}
-              >
-                Remove
-              </Link>
-            </Grid>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography variant="body1">${meal.price}</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
+    <Grid container className={classes.root}>
+      <Grid item xs={12}>
+        {mealIds.map((mealId) => (
+          <CheckoutSingleMeal
+            key={mealId}
+            mealName={order.meals.get(mealId).meal.name}
+            mealQuantity={order.meals.get(mealId).quantity}
+            mealPrice={order.meals.get(mealId).meal.price}
+            removeMealFromOrder={removeMealFromOrder}
+          />
+        ))}
+      </Grid>
+      <Grid container item xs={12}>
+        <Grid container item xs={10}>
+          <Typography variant="h6">Total</Typography>
         </Grid>
-      ))}
-    </div>
+        <Grid item xs={2}>
+          <Typography variant="h6">${order.totalPrice}</Typography>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

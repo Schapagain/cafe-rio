@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@material-ui/core/Drawer";
@@ -9,11 +9,14 @@ import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { useStripe } from "@stripe/react-stripe-js";
+// import { useStripe } from "@stripe/react-stripe-js";
+// import axios from "axios";
+// import { ROOT_ENDPOINT } from "../constants";
 
 import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
+import { createPaymentIntent } from '../actions/paymentActions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,44 +49,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = ({ order, meals, removeMealFromOrder }) => {
+const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
   const classes = useStyles();
-
+  // const stripe = useStripe();
   const [openDrawer, setOpenDrawer] = useState(false);
-  // const [mealSet, setMealSet] =
-  // const [orderCount, setOrderCount] = useState(1);
 
-  // const toggleDrawer = (open) => {
-  //   setOpenDrawer(open);
-  // };
-
-  const stripe = useStripe();
   const handleCheckout = async (event) => {
     setOpenDrawer(false);
-
-    // Call your backend to create the Checkout Session
-    const response = await fetch("/create-checkout-session", {
-      method: "POST",
-    });
-
-    const session = await response.json();
-
-    // When the customer clicks on the button, redirect them to Checkout.
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      // If `redirectToCheckout` fails due to a browser or network
-      // error, display the localized error message to your customer
-      // using `result.error.message`.
-    }
+    createPaymentIntent();
   };
 
-  const totalPrice = order.reduce(
-    (accumulator, currentVal) => accumulator + currentVal.price,
-    0
-  );
+  const [mealsOrdered, totalPrice, totalMeals] = [
+    order.meals,
+    order.totalPrice,
+    order.totalMeals,
+  ];
 
   return (
     <>
@@ -96,7 +76,7 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
         disableRipple
         disableFocusRipple
       >
-        <Badge badgeContent={order.length} color="secondary">
+        <Badge badgeContent={totalMeals} color="secondary">
           <ShoppingCartIcon />
         </Badge>
       </IconButton>
@@ -138,12 +118,13 @@ const Cart = ({ order, meals, removeMealFromOrder }) => {
               </Typography>
             </Button>
           </Grid>
-          {order.map((meal, index) => (
+          {Array.from(mealsOrdered.keys()).map((mealId) => (
             <CartSingleMeal
-              key={index}
-              meal={meal}
+              key={mealId}
+              meal={mealsOrdered.get(mealId).meal}
+              quantity={mealsOrdered.get(mealId).quantity}
               handleRemove={() => {
-                removeMealFromOrder(index);
+                removeMealFromOrder(mealId);
               }}
             />
           ))}
@@ -161,4 +142,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   addMealToOrder,
   removeMealFromOrder,
+  createPaymentIntent,
 })(Cart);

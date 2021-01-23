@@ -14,7 +14,6 @@ const { getRandomCode, getServerURL, trimPrematureIds, makeItem } = require('./u
  */
 async function signupUser(user) {
   try {
-
     checkIdCardPresence(user); 
     user = trimPrematureIds(user);
     user = await saveUserIdCard(user);
@@ -27,7 +26,7 @@ async function signupUser(user) {
 
     return { user: makeItem(user,['id','name','email']) };
   } catch (err) {
-    deleteFiles(user.idCard);
+    if (user.idCard) deleteFiles(user.idCard);
     throw await getError(err);
   }
 }
@@ -96,8 +95,12 @@ function generateActivationCode(user) {
  * @param {Object} user 
  */
 function checkIdCardPresence(user) {
-  if (!user.idCard || !(typeof user.idCard == "object"))
-      throw new ValidationError("idCard", "Upload a picture of an Id card");
+  if (!user.idCard || !(typeof user.idCard == "object")) {
+    if (user.idCard === "null" || user.idCard === "undefined")
+      user.idCard = null;
+    throw new ValidationError("idCard", "Upload a picture of an Id card");
+  }
+      
 }
 
 /**
@@ -136,7 +139,7 @@ async function checkUserPresence({query,attributes=['id']}) {
  * @param {Object} query
  * @param {String[]} attributes 
  */
-async function getUsers({query,attributes=['id']}) {
+async function getUsers({query,attributes=["id","name","email","phone","organization"]}) {
   let users;
   try {
     if (!query || !query.id) {
@@ -149,16 +152,6 @@ async function getUsers({query,attributes=['id']}) {
   }
   
   return {count:users.length,data:users};
-}
-
-/**
- * Get a single user from database
- * @param {Object} query
- * @param {String[]} attributes 
- */
-async function getUser({query,attributes=["id"]}) {
-  const users = await getUsers({query,attributes})
-  return users.data[0];
 }
 
 /**
@@ -179,7 +172,6 @@ module.exports = {
   signupUser, 
   updateUser, 
   deleteUser, 
-  getUser, 
   getUsers, 
   checkUserPresence, 
   getIdCard 

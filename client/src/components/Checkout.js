@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
 import CheckoutOrderReview from "./CheckoutOrderReview";
 import CheckoutForm from "./CheckoutForm";
+import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -32,8 +34,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Checkout = () => {
+const Checkout = ({isAuthenticated}) => {
   const classes = useStyles();
+  let history = useHistory();
+  useEffect(()=> {
+    if (!isAuthenticated) {
+      history.push({
+        pathname: "/login",
+        state: {checkoutFail: true}
+      })
+    }
+  })
 
   return (
     <div className={classes.container}>
@@ -48,4 +59,9 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, {})(Checkout);
+
