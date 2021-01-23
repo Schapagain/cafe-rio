@@ -11,7 +11,6 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { connect } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import Cart from "./Cart";
-import { logOut } from "../actions/authActions";
 import PropTypes from "prop-types";
 import Fade from '@material-ui/core/Fade';
 import Logout from "./Logout";
