@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { useStripe } from "@stripe/react-stripe-js";
+// import { useStripe } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { ROOT_ENDPOINT } from "../constants";
 
@@ -50,14 +50,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Cart = ({ order, removeMealFromOrder }) => {
   const classes = useStyles();
-  const stripe = useStripe();
+  // const stripe = useStripe();
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const handleCheckout = async (event) => {
     setOpenDrawer(false);
 
     // Call your backend to create the Checkout Session
-    const response = await axios.post(ROOT_ENDPOINT);
+    await axios.post(ROOT_ENDPOINT);
   };
 
   const [mealsOrdered, totalPrice, totalMeals] = [
