@@ -6,7 +6,7 @@ import {
   ADD_MEAL_TO_ORDER,
   REMOVE_MEAL_FROM_ORDER,
 } from "../actions/types";
-import { tokenConfig } from "./authActions";
+import { tokenConfig } from "./shared";
 import { Order } from "../utils/order";
 
 export const addOrder = (cardId, order, user) => async (dispatch, getState) => {

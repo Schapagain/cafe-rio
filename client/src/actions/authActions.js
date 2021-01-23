@@ -11,6 +11,7 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
 } from "./types";
+import { tokenConfig } from "./shared";
 
 export const loadUser = () => async (dispatch, getState) => {
   // trigger USER_LOADING
@@ -96,21 +97,4 @@ export const logout = () => (dispatch) => {
   dispatch({
     type: LOGOUT_SUCCESS,
   });
-};
-
-export const tokenConfig = (getState) => {
-  // get token from localStorage
-  const token = getState().auth.token;
-
-  // set header
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-
-  // pass along token, if it exists
-  if (token) config.headers["authorization"] = token;
-
-  return config;
 };

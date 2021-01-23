@@ -10,6 +10,8 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { useStripe } from "@stripe/react-stripe-js";
+import axios from "axios";
+import { ROOT_ENDPOINT } from "../constants";
 
 import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
@@ -46,37 +48,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = ({ order, meals, removeMealFromOrder }) => {
+const Cart = ({ order, removeMealFromOrder }) => {
   const classes = useStyles();
-  const [openDrawer, setOpenDrawer] = useState(false);
-  // const [mealSet, setMealSet] =
-  // const [orderCount, setOrderCount] = useState(1);
-
-  // const toggleDrawer = (open) => {
-  //   setOpenDrawer(open);
-  // };
-
   const stripe = useStripe();
+  const [openDrawer, setOpenDrawer] = useState(false);
+
   const handleCheckout = async (event) => {
     setOpenDrawer(false);
 
     // Call your backend to create the Checkout Session
-    const response = await fetch("/create-checkout-session", {
-      method: "POST",
-    });
-
-    const session = await response.json();
-
-    // When the customer clicks on the button, redirect them to Checkout.
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      // If `redirectToCheckout` fails due to a browser or network
-      // error, display the localized error message to your customer
-      // using `result.error.message`.
-    }
+    const response = await axios.post(ROOT_ENDPOINT);
   };
 
   const [mealsOrdered, totalPrice, totalMeals] = [
