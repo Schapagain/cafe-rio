@@ -10,12 +10,13 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 // import { useStripe } from "@stripe/react-stripe-js";
-import axios from "axios";
-import { ROOT_ENDPOINT } from "../constants";
+// import axios from "axios";
+// import { ROOT_ENDPOINT } from "../constants";
 
 import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
+import { createPaymentIntent } from '../actions/paymentActions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,16 +49,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = ({ order, removeMealFromOrder }) => {
+const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
   const classes = useStyles();
   // const stripe = useStripe();
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const handleCheckout = async (event) => {
     setOpenDrawer(false);
-
-    // Call your backend to create the Checkout Session
-    await axios.post(ROOT_ENDPOINT);
+    createPaymentIntent();
   };
 
   const [mealsOrdered, totalPrice, totalMeals] = [
@@ -143,4 +142,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   addMealToOrder,
   removeMealFromOrder,
+  createPaymentIntent,
 })(Cart);
