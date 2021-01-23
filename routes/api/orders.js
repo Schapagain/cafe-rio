@@ -44,11 +44,10 @@ router.get("/", async (req, res) => {
  */
 router.post(
   "/create_intent",
-  // auth([ADMIN,CUSTOMER]),
+  auth([ADMIN,CUSTOMER]),
   async (req, res) => {
     try {
-      // const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
-      const user = req.body.user;
+      const user = req.auth.role === ADMIN ? req.body.user : req.auth.id;
       const result = await createPaymentIntent({ ...req.body, user });
       res.status(201).json(result);
     } catch (err) {
