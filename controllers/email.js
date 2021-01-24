@@ -4,7 +4,7 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
-
+const moment = require('moment');
 /**
  * Use google client info in the environment 
  * to creaet nodemailer transporter
@@ -84,4 +84,57 @@ function getEmailBody(senderEmail,receiverEmail,receiverName,activationLink) {
   return mailBody;
 }
 
-module.exports = { sendActivationEmail };
+async function sendOrderConfirmation(order) {
+
+  try {
+    let transporter = await getGoogleMailTransporter();
+    const mailBody = getConfirmationBody(order);
+    transporter.sendMail(mailBody);
+  }catch(err) {
+    throw await getError(err);
+  }
+}
+
+function getConfirmationBody(order) {
+  const senderEmail = process.env.EMAILUSER;
+  console.log(senderEmail);
+  const {meals,user,amount} = order;
+  const table = getMealsTable(meals,amount);
+
+  const style = `
+  <style>
+  th, td {
+    padding: 5px;
+  }
+  th {
+    text-align: left;
+  }
+  </style>
+  `
+  let mailBody = {
+    from: `"Cafe Rio" <${senderEmail}>`,
+    to: user.email,
+    subject: "Order confirmation",
+    html: `${style}<h2> Hello ${user.name}</h2>
+    <p> Here's a summary of your order:</p>
+    ${table}
+    <p> The order will be ready around ${moment(order.deliveryTime).format("dddd, MMMM Do YYYY, h:mm:ss a")}</p>
+    `
+  }
+  return mailBody;
+}
+
+function getMealsTable(meals,amount) {
+  let table = `<table style="width:500px">
+  <tr>
+    <th>Meal</th>
+    <th>Price</th>
+  </tr>`
+  for (let meal of meals) {
+    table += `<tr> <td> ${meal.name} </td> <td>${meal.price} </td> </tr>`
+  }
+  table += `<tr><td>Total</td><td>${amount}</td></tr>`
+  return table += "</table>"
+}
+
+module.exports = { sendActivationEmail, sendOrderConfirmation };
