@@ -7,7 +7,9 @@ import {
   CONFIRM_CARD_PAYMENT_SUCCESS,
   CONFIRM_CARD_PAYMENT_FAIL,
   PAYMENT_PROCESSING,
+  CLEAR_CART,
 } from "../actions/types";
+
 import { tokenConfig } from "./shared";
 
 export const createPaymentIntent = () => async (dispatch, getState) => {
@@ -62,6 +64,9 @@ export const confirmCardPayment = (
       dispatch({
         type: CONFIRM_CARD_PAYMENT_SUCCESS,
         payload: { paymentIntent: res.paymentIntent },
+      });
+      dispatch({
+        type: CLEAR_CART,
       });
     }
   } catch (err) {
