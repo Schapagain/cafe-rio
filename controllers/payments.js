@@ -19,7 +19,6 @@ async function createPaymentIntent(order, currency = "usd") {
     });
     return { amount, secret: intent.client_secret };
   } catch (err) {
-    console.log(err);
     throw await getError(err);
   }
 }
