@@ -44,6 +44,24 @@ const OrderSchema = new Schema({
       message: "Payment could not be verified",
     },
   },
+  type: {
+    type: String,
+    validate: {
+      validator : function (type) {
+        return ["dinein","delivery","takeout"].includes(type);
+      },
+      message: "Type has to be one of: dinein, delivery or takeout"
+    }
+  },
+  deliveryTime: {
+    type: Date,
+    validate: {
+      validator: function (time) {
+        return time >= Date.now();
+      },
+      message: "delivery time cannot be in the past"
+    }
+  },
   delivered: {
     type: Boolean,
     default: false,
