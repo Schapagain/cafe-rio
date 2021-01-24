@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 
 import { addOrder } from "../actions/orderActions";
 import { confirmCardPayment } from "../actions/paymentActions";
+import Spinner from './Spinner';
 
 const useStyles = makeStyles((theme) => ({
   // root: {
@@ -89,7 +90,9 @@ const PaymentForm = ({ addOrder, payment, error, confirmCardPayment }) => {
         {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
       </Grid>
       <Grid item xs={12}>
-        <Button
+        {payment.isLoading 
+        ? <Spinner/> 
+        : <Button
           variant="contained"
           color="secondary"
           fullWidth
@@ -100,6 +103,7 @@ const PaymentForm = ({ addOrder, payment, error, confirmCardPayment }) => {
         >
           Pay Now
         </Button>
+        }
       </Grid>
     </Grid>
   );
