@@ -13,8 +13,8 @@
     - client id
     - client secret
     - refresh token
-* Stripe -
-* Paypal - 
+* Stripe - Create an account, and obtain:
+    - payment secret
 
 ### Deployment instructions
 * clone repository: ```https://github.com/Schapagain/cafe-rio.git```
@@ -31,6 +31,8 @@
         - ```REFRESHTOKEN```
     - Used to issue JWTs
         - ```SECRET_KEY```
+    - Used to make payments
+        - ```STRIPE_SECRET```
 * Start the application: ```npm run dev``` at project root
 <br/>
 <br/>

@@ -49,7 +49,7 @@ export class Order {
   }
 
   get totalMeals() {
-    return this.order.size;
+    return [...(this.order.values())].reduce((acc,val)=>val.quantity + acc, 0);
   }
 
   get totalPrice() {
@@ -59,7 +59,7 @@ export class Order {
     this.order.forEach(({ meal, quantity }) => {
       orderPrice += meal.price * quantity;
     });
-    return orderPrice;
+    return orderPrice.toFixed(2);
   }
 
   get jsonStringifiedOrder() {

@@ -15,7 +15,7 @@ async function addMeal(meal) {
     meal = await saveMealPicture(meal);
     newMeal = new Meal(meal);
     meal = await newMeal.save();
-    return { meal: makeItem(meal, ["id", "name", "price", "category"]) };
+    return { meal: makeItem(meal, ["id", "name", "price", "category","picture"]) };
   } catch (err) {
     deleteFiles(meal.picture);
     throw await getError(err);
@@ -88,7 +88,7 @@ async function checkMealPresence(query) {
  */
 async function getMeals(
   id = null,
-  attributes = ["id", "name", "category", "price"]
+  attributes = ["id", "name", "category", "price","picture"]
 ) {
   let meals = [];
   if (!id) {

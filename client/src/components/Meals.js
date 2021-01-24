@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     // maxWidth: "100%",
   },
+  todaysMenuText: {
+    marginTop: "1em"
+  }
 }));
 
 const Meals = ({ meal, filter, addMealToOrder }) => {
@@ -25,7 +28,7 @@ const Meals = ({ meal, filter, addMealToOrder }) => {
     // <Container maxWidth="md">
     <>
       <Typography variant="h5" className={classes.todaysMenuText}>
-        {filter}
+        {meals.length ? filter : null}
       </Typography>
       <Grid direction="row" container spacing={2} className={classes.root}>
         {(isLoading ? Array.from(new Array(4)) : meals).map((meal, index) => (

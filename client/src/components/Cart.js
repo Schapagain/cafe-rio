@@ -17,6 +17,7 @@ import CartSingleMeal from "./CartSingleMeal";
 import { Typography } from "@material-ui/core";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
 import { createPaymentIntent } from '../actions/paymentActions';
+import emptyCartImage from "../empty_cart.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
   subPriceText: {
     fontSize: "0.8rem",
   },
+  emptyCart: {
+    marginTop: "100%"
+  }
 }));
 
 const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
@@ -64,36 +68,15 @@ const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
     order.totalPrice,
     order.totalMeals,
   ];
+  
+  const emptyCart = (
+    <Grid className={classes.emptyCart} item xs={10}>
+      <img className={classes.emptyCartImage} src={emptyCartImage} alt="emtpy cart" />
+    </Grid> 
+  )
 
-  return (
-    <>
-      <IconButton
-        className={classes.shoppingCart}
-        aria-label="open shopping cart"
-        onClick={() => {
-          setOpenDrawer(!openDrawer);
-        }}
-        disableRipple
-        disableFocusRipple
-      >
-        <Badge badgeContent={totalMeals} color="secondary">
-          <ShoppingCartIcon />
-        </Badge>
-      </IconButton>
-      <Drawer
-        anchor="right"
-        open={openDrawer}
-        onClose={() => {
-          setOpenDrawer(false);
-        }}
-      >
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          spacing={1}
-          className={classes.root}
-        >
+  const cartWithItems = (
+      <>
           <Grid item xs={12} className={classes.yourOrderContainer}>
             <Typography className={classes.yourOrder}>Your Order</Typography>
           </Grid>
@@ -128,6 +111,39 @@ const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
               }}
             />
           ))}
+          </>
+    );
+
+  return (
+    <>
+      <IconButton
+        className={classes.shoppingCart}
+        aria-label="open shopping cart"
+        onClick={() => {
+          setOpenDrawer(!openDrawer);
+        }}
+        disableRipple
+        disableFocusRipple
+      >
+        <Badge badgeContent={totalMeals} color="secondary">
+          <ShoppingCartIcon />
+        </Badge>
+      </IconButton>
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => {
+          setOpenDrawer(false);
+        }}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          spacing={1}
+          className={classes.root}
+        >
+        {totalMeals ? cartWithItems : emptyCart}
         </Grid>
       </Drawer>
     </>

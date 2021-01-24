@@ -8,7 +8,6 @@ import {
   CONFIRM_CARD_PAYMENT_FAIL,
   PAYMENT_PROCESSING,
   CLEAR_CART,
-  FINISH_CHECKOUT,
 } from "../actions/types";
 
 import { tokenConfig } from "./shared";

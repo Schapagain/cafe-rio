@@ -51,7 +51,7 @@ const CartSingleMeal = ({ meal, quantity, handleRemove }) => {
           </Grid>
           <Grid item xs={2}>
             <CardContent>
-              <Typography variant="body1">${meal.price * quantity}</Typography>
+              <Typography variant="body1">${(meal.price * quantity).toFixed(2)}</Typography>
             </CardContent>
           </Grid>
         </Grid>

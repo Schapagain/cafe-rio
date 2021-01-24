@@ -8,10 +8,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { connect } from "react-redux";
 
 import { addOrder } from "../actions/orderActions";
-import {
-  createPaymentIntent,
-  confirmCardPayment,
-} from "../actions/paymentActions";
+import { confirmCardPayment } from "../actions/paymentActions";
 
 const useStyles = makeStyles((theme) => ({
   // root: {
@@ -22,13 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PaymentForm = ({
-  addOrder,
-  payment,
-  error,
-  createPaymentIntent,
-  confirmCardPayment,
-}) => {
+const PaymentForm = ({ addOrder, payment, error, confirmCardPayment }) => {
   const [disabled, setDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const stripe = useStripe();
@@ -59,10 +50,6 @@ const PaymentForm = ({
       },
     },
   };
-
-  useEffect(() => {
-    createPaymentIntent();
-  }, []);
 
   const handleChange = async (e) => {
     // Listen for changes in the CardElement
@@ -125,6 +112,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   addOrder,
-  createPaymentIntent,
   confirmCardPayment,
 })(PaymentForm);
