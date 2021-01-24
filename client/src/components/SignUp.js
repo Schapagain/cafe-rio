@@ -83,9 +83,6 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   let history = useHistory();
   const [msg, setMsg] = useState("");
   useEffect(() => {
-    console.log(nextDisabled);
-    console.log(name);
-    console.log();
     checkDisabled();
   });
   useEffect(() => {
