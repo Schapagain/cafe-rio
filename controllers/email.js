@@ -130,9 +130,9 @@ function getMealsTable(meals,amount) {
     <th>Price</th>
   </tr>`
   for (let meal of meals) {
-    table += `<tr> <td> ${meal.name} </td> <td>${meal.price} </td> </tr>`
+    table += `<tr> <td> ${meal.name} </td> <td>$${meal.price.toFixed(2)} </td> </tr>`
   }
-  table += `<tr><td>Total</td><td>${amount}</td></tr>`
+  table += `<tr><td>Total</td><td>$${amount.toFixed(2)}</td></tr>`
   return table += "</table>"
 }
 
