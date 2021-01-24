@@ -10,7 +10,6 @@ import PaymentForm from "./PaymentForm";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { PAYMENT_STATUS } from "../utils/constants";
-import store from "../store";
 
 const useStyles = makeStyles((theme) => ({
   container: {
