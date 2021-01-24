@@ -84,7 +84,7 @@ OrderSchema.pre("save", async function (next) {
 async function verifyStripePaymentMethod(paymentId) {
   try {
     if (!paymentId) return false;
-    const paymentMethod = await stripe.paymentMethods.retrieve(paymentId);
+    await stripe.paymentMethods.retrieve(paymentId);
     return true;
   } catch (err) {
     return false;
