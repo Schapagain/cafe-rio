@@ -25,6 +25,7 @@ export const createPaymentIntent = () => async (dispatch, getState) => {
     });
   } catch (err) {
     if (err && err.response) {
+      console.log(err.response);
       dispatch(
         returnErrors(
           err.response.data.error,

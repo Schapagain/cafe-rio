@@ -4,6 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
 import CheckoutOrderReview from "./CheckoutOrderReview";
+import CheckoutConfirmation from "./CheckoutConfirmation";
 import PaymentForm from "./PaymentForm";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Checkout = ({ isAuthenticated }) => {
+const Checkout = ({ isAuthenticated, payment }) => {
   const classes = useStyles();
   let history = useHistory();
   useEffect(() => {
@@ -53,26 +54,35 @@ const Checkout = ({ isAuthenticated }) => {
 
   return (
     <div className={classes.container}>
-      <Typography
-        component="h1"
-        variant="h4"
-        align="center"
-        className={classes.title}
-      >
-        Checkout
-      </Typography>
-      <Paper className={classes.paper}>
-        <CheckoutOrderReview />
-      </Paper>
-      <Paper className={classes.paper}>
-        <PaymentForm />
-      </Paper>
+      {Object.keys(payment.confirmedPaymentIntent).length === 0 ? (
+        <>
+          <Typography
+            component="h1"
+            variant="h4"
+            align="center"
+            className={classes.title}
+          >
+            Checkout
+          </Typography>
+          <Paper className={classes.paper}>
+            <CheckoutOrderReview />
+          </Paper>
+          <Paper className={classes.paper}>
+            <PaymentForm />
+          </Paper>
+        </>
+      ) : (
+        <Paper className={classes.paper}>
+          <CheckoutConfirmation />
+        </Paper>
+      )}
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  payment: state.payment,
 });
 
 export default connect(mapStateToProps, {})(Checkout);

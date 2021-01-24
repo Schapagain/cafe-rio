@@ -62,7 +62,7 @@ const PaymentForm = ({
 
   useEffect(() => {
     createPaymentIntent();
-  });
+  }, []);
 
   const handleChange = async (e) => {
     // Listen for changes in the CardElement
