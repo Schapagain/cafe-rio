@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
     justifyContent: 'center',
-    marginTop: '2em'
+    marginTop: '1.5em'
   },
 }));
 
