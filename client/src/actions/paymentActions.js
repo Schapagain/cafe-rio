@@ -1,6 +1,6 @@
 import axios from "axios";
 import { returnErrors } from "./errorActions";
-import { ROOT_ENDPOINT } from "../constants";
+import { ROOT_ENDPOINT } from "../utils/constants";
 import {
   CREATE_PAYMENT_INTENT_SUCCESS,
   CREATE_PAYMENT_INTENT_FAIL,
@@ -8,6 +8,7 @@ import {
   CONFIRM_CARD_PAYMENT_FAIL,
   PAYMENT_PROCESSING,
   CLEAR_CART,
+  FINISH_CHECKOUT,
 } from "../actions/types";
 
 import { tokenConfig } from "./shared";
@@ -27,7 +28,6 @@ export const createPaymentIntent = () => async (dispatch, getState) => {
     });
   } catch (err) {
     if (err && err.response) {
-      console.log(err.response);
       dispatch(
         returnErrors(
           err.response.data.error,

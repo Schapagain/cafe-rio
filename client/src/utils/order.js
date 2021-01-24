@@ -1,13 +1,13 @@
 export class Order {
-  constructor(order, type) {
-    // this.user = user;
-    this.order = new Map(order);
+  constructor(order = null, type = "dinein") {
+    this.order = order ? new Map(order) : new Map();
     this.mealIds = this.createMealIdArray(this.order);
-    // this.payment = payment;
     this.type = type ? type : "dinein";
   }
 
   createMealIdArray(order) {
+    if (!order) return [];
+
     const mealIds = Array.from(order.keys());
     return mealIds
       .map((id) => {
@@ -53,6 +53,8 @@ export class Order {
   }
 
   get totalPrice() {
+    if (!this.order) return 0;
+
     let orderPrice = 0;
     this.order.forEach(({ meal, quantity }) => {
       orderPrice += meal.price * quantity;

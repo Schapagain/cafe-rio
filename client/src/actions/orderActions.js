@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ROOT_ENDPOINT } from "../constants";
+import { ROOT_ENDPOINT } from "../utils/constants";
 import { returnErrors } from "./errorActions";
 import {
   ADD_ORDER,

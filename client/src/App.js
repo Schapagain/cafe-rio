@@ -32,16 +32,17 @@ function App() {
           <ThemeProvider theme={theme}>
             <NavBar />
             <Switch>
-              <Route exact path="/login" render={ props => <SignIn {...props.location.state} />} /> 
+              <Route
+                exact
+                path="/login"
+                render={(props) => <SignIn {...props.location.state} />}
+              />
               <Route exact path="/signup">
                 <SignUp />
               </Route>
               <Route exact path="/checkout">
                 <Checkout />
               </Route>
-              {/* <PrivateRoute path="/">
-            <HomePage />
-          </PrivateRoute> */}
               <Route path="/">
                 <HomePage />
               </Route>

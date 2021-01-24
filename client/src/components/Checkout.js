@@ -5,9 +5,11 @@ import Typography from "@material-ui/core/Typography";
 
 import CheckoutOrderReview from "./CheckoutOrderReview";
 import CheckoutConfirmation from "./CheckoutConfirmation";
+import Spinner from "./Spinner";
 import PaymentForm from "./PaymentForm";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { PAYMENT_STATUS } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -30,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
-    stepper: {
-      padding: theme.spacing(3, 0, 5),
-    },
   },
   title: {
     fontWeight: "bold",
@@ -54,7 +53,7 @@ const Checkout = ({ isAuthenticated, payment }) => {
 
   return (
     <div className={classes.container}>
-      {Object.keys(payment.confirmedPaymentIntent).length === 0 ? (
+      {payment.status === PAYMENT_STATUS.need_payment_method ? (
         <>
           <Typography
             component="h1"
@@ -71,9 +70,13 @@ const Checkout = ({ isAuthenticated, payment }) => {
             <PaymentForm />
           </Paper>
         </>
-      ) : (
+      ) : payment.status === PAYMENT_STATUS.success ? (
         <Paper className={classes.paper}>
           <CheckoutConfirmation />
+        </Paper>
+      ) : (
+        <Paper className={classes.paper}>
+          <Spinner />
         </Paper>
       )}
     </div>

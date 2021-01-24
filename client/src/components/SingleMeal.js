@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import { makeStyles } from "@material-ui/styles";
 
-import { ROOT_ENDPOINT } from "../constants";
+import { ROOT_ENDPOINT } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {

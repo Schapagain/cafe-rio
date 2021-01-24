@@ -26,8 +26,9 @@ export default function reducer(state = initialState, action) {
       localStorage.removeItem("order");
       return {
         ...state,
-        order: null,
+        order: new Order(),
       };
+
     default:
       return state;
   }
