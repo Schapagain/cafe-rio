@@ -18,7 +18,8 @@ import { connect } from "react-redux";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import Spinner from "./Spinner";
 import { signUp } from "../actions/authActions";
-// import SignIn from "./SignIn";
+
+import IdUpload from "./IdUpload";
 import { clearErrors } from "../actions/errorActions";
 import Copyright from "./Copyright";
 
@@ -99,7 +100,7 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
           Sign up
         </Typography>
         {msg !== "" ? <Alert severity="error">{msg}</Alert> : null}
-        <form className={classes.form} onSubmit={handleSubmit} noValidate>
+        {/*<form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -245,7 +246,8 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
               </Grid>
             </>
           )}
-        </form>
+          </form> */}
+        <IdUpload />
       </div>
       <Box mt={5}>
         <Copyright />
