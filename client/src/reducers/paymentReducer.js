@@ -4,6 +4,7 @@ import {
   CONFIRM_CARD_PAYMENT_SUCCESS,
   CONFIRM_CARD_PAYMENT_FAIL,
   PAYMENT_PROCESSING,
+  LOAD_CHECKOUT,
   FINISH_CHECKOUT,
 } from "../actions/types";
 import { PAYMENT_STATUS } from "../utils/constants";
@@ -20,14 +21,22 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case PAYMENT_PROCESSING:
       return { ...state, isLoading: true };
+
+    case LOAD_CHECKOUT:
+      localStorage.setItem("paymentStatus", PAYMENT_STATUS.load_checkout);
+      return {
+        ...state,
+        status: PAYMENT_STATUS.load_checkout,
+      };
+
     case CREATE_PAYMENT_INTENT_SUCCESS:
-      localStorage.setItem("paymentStatus", PAYMENT_STATUS.need_payment_method);
+      console.log(localStorage.getItem("paymentStatus"));
       return {
         ...state,
         clientSecret: action.payload.clientSecret,
         amount: action.payload.amount,
-        status: PAYMENT_STATUS.need_payment_method,
       };
+
     case CONFIRM_CARD_PAYMENT_SUCCESS:
       localStorage.setItem("paymentStatus", PAYMENT_STATUS.success);
       return {
@@ -36,12 +45,14 @@ export default function reducer(state = initialState, action) {
         isLoading: false,
         status: PAYMENT_STATUS.success,
       };
+
     case FINISH_CHECKOUT:
       localStorage.setItem("paymentStatus", "");
       return {
         ...state,
         status: "",
       };
+
     case CREATE_PAYMENT_INTENT_FAIL:
     case CONFIRM_CARD_PAYMENT_FAIL:
       return { ...state, isLoading: false, confirmedPaymentIntent: null };

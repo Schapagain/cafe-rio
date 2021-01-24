@@ -10,6 +10,7 @@ import PaymentForm from "./PaymentForm";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { PAYMENT_STATUS } from "../utils/constants";
+import store from "../store";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -53,7 +54,7 @@ const Checkout = ({ isAuthenticated, payment }) => {
 
   return (
     <div className={classes.container}>
-      {payment.status === PAYMENT_STATUS.need_payment_method ? (
+      {payment.status === PAYMENT_STATUS.load_checkout ? (
         <>
           <Typography
             component="h1"
@@ -88,4 +89,4 @@ const mapStateToProps = (state) => ({
   payment: state.payment,
 });
 
-export default connect(mapStateToProps, {})(Checkout);
+export default connect(mapStateToProps)(Checkout);

@@ -6,4 +6,5 @@ export const ROOT_ENDPOINT =
 export const PAYMENT_STATUS = {
   success: "success",
   need_payment_method: "need payment method",
+  load_checkout: "load checkout",
 };
