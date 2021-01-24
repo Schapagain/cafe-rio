@@ -11,7 +11,7 @@ const rootEndpoint =
   process.env.NODE_ENV === "production"
     ? "https://cafe-rio.netlify.app"
     : "http://localhost:3000";
-const appAddress = `${rootEndpoint}/activate`;
+const appAddress = rootEndpoint;
 
 /**
  * Route to active account
@@ -27,7 +27,7 @@ router.get("/activate/:activationCode", async (req, res) => {
     await activateAccount(req.params.activationCode);
     res.redirect(appAddress);
   } catch (err) {
-    res.status(err.httpCode || 500).json({ error: err.message });
+    res.redirect(appAddress);
   }
 });
 
