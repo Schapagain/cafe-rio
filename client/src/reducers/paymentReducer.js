@@ -30,7 +30,6 @@ export default function reducer(state = initialState, action) {
       };
 
     case CREATE_PAYMENT_INTENT_SUCCESS:
-      console.log(localStorage.getItem("paymentStatus"));
       return {
         ...state,
         clientSecret: action.payload.clientSecret,

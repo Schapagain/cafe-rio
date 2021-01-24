@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 const Checkout = ({ isAuthenticated, payment }) => {
   const classes = useStyles();
   let history = useHistory();
+
   useEffect(() => {
     if (!isAuthenticated) {
       history.push({
