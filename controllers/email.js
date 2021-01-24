@@ -97,7 +97,6 @@ async function sendOrderConfirmation(order) {
 
 function getConfirmationBody(order) {
   const senderEmail = process.env.EMAILUSER;
-  console.log(senderEmail);
   const {meals,user,amount} = order;
   const table = getMealsTable(meals,amount);
 
