@@ -1,10 +1,6 @@
 
-const fs = require('fs');
-const path = require('path');
-const { uploadPath, defaultPrefix } = require('../config');
+const { defaultPrefix } = require('../config');
 const { getError } = require('./errors');
-const { getRandomCode } = require('./utils');
-const { NotFoundError } = require('./errors');
 const cloudinary = require('cloudinary').v2;
 
 const uploadOptions = {
@@ -12,12 +8,26 @@ const uploadOptions = {
     folder: 'cafe-rio',
 }
 
-cloudinary.config({
-    cloud_name: "skyimages",
-    api_key:"369875593241412",
-    api_secret:"RUYPNwOSTU3JwqOfdS2mDnMzo-c",
-});
+/**
+ * Update the file at the given oldUrl
+ * return the url of the new file
+ * @param {File} file 
+ * @param {String} oldUrl 
+ */
+async function updateCloudinaryFile(file,oldUrl) {
+    try {
+        const newUrl = await uploadToCloudinary(file.path);
+        deleteFromCloudinary(oldUrl);
+        return newUrl;
+    }catch(err) {
+        throw await getError(err);
+    }
+}
 
+/**
+ * Upload file at the given path to cloudinary
+ * @param {String} image 
+ */
 function uploadToCloudinary(image) {
     return new Promise((resolve, reject) => {
       cloudinary.uploader.upload(image, uploadOptions, (err, result) => {
@@ -27,6 +37,10 @@ function uploadToCloudinary(image) {
     });
   }
 
+  /**
+   * Extract the public id from the given cloudinary url
+   * @param {String} url 
+   */
 function getPublicIdFromUrl(url) {
     const publicId = url
     .split('/')
@@ -42,12 +56,14 @@ function getPublicIdFromUrl(url) {
  */
 function deleteFromCloudinary(imageUrl) {
     const publicId = getPublicIdFromUrl(imageUrl);
-    console.log(publicId);
     if (!publicId.includes(defaultPrefix)) {
-        cloudinary.uploader.destroy(getPublicIdFromUrl(imageUrl),()=>console.log('deleted'));
+        cloudinary.uploader.destroy(getPublicIdFromUrl(imageUrl));
     }
 }
 
+/**
+ * Save all the files in the arguments to cloud storage
+ */
 async function saveFiles() {
     const files = [...arguments];
     if (!files || !files[0]) return [];
@@ -61,6 +77,22 @@ async function saveFiles() {
         return fileNames.length > 1 ? fileNames : fileNames[0];
     }catch(err){
         throw await getError(err) 
+    }
+}
+
+/**
+ * Replace the file at the oldUrl with the given file
+ * return url to the new file
+ * @param {File} newFile 
+ * @param {String} oldUrl 
+ */
+async function updateFile(newFile,oldUrl) {
+    let newUrl
+    try {
+        newUrl = await updateCloudinaryFile(newFile,oldUrl);
+        return newUrl;
+    } catch(err) {
+        throw await getError(err);
     }
 }
 
@@ -83,26 +115,12 @@ async function deleteFiles() {
     if (!fileUrls || !fileUrls[0]) return;
     try{
         fileUrls.forEach(async url => {
-            deleteFromCloudinary(url);
+            if (typeof url === 'string')
+                deleteFromCloudinary(url);
         });
     }catch(err){
         throw await getError(err);
     }
 }
 
-/**
- * Given valid filenName, return the full file path
- * @param {String} fileName 
- */
-async function getFilePath(fileName) {
-    try{
-        const fullPath = path.join(uploadPath,fileName);
-        await fs.promises.access(fullPath)
-        return fullPath;
-    }catch(err) {
-        throw new NotFoundError('file'); 
-    }
-    
-}
-
-module.exports = { saveFiles, deleteFiles, getFilePath }
+module.exports = { saveFiles, deleteFiles, updateFile }

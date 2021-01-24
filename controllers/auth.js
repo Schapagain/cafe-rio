@@ -83,8 +83,8 @@ async function activateAccount(activationCode) {
       query: { activationCode },
       attributes: ["_id", "activationCode"],
     });
-    if (!users.length) throw new Error();
-    const user = users[0];
+    if (!users.count) throw new Error();
+    const user = users.data[0];
     user.activationCode = null;
     user.save();
   } catch (err) {

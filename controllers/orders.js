@@ -1,9 +1,10 @@
 const { Order, Meal } = require("../database/models");
-const { isValidMongooseId, queryDatabase } = require("../database");
+const { queryDatabase } = require("../database");
 const { getError, ValidationError, NotFoundError } = require("./errors");
 const { trimPrematureIds, makeItem } = require("./utils");
-const { saveFiles, deleteFiles, getFilePath } = require("./files");
+const { deleteFiles } = require("./files");
 const meal = require("../database/models/meal");
+const { sendOrderConfirmation } = require("./email");
 
 /**
  * Add a new order to the database
@@ -13,11 +14,10 @@ async function addOrder(order) {
   try {
     if (!order) throw new ValidationError("order");
     order = trimPrematureIds(order);
-    const newOrder = await validateOrder(order);
-    if (!newOrder.payment) throw new ValidationError("payment");
-    if (!newOrder.amount) throw new ValidationError("amount");
-
+    const newOrder = await validateOrder(order,true);
     order = await newOrder.save();
+    const populatedOrder = await order.populate('user',['name','email']).populate('meals',["name","price"]).execPopulate();
+    sendOrderConfirmation(populatedOrder);
     return { order: makeItem(order, ["id", "user", "meals", "amount"]) };
   } catch (err) {
     throw await getError(err);
@@ -28,8 +28,14 @@ async function addOrder(order) {
  * Validate the given order
  * @param {*} order
  */
-async function validateOrder(order) {
+async function validateOrder(order,final=false) {
   try {
+    if (final) {
+      if (!order.payment) throw new ValidationError("payment");
+      if (!order.amount) throw new ValidationError("amount");
+      if (!order.deliveryTime) throw new ValidationError("deliveryTime");
+      if (!order.type) throw new ValidationError("type");
+    }
     const newOrder = new Order(order);
     await newOrder.validate();
     return newOrder;
@@ -71,7 +77,7 @@ async function checkOrderPresence({ query, attributes = ["id"] }) {
  * @param {String} id
  */
 async function getOrders({
-  attributes = ["id", "user", "meals", "delivered"],
+  attributes = ["id", "user", "meals", "delivered","type","deliveryTime"],
   query = {},
 }) {
   try {

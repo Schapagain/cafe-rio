@@ -2,7 +2,7 @@ const { Meal } = require("../database/models");
 const { isValidMongooseId } = require("../database");
 const { getError, ValidationError, NotFoundError } = require("./errors");
 const { trimPrematureIds, makeItem } = require("./utils");
-const { saveFiles, deleteFiles, getFilePath } = require("./files");
+const { saveFiles, deleteFiles, updateFile } = require("./files");
 
 /**
  * Add a new meal to the database
@@ -31,7 +31,7 @@ async function updateMeal(meal) {
     if (!meal) throw new ValidationError("meal");
     const oldMeal = await checkMealPresence({ id: meal.id });
     meal = trimPrematureIds(meal);
-    meal = await saveMealPicture(meal);
+    meal.picture = await updateMealPicture(oldMeal.picture,meal.picture); 
 
     // update key values
     const keysToUpdate = Object.keys(meal);
@@ -55,7 +55,7 @@ async function updateMeal(meal) {
 }
 
 /**
- * If a picture is provided, save it to the disk
+ * If a picture is provided, move it to storage
  * @param {*} meal
  */
 async function saveMealPicture(meal) {
@@ -64,6 +64,19 @@ async function saveMealPicture(meal) {
     meal.picture = pictureFileName;
   }
   return meal;
+}
+
+/**
+ * replace the file at oldPictureUrl with the newPicture
+ * return url to the updated picture 
+ * @param {String} oldPictureUrl 
+ * @param {File} newPicture 
+ */
+async function updateMealPicture(oldPictureUrl,newPicture) {
+  if (newPicture && typeof newPicture == "object") {
+    oldPictureUrl = updateFile(newPicture,oldPictureUrl);
+  }
+  return oldPictureUrl;
 }
 
 /**
@@ -103,20 +116,6 @@ async function getMeals(
 }
 
 /**
- * Returns file path for the meal's picture
- * @param {String} id
- */
-async function getPicture(id) {
-  try {
-    let meal = await checkMealPresence({ id });
-    let filePath = await getFilePath(meal.picture);
-    return filePath;
-  } catch (err) {
-    throw await getError(err);
-  }
-}
-
-/**
  * Remove meal from the database
  * and meal pictures from the disk
  * @param {String} id
@@ -132,4 +131,4 @@ async function deleteMeal(id) {
   }
 }
 
-module.exports = { getMeals, addMeal, getPicture, updateMeal, deleteMeal };
+module.exports = { getMeals, addMeal, updateMeal, deleteMeal };
