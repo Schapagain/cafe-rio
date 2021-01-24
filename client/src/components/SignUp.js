@@ -51,10 +51,17 @@ const useStyles = makeStyles((theme) => ({
   signin: {
     marginTop: theme.spacing(1),
   },
+  image: {
+    width: "100%",
+  },
 }));
 
 function getSteps() {
-  return ["Input Your Information", "Upload a Photo of Your Employee ID"];
+  return [
+    "Input Your Information",
+    "Upload a Photo of Your Employee ID",
+    "Confirm Your Information",
+  ];
 }
 
 const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
@@ -67,7 +74,7 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   const [employeeId, setEmployeeId] = useState("");
   const [phone, setPhone] = useState("");
   const [idCard, setIdCard] = useState(null);
-
+  const [nextDisabled, setNextDisabled] = useState(true);
   // state for what step of sign up we're at
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -75,6 +82,12 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   // showing errors if they exist
   let history = useHistory();
   const [msg, setMsg] = useState("");
+  useEffect(() => {
+    console.log(nextDisabled);
+    console.log(name);
+    console.log();
+    checkDisabled();
+  });
   useEffect(() => {
     if (error.id === "REGISTER_FAIL") setMsg(error.msg);
     if (error.id === "REGISTER_SUCCESS") {
@@ -110,9 +123,9 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
     signUp(newUser);
   };
 
-  const SignUpForm = () => (
-    <form className={classes.form} onSubmit={handleSubmit} noValidate>
-      <Grid item xs={12} container spacing={2}>
+  const PreviewForm = () => (
+    <Grid item xs={12}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
             autoComplete="name"
@@ -122,10 +135,12 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             fullWidth
             id="name"
             label="Name"
-            autoFocus
             value={name}
             onChange={(e) => {
               setName(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
             }}
           />
         </Grid>
@@ -141,6 +156,9 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
             }}
           />
         </Grid>
@@ -158,6 +176,9 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            InputProps={{
+              readOnly: true,
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -172,10 +193,12 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             fullWidth
             id="organization"
             label="Organization"
-            autoFocus
             value={organization}
             onChange={(e) => {
               setOrganization(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
             }}
           />
         </Grid>
@@ -188,10 +211,12 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             fullWidth
             id="employeeId"
             label="Employee ID"
-            autoFocus
             value={employeeId}
             onChange={(e) => {
               setEmployeeId(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
             }}
           />
         </Grid>
@@ -204,28 +229,31 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             fullWidth
             id="phone"
             label="Phone"
-            autoFocus
             value={phone}
             onChange={(e) => {
               setPhone(e.target.value);
             }}
+            InputProps={{
+              readOnly: true,
+            }}
           />
         </Grid>
       </Grid>
-    </form>
+    </Grid>
   );
 
-  function getStepContent(step) {
-    switch (step) {
-      case 0:
-        return <SignUpForm />;
-      case 1:
-        return <IdUpload setIdCard={setIdCard} />;
-
-      default:
-        return "Unknown step";
+  const checkDisabled = () => {
+    if (activeStep === 0) {
+      const fields = [name, email, password, organization, employeeId, phone];
+      const nextDisabled = fields.reduce(
+        (disabled, field) => Boolean(field) && disabled
+      );
+      setNextDisabled(!nextDisabled);
+    } else if (activeStep === 1) {
+      setNextDisabled(!idCard);
     }
-  }
+  };
+
   const SignUpButtons = () => (
     <Grid container justify="space-between">
       <Button
@@ -241,6 +269,7 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
           color="primary"
           onClick={handleNext}
           className={classes.button}
+          disabled={nextDisabled}
         >
           Next
         </Button>
@@ -288,7 +317,7 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             );
           })}
         </Stepper>
-        {msg !== "" ? <Alert severity="error">{msg}</Alert> : null}
+        {msg !== "" ? <Alert severity="error">{msg.msg}</Alert> : null}
         {activeStep === steps.length ? (
           <div>
             <Typography className={classes.instructions}>
@@ -299,14 +328,134 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             <Button>Sign In</Button>
           </div>
         ) : (
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              {getStepContent(activeStep)}
+          <form className={classes.form} onSubmit={handleSubmit} noValidate>
+            <Grid container spacing={2} justify="center">
+              <Grid item xs={12}>
+                {activeStep === 0 ? (
+                  <Grid item xs={12}>
+                    <Grid container spacing={2} justify="center">
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="name"
+                          name="name"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="name"
+                          label="Name"
+                          autoFocus
+                          value={name}
+                          onChange={(e) => {
+                            setName(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="email"
+                          label="Email Address"
+                          name="email"
+                          autoComplete="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          name="password"
+                          label="Password"
+                          type="password"
+                          id="password"
+                          autoComplete="current-password"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Divider />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="organization"
+                          name="organization"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="organization"
+                          label="Organization"
+                          autoFocus
+                          value={organization}
+                          onChange={(e) => {
+                            setOrganization(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="Employee ID"
+                          name="employeeId"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="employeeId"
+                          label="Employee ID"
+                          autoFocus
+                          value={employeeId}
+                          onChange={(e) => {
+                            setEmployeeId(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="Phone"
+                          name="phone"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="phone"
+                          label="Phone"
+                          autoFocus
+                          value={phone}
+                          onChange={(e) => {
+                            setPhone(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                ) : activeStep === 1 ? (
+                  <IdUpload setIdCard={setIdCard} />
+                ) : (
+                  <Grid container justify="center">
+                    <Grid item xs={12}>
+                      <img
+                        src={URL.createObjectURL(idCard)}
+                        alt="employment id card"
+                        className={classes.image}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <PreviewForm />
+                    </Grid>
+                  </Grid>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <SignUpButtons />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <SignUpButtons />
-            </Grid>
-          </Grid>
+          </form>
         )}
       </div>
       <Box mt={5}>
