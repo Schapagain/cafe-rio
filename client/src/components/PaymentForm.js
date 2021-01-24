@@ -8,9 +8,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { connect } from "react-redux";
 
 import { addOrder } from "../actions/orderActions";
-import {
-  confirmCardPayment,
-} from "../actions/paymentActions";
+import { confirmCardPayment } from "../actions/paymentActions";
 
 const useStyles = makeStyles((theme) => ({
   // root: {
@@ -21,12 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PaymentForm = ({
-  addOrder,
-  payment,
-  error,
-  confirmCardPayment,
-}) => {
+const PaymentForm = ({ addOrder, payment, error, confirmCardPayment }) => {
   const [disabled, setDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const stripe = useStripe();

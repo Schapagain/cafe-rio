@@ -9,17 +9,16 @@ import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-// import { useStripe } from "@stripe/react-stripe-js";
-// import axios from "axios";
-// import { ROOT_ENDPOINT } from "../constants";
 
 import CartSingleMeal from "./CartSingleMeal";
+import emptyCartImage from "../empty_cart.png";
 import { Typography } from "@material-ui/core";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
-import { createPaymentIntent } from '../actions/paymentActions';
-import emptyCartImage from "../empty_cart.png";
+import { createPaymentIntent } from "../actions/paymentActions";
+import store from "../store";
+import { LOAD_CHECKOUT } from "../actions/types";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     width: "25em",
   },
@@ -49,17 +48,17 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.8rem",
   },
   emptyCart: {
-    marginTop: "100%"
-  }
+    marginTop: "100%",
+  },
 }));
 
 const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
   const classes = useStyles();
-  // const stripe = useStripe();
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const handleCheckout = async (event) => {
+  const handleCheckout = async () => {
     setOpenDrawer(false);
+    store.dispatch({ type: LOAD_CHECKOUT });
     createPaymentIntent();
   };
 
@@ -68,51 +67,55 @@ const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
     order.totalPrice,
     order.totalMeals,
   ];
-  
+
   const emptyCart = (
     <Grid className={classes.emptyCart} item xs={10}>
-      <img className={classes.emptyCartImage} src={emptyCartImage} alt="emtpy cart" />
-    </Grid> 
-  )
+      <img
+        className={classes.emptyCartImage}
+        src={emptyCartImage}
+        alt="emtpy cart"
+      />
+    </Grid>
+  );
 
   const cartWithItems = (
-      <>
-          <Grid item xs={12} className={classes.yourOrderContainer}>
-            <Typography className={classes.yourOrder}>Your Order</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={11} className={classes.checkoutButtonContainer}>
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.checkoutButton}
-              size="large"
-              onClick={handleCheckout}
-              component={Link}
-              to="/checkout"
-            >
-              <Typography variant="button" className={classes.checkoutText}>
-                CHECKOUT
-              </Typography>
-              <Typography variant="subtitle2" className={classes.subPriceText}>
-                ${totalPrice}
-              </Typography>
-            </Button>
-          </Grid>
-          {Array.from(mealsOrdered.keys()).map((mealId) => (
-            <CartSingleMeal
-              key={mealId}
-              meal={mealsOrdered.get(mealId).meal}
-              quantity={mealsOrdered.get(mealId).quantity}
-              handleRemove={() => {
-                removeMealFromOrder(mealId);
-              }}
-            />
-          ))}
-          </>
-    );
+    <>
+      <Grid item xs={12} className={classes.yourOrderContainer}>
+        <Typography className={classes.yourOrder}>Your Order</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
+      <Grid item xs={11} className={classes.checkoutButtonContainer}>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.checkoutButton}
+          size="large"
+          onClick={handleCheckout}
+          component={Link}
+          to="/checkout"
+        >
+          <Typography variant="button" className={classes.checkoutText}>
+            CHECKOUT
+          </Typography>
+          <Typography variant="subtitle2" className={classes.subPriceText}>
+            ${totalPrice}
+          </Typography>
+        </Button>
+      </Grid>
+      {Array.from(mealsOrdered.keys()).map((mealId) => (
+        <CartSingleMeal
+          key={mealId}
+          meal={mealsOrdered.get(mealId).meal}
+          quantity={mealsOrdered.get(mealId).quantity}
+          handleRemove={() => {
+            removeMealFromOrder(mealId);
+          }}
+        />
+      ))}
+    </>
+  );
 
   return (
     <>
@@ -143,7 +146,7 @@ const Cart = ({ order, createPaymentIntent, removeMealFromOrder }) => {
           spacing={1}
           className={classes.root}
         >
-        {totalMeals ? cartWithItems : emptyCart}
+          {totalMeals ? cartWithItems : emptyCart}
         </Grid>
       </Drawer>
     </>
@@ -159,4 +162,5 @@ export default connect(mapStateToProps, {
   addMealToOrder,
   removeMealFromOrder,
   createPaymentIntent,
+  store,
 })(Cart);

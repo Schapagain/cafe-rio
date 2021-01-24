@@ -2,6 +2,7 @@ import {
   ADD_ORDER,
   ADD_MEAL_TO_ORDER,
   REMOVE_MEAL_FROM_ORDER,
+  CLEAR_CART,
 } from "../actions/types";
 import { Order } from "../utils/order";
 
@@ -12,7 +13,7 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case ADD_ORDER: // not sure what to do with the order data just yet
+    case ADD_ORDER: // will use this later
       return state;
     case ADD_MEAL_TO_ORDER:
     case REMOVE_MEAL_FROM_ORDER:
@@ -21,6 +22,13 @@ export default function reducer(state = initialState, action) {
         ...initialState,
         order: action.payload,
       };
+    case CLEAR_CART:
+      localStorage.removeItem("order");
+      return {
+        ...state,
+        order: new Order(),
+      };
+
     default:
       return state;
   }

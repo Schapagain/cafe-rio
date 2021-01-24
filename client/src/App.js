@@ -18,7 +18,9 @@ import { loadUser } from "./actions/authActions";
 import theme from "./components/Theme";
 
 const stripePromise = loadStripe(
-  "pk_test_51I8QurI5qzReycR9FSYytJ8iPoxfXFQwYObAZC0x8jXsHY6K6XOCZ8AtF6N8NDiDpPC58I090d88Q0i0Y4PudyZo00AFJEaifB"
+  process.env.NODE_ENV === "production"
+    ? "pk_test_51I8QurI5qzReycR9FSYytJ8iPoxfXFQwYObAZC0x8jXsHY6K6XOCZ8AtF6N8NDiDpPC58I090d88Q0i0Y4PudyZo00AFJEaifB"
+    : "pk_test_51I9vjxG8iwDJeXMuTa3a3eWZaDQmLnQHxu1Nz2hdvYqrkW1rInfWsZeoqMaXIx4aiI2s8SRYNoyDUZRpudKGyT6600UGYFL0MR"
 );
 
 function App() {
@@ -32,16 +34,17 @@ function App() {
           <ThemeProvider theme={theme}>
             <NavBar />
             <Switch>
-              <Route exact path="/login" render={ props => <SignIn {...props.location.state} />} /> 
+              <Route
+                exact
+                path="/login"
+                render={(props) => <SignIn {...props.location.state} />}
+              />
               <Route exact path="/signup">
                 <SignUp />
               </Route>
               <Route exact path="/checkout">
                 <Checkout />
               </Route>
-              {/* <PrivateRoute path="/">
-            <HomePage />
-          </PrivateRoute> */}
               <Route path="/">
                 <HomePage />
               </Route>

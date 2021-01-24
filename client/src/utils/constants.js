@@ -3,8 +3,8 @@ export const ROOT_ENDPOINT =
     ? "https://cafe-rio.herokuapp.com"
     : "http://localhost:5000";
 
-export const PAYMENT = {
-  creditCard: "credit",
-  stripe: "stripe",
-  paypal: "paypal",
+export const PAYMENT_STATUS = {
+  success: "success",
+  need_payment_method: "need payment method",
+  load_checkout: "load checkout",
 };

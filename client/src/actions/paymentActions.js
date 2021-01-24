@@ -1,13 +1,15 @@
 import axios from "axios";
 import { returnErrors } from "./errorActions";
-import { ROOT_ENDPOINT } from "../constants";
+import { ROOT_ENDPOINT } from "../utils/constants";
 import {
   CREATE_PAYMENT_INTENT_SUCCESS,
   CREATE_PAYMENT_INTENT_FAIL,
   CONFIRM_CARD_PAYMENT_SUCCESS,
   CONFIRM_CARD_PAYMENT_FAIL,
   PAYMENT_PROCESSING,
+  CLEAR_CART,
 } from "../actions/types";
+
 import { tokenConfig } from "./shared";
 
 export const createPaymentIntent = () => async (dispatch, getState) => {
@@ -61,6 +63,9 @@ export const confirmCardPayment = (
       dispatch({
         type: CONFIRM_CARD_PAYMENT_SUCCESS,
         payload: { paymentIntent: res.paymentIntent },
+      });
+      dispatch({
+        type: CLEAR_CART,
       });
     }
   } catch (err) {

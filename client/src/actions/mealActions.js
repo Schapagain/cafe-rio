@@ -1,6 +1,6 @@
 import axios from "axios";
 import { returnErrors } from "./errorActions";
-import { ROOT_ENDPOINT } from "../constants";
+import { ROOT_ENDPOINT } from "../utils/constants";
 import {
   ADD_MEAL,
   GET_MEALS,

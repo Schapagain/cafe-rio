@@ -4,9 +4,12 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
 import CheckoutOrderReview from "./CheckoutOrderReview";
+import CheckoutConfirmation from "./CheckoutConfirmation";
+import Spinner from "./Spinner";
 import PaymentForm from "./PaymentForm";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { PAYMENT_STATUS } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
-    stepper: {
-      padding: theme.spacing(3, 0, 5),
-    },
   },
   title: {
     fontWeight: "bold",
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Checkout = ({ isAuthenticated }) => {
+const Checkout = ({ isAuthenticated, payment }) => {
   const classes = useStyles();
   let history = useHistory();
   useEffect(() => {
@@ -53,26 +53,39 @@ const Checkout = ({ isAuthenticated }) => {
 
   return (
     <div className={classes.container}>
-      <Typography
-        component="h1"
-        variant="h4"
-        align="center"
-        className={classes.title}
-      >
-        Checkout
-      </Typography>
-      <Paper className={classes.paper}>
-        <CheckoutOrderReview />
-      </Paper>
-      <Paper className={classes.paper}>
-        <PaymentForm />
-      </Paper>
+      {payment.status === PAYMENT_STATUS.load_checkout ? (
+        <>
+          <Typography
+            component="h1"
+            variant="h4"
+            align="center"
+            className={classes.title}
+          >
+            Checkout
+          </Typography>
+          <Paper className={classes.paper}>
+            <CheckoutOrderReview />
+          </Paper>
+          <Paper className={classes.paper}>
+            <PaymentForm />
+          </Paper>
+        </>
+      ) : payment.status === PAYMENT_STATUS.success ? (
+        <Paper className={classes.paper}>
+          <CheckoutConfirmation />
+        </Paper>
+      ) : (
+        <Paper className={classes.paper}>
+          <Spinner />
+        </Paper>
+      )}
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  payment: state.payment,
 });
 
-export default connect(mapStateToProps, {})(Checkout);
+export default connect(mapStateToProps)(Checkout);
