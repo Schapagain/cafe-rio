@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
+
 import store from "../store";
-import { FINISH_CHECKOUT } from "../actions/types";
+import { FINISH_CHECKOUT, CLEAR_CART } from "../actions/types";
 
 const CheckoutConfirmation = () => {
   const history = useHistory();
+
+  useEffect(() => {
+    store.dispatch({ type: CLEAR_CART });
+  }, []);
+
   const handleClick = () => {
     store.dispatch({ type: FINISH_CHECKOUT });
     history.push("/");

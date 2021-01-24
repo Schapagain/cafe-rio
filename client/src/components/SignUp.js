@@ -10,15 +10,18 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Divider from "@material-ui/core/Divider";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import Spinner from "./Spinner";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+
 import { signUp } from "../actions/authActions";
-// import SignIn from "./SignIn";
+import IdUpload from "./IdUpload";
 import { clearErrors } from "../actions/errorActions";
 import Copyright from "./Copyright";
 
@@ -45,7 +48,21 @@ const useStyles = makeStyles((theme) => ({
   input: {
     display: "none",
   },
+  signin: {
+    marginTop: theme.spacing(1),
+  },
+  image: {
+    width: "100%",
+  },
 }));
+
+function getSteps() {
+  return [
+    "Input Your Information",
+    "Upload a Photo of Your Employee ID",
+    "Confirm Your Information",
+  ];
+}
 
 const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   const classes = useStyles();
@@ -57,10 +74,17 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   const [employeeId, setEmployeeId] = useState("");
   const [phone, setPhone] = useState("");
   const [idCard, setIdCard] = useState(null);
+  const [nextDisabled, setNextDisabled] = useState(true);
+  // state for what step of sign up we're at
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = getSteps();
 
   // showing errors if they exist
   let history = useHistory();
   const [msg, setMsg] = useState("");
+  useEffect(() => {
+    checkDisabled();
+  });
   useEffect(() => {
     if (error.id === "REGISTER_FAIL") setMsg(error.msg);
     if (error.id === "REGISTER_SUCCESS") {
@@ -71,6 +95,14 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
       clearErrors();
     }
   }, [error, history, clearErrors]);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
 
   // posts form data to server
   const handleSubmit = (e) => {
@@ -88,6 +120,180 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
     signUp(newUser);
   };
 
+  const PreviewForm = () => (
+    <Grid item xs={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField
+            autoComplete="name"
+            name="name"
+            variant="outlined"
+            required
+            fullWidth
+            id="name"
+            label="Name"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            autoComplete="organization"
+            name="organization"
+            variant="outlined"
+            required
+            fullWidth
+            id="organization"
+            label="Organization"
+            value={organization}
+            onChange={(e) => {
+              setOrganization(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            autoComplete="Employee ID"
+            name="employeeId"
+            variant="outlined"
+            required
+            fullWidth
+            id="employeeId"
+            label="Employee ID"
+            value={employeeId}
+            onChange={(e) => {
+              setEmployeeId(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            autoComplete="Phone"
+            name="phone"
+            variant="outlined"
+            required
+            fullWidth
+            id="phone"
+            label="Phone"
+            value={phone}
+            onChange={(e) => {
+              setPhone(e.target.value);
+            }}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+
+  const checkDisabled = () => {
+    if (activeStep === 0) {
+      const fields = [name, email, password, organization, employeeId, phone];
+      const nextDisabled = fields.reduce(
+        (disabled, field) => Boolean(field) && disabled
+      );
+      setNextDisabled(!nextDisabled);
+    } else if (activeStep === 1) {
+      setNextDisabled(!idCard);
+    }
+  };
+
+  const SignUpButtons = () => (
+    <Grid container justify="space-between">
+      <Button
+        disabled={activeStep === 0}
+        onClick={handleBack}
+        className={classes.button}
+      >
+        Back
+      </Button>
+      {activeStep !== steps.length - 1 ? (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleNext}
+          className={classes.button}
+          disabled={nextDisabled}
+        >
+          Next
+        </Button>
+      ) : isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Sign Up
+          </Button>
+        </>
+      )}
+      <Grid container justify="flex-end" className={classes.signin}>
+        <Grid item>
+          <Link component={RouterLink} to="/login" variant="body2">
+            Already have an account? Sign in
+          </Link>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -98,154 +304,156 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        {msg !== "" ? <Alert severity="error">{msg}</Alert> : null}
-        <form className={classes.form} onSubmit={handleSubmit} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="name"
-                name="name"
-                variant="outlined"
-                required
-                fullWidth
-                id="name"
-                label="Name"
-                autoFocus
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="organization"
-                name="organization"
-                variant="outlined"
-                required
-                fullWidth
-                id="organization"
-                label="Organization"
-                autoFocus
-                value={organization}
-                onChange={(e) => {
-                  setOrganization(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="Employee ID"
-                name="employeeId"
-                variant="outlined"
-                required
-                fullWidth
-                id="employeeId"
-                label="Employee ID"
-                autoFocus
-                value={employeeId}
-                onChange={(e) => {
-                  setEmployeeId(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="Phone"
-                name="phone"
-                variant="outlined"
-                required
-                fullWidth
-                id="phone"
-                label="Phone"
-                autoFocus
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <input
-                accept="image/*"
-                className={classes.input}
-                id="idCard"
-                type="file"
-                name="idCard"
-                onChange={(e) => {
-                  setIdCard(e.target.files[0]);
-                }}
-                // ref={fileRef}
-              />
-              <label htmlFor="idCard">
-                <Button
-                  variant="contained"
-                  component="span"
-                  color="secondary"
-                  startIcon={<PhotoCamera />}
-                >
-                  Upload Photo of Your Employee ID
-                </Button>
-              </label>
-            </Grid>
-          </Grid>
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign Up
-              </Button>
-              <Grid container justify="flex-end">
-                <Grid item>
-                  <Link component={RouterLink} to="/login" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
-                </Grid>
+
+        <Stepper activeStep={activeStep}>
+          {steps.map((label) => {
+            return (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+        {msg !== "" ? <Alert severity="error">{msg.msg}</Alert> : null}
+        {activeStep === steps.length ? (
+          <div>
+            <Typography className={classes.instructions}>
+              Thank you for signing up! We have sent an activation code to your
+              email. Please activate your account and then click below to sign
+              in
+            </Typography>
+            <Button>Sign In</Button>
+          </div>
+        ) : (
+          <form className={classes.form} onSubmit={handleSubmit} noValidate>
+            <Grid container spacing={2} justify="center">
+              <Grid item xs={12}>
+                {activeStep === 0 ? (
+                  <Grid item xs={12}>
+                    <Grid container spacing={2} justify="center">
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="name"
+                          name="name"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="name"
+                          label="Name"
+                          autoFocus
+                          value={name}
+                          onChange={(e) => {
+                            setName(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="email"
+                          label="Email Address"
+                          name="email"
+                          autoComplete="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          name="password"
+                          label="Password"
+                          type="password"
+                          id="password"
+                          autoComplete="current-password"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Divider />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="organization"
+                          name="organization"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="organization"
+                          label="Organization"
+                          autoFocus
+                          value={organization}
+                          onChange={(e) => {
+                            setOrganization(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="Employee ID"
+                          name="employeeId"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="employeeId"
+                          label="Employee ID"
+                          autoFocus
+                          value={employeeId}
+                          onChange={(e) => {
+                            setEmployeeId(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="Phone"
+                          name="phone"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="phone"
+                          label="Phone"
+                          autoFocus
+                          value={phone}
+                          onChange={(e) => {
+                            setPhone(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                ) : activeStep === 1 ? (
+                  <IdUpload setIdCard={setIdCard} />
+                ) : (
+                  <Grid container justify="center">
+                    <Grid item xs={12}>
+                      <img
+                        src={URL.createObjectURL(idCard)}
+                        alt="employment id card"
+                        className={classes.image}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <PreviewForm />
+                    </Grid>
+                  </Grid>
+                )}
               </Grid>
-            </>
-          )}
-        </form>
+              <Grid item xs={12}>
+                <SignUpButtons />
+              </Grid>
+            </Grid>
+          </form>
+        )}
       </div>
       <Box mt={5}>
         <Copyright />

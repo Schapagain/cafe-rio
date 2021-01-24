@@ -23,7 +23,7 @@ export const addOrder = () => async (dispatch, getState) => {
       },
       tokenConfig(getState)
     );
-    dispatch({ type: ADD_ORDER, payload: res.order });
+    dispatch({ type: ADD_ORDER, payload: res.data.order });
   } catch (err) {
     if (err.response) {
       dispatch(
