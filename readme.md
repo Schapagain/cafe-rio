@@ -1,7 +1,6 @@
 ## Guide to the API Endpoints
 <br/>
 
-> Server deployed at: https://cafe-rio.herokuapp.com <br/>
 > Client deployed at: https://cafe-rio.netlify.app
 
 <br/>
@@ -15,6 +14,10 @@
     - refresh token
 * Stripe - Create an account, and obtain:
     - payment secret
+* Cloudinary - Create an account, and obtain:
+    - cloud name
+    - API key
+    - API secret
 
 ### Deployment instructions
 * clone repository: ```https://github.com/Schapagain/cafe-rio.git```
@@ -33,10 +36,21 @@
         - ```SECRET_KEY```
     - Used to make payments
         - ```STRIPE_SECRET```
+    - Used for image uploads
+        - ```CLOUDINARY_URL``` = cloudinary://{api_key}:{api_secret}@{cloud_name}
 * Start the application: ```npm run dev``` at project root
 <br/>
 <br/>
 
+### Valid credit cards
+|Number|BRAND|CVC|DATE|
+|-----|-----|-----|-----|
+|4242 4242 4242 4242| Visa | Any 3 digits | Any future date |
+|3782 8224 6310 005| Amex | Any 4 digits | Any future date | 
+|6011 0009 9013 9424 | Discover | Any 3 digits | Any future date |
+
+<br/>
+<br/>
 ### Responses and Error Codes
 All responses are JSON objects. In cases of failure, an 'error' property shall always exist with an appropriate error message. The following are all possible http response types:
 
@@ -100,7 +114,7 @@ All responses are JSON objects. In cases of failure, an 'error' property shall a
 |Endpoint|Desc|Method|Access|Payload|Return|Notes|
 |-----|-----|-----|-----|-----|-----|-----|
 | /create_intent | Create a payment intent | POST | Public | { user*, meals* } | { secret, amount } | ```user``` is id of the user, and ```meals``` is an array of meal ids |
-| / | Add a new order | POST | Public | {user*, meals*, payment*, amount*, type(dinein)} | { order } | ```user``` is id of the user<br/>```meals``` is an array of meal ids<br/>```payment``` is payment method id|
+| / | Add a new order | POST | Public | {user*, meals*, payment*, amount*, deliveryTime*, delivered, type} | { order } | ```user``` is id of the user<br/>```meals``` is an array of meal ids<br/>```payment``` is payment method id<br/>Order confirmation email is sent|
 | / | Fetch all orders | GET | Public |  | { count, data : [ Meal ] } |  |
 | /:id | Fetch order info | GET | Public |  | { count, data : [ Meal ] } | |
 | /:id | Update order info | PATCH | Public | {name, price, category, available} | { order } | |
