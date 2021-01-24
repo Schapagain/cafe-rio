@@ -13,10 +13,7 @@ async function addOrder(order) {
   try {
     if (!order) throw new ValidationError("order");
     order = trimPrematureIds(order);
-    const newOrder = await validateOrder(order);
-    if (!newOrder.payment) throw new ValidationError("payment");
-    if (!newOrder.amount) throw new ValidationError("amount");
-
+    const newOrder = await validateOrder(order,true);
     order = await newOrder.save();
     return { order: makeItem(order, ["id", "user", "meals", "amount"]) };
   } catch (err) {
@@ -28,8 +25,14 @@ async function addOrder(order) {
  * Validate the given order
  * @param {*} order
  */
-async function validateOrder(order) {
+async function validateOrder(order,final=false) {
   try {
+    if (final) {
+      if (!order.payment) throw new ValidationError("payment");
+      if (!order.amount) throw new ValidationError("amount");
+      if (!order.deliveryTime) throw new ValidationError("deliveryTime");
+      if (!order.type) throw new ValidationError("type");
+    }
     const newOrder = new Order(order);
     await newOrder.validate();
     return newOrder;
