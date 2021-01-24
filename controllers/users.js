@@ -3,7 +3,7 @@ const { isValidMongooseId, queryDatabase } = require('../database');
 // Import the user model
 const { User } = require("../database/models");
 const { getError, ValidationError, NotFoundError } = require("./errors");
-const { saveFiles, deleteFiles, getFilePath } = require("./files");
+const { saveFiles, deleteFiles } = require("./files");
 const { sendActivationEmail } = require("./email");
 const { getRandomCode, getServerURL, trimPrematureIds, makeItem } = require('./utils');
 
@@ -32,7 +32,7 @@ async function signupUser(user) {
 }
 
 /**
- * If an id card is provided, save it to the disk
+ * If an id card is provided, move it to storage
  * @param {*} user 
  */
 async function saveUserIdCard(user) {
@@ -44,6 +44,19 @@ async function saveUserIdCard(user) {
 }
 
 /**
+ * replace the file at oldPictureUrl with the newPicture
+ * return url to the updated picture 
+ * @param {String} OldIdUrl 
+ * @param {File} newId 
+ */
+async function updateUserIdCard(oldIdUrl,newId) {
+  if (newId && typeof newId == "object") {
+    oldIdUrl = updateFile(newId,oldIdUrl);
+  }
+  return oldIdUrl;
+}
+
+/**
  * Update given properties for the user
  * @param {*} user 
  */
@@ -52,7 +65,7 @@ async function updateUser(user) {
     if (!user) throw new ValidationError('user');
     const oldUser = await checkUserPresence({query:{id:user.id}});
     user = trimPrematureIds(user);
-    user = await saveUserIdCard(user);
+    user.idCard = await updateUserIdCard(oldUser.idCard,user.idCard);
     
     // update key values
     let keysToUpdate = Object.keys(user);
@@ -154,25 +167,10 @@ async function getUsers({query,attributes=["id","name","email","phone","organiza
   return {count:users.length,data:users};
 }
 
-/**
- * Return file path for idcard of the user with the given id
- * @param {String} id 
- */
-async function getIdCard(id) {
-  try{
-    let user = await checkUserPresence({query:{id}});
-    let filePath = await getFilePath(user.idCard);
-    return filePath;
-  }catch(err) {
-    throw await getError(err);
-  }
-}
-
 module.exports = { 
   signupUser, 
   updateUser, 
   deleteUser, 
   getUsers, 
   checkUserPresence, 
-  getIdCard 
 };
