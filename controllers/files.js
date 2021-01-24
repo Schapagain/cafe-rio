@@ -16,6 +16,7 @@ cloudinary.config({
     cloud_name: "skyimages",
     api_key:"369875593241412",
     api_secret:"RUYPNwOSTU3JwqOfdS2mDnMzo-c",
+    secure: true,
 });
 
 function uploadToCloudinary(image) {
