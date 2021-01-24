@@ -24,13 +24,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IdUpload = () => {
+const IdUpload = ({ setIdCard }) => {
   const classes = useStyles();
-  const [uploadedFile, setUploadedFile] = useState("");
   const [uploadedFileUrl, setUploadedFileUrl] = useState("");
 
   const onDrop = (acceptedFiles) => {
-    setUploadedFile(acceptedFiles[0]);
     handleImageUpload(acceptedFiles[0]);
   };
 
@@ -38,6 +36,7 @@ const IdUpload = () => {
 
   const handleImageUpload = (file) => {
     setUploadedFileUrl(URL.createObjectURL(file));
+    setIdCard(file);
   };
 
   const ImagePreview = () => (
