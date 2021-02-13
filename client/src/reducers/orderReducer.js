@@ -3,6 +3,8 @@ import {
   ADD_MEAL_TO_ORDER,
   REMOVE_MEAL_FROM_ORDER,
   CLEAR_CART,
+  SET_DELIVERY_TIME,
+  SET_DELIVERY_TYPE,
 } from "../actions/types";
 import { Order } from "../utils/order";
 
@@ -17,6 +19,8 @@ export default function reducer(state = initialState, action) {
       return state;
     case ADD_MEAL_TO_ORDER:
     case REMOVE_MEAL_FROM_ORDER:
+    case SET_DELIVERY_TIME:
+    case SET_DELIVERY_TYPE:
       localStorage.setItem("order", action.payload.jsonStringifiedOrder);
       return {
         ...initialState,

@@ -3,6 +3,7 @@ export class Order {
     this.order = order ? new Map(order) : new Map();
     this.mealIds = this.createMealIdArray(this.order);
     this.type = type ? type : "dinein";
+    this.time = 1;
   }
 
   createMealIdArray(order) {
@@ -27,6 +28,14 @@ export class Order {
     this.mealIds.push(meal.id);
   }
 
+  setTime(time) {
+    this.time = time;
+  }
+
+  setType(type) {
+    this.type = type;
+  }
+
   removeMeal(mealId) {
     if (!this.order.has(mealId)) return;
     if (this.order.get(mealId).quantity === 1) {
@@ -42,6 +51,14 @@ export class Order {
 
   getOrderDetails() {
     return this.order;
+  }
+
+  get orderTime() {
+    return this.time;
+  }
+
+  get orderType() {
+    return this.type;
   }
 
   get meals() {
