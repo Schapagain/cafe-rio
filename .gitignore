@@ -9,4 +9,6 @@ uploads/*
 # Local Netlify folder
 .netlify
 
+# linters
 /client/.eslintcache
+.eslintcache

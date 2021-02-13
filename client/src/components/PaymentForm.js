@@ -7,9 +7,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { connect } from "react-redux";
 
-import { addOrder } from "../actions/orderActions";
+import { addOrder, setDeliveryTime, setDeliveryType } from "../actions/orderActions";
 import { confirmCardPayment } from "../actions/paymentActions";
 import Spinner from './Spinner';
+
+
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
   // root: {
@@ -18,14 +25,33 @@ const useStyles = makeStyles((theme) => ({
   payment: {
     fontSize: "1.8rem",
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
-const PaymentForm = ({ addOrder, payment, error, confirmCardPayment }) => {
+const PaymentForm = ({ addOrder, setDeliveryTime, setDeliveryType, payment, error, confirmCardPayment }) => {
   const [disabled, setDisabled] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
   const classes = useStyles();
+
+  const [deliveryType, setType] = useState("dinein");
+  const [deliveryTime, setTime] = useState(1);
+
+  const handleTimeChange = e => {
+    setTime(e.target.value);
+    setDeliveryTime(e.target.value);
+  }
+  const handleTypeChange = e => {
+    setType(e.target.value);
+    setDeliveryType(e.target.value);
+  }
 
   // error msg state
   useEffect(() => {
@@ -70,15 +96,42 @@ const PaymentForm = ({ addOrder, payment, error, confirmCardPayment }) => {
     });
 
     if (error.id === "CONFIRM_CARD_PAYMENT_FAIL") return;
-
+    console.log('almost adding order')
     addOrder();
   };
 
   return (
     <Grid container justify="center" className={classes.root} spacing={1}>
       <Grid item xs={12}>
-        <Typography className={classes.payment}>Payment Details</Typography>
+        <Typography className={classes.payment}>Order Details</Typography>
       </Grid>
+      <Grid item xs={12}>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="type-select-label">Order Type</InputLabel>
+        <Select
+          labelId="type-select-label"
+          value={deliveryType}
+          onChange={handleTypeChange}
+        >
+          <MenuItem value="dinein">Dine in</MenuItem>
+          <MenuItem value="delivery">Delivery</MenuItem>
+          <MenuItem value="takeout">Take Out</MenuItem>
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="time-select-label">Delivery Time</InputLabel>
+        <Select
+          labelId="time-select-label"
+          value={deliveryTime}
+          onChange={handleTimeChange}
+        >
+          <MenuItem value={1}>In an hour</MenuItem>
+          <MenuItem value={2}>In 2 hours</MenuItem>
+          <MenuItem value={3}>In 3 hours</MenuItem>
+        </Select>
+        <FormHelperText>Times are relative to order time</FormHelperText>
+      </FormControl>
+      </Grid> 
       <Grid item xs={12}>
         <CardElement
           id="card-element"
@@ -116,5 +169,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   addOrder,
+  setDeliveryTime,
+  setDeliveryType,
   confirmCardPayment,
 })(PaymentForm);
