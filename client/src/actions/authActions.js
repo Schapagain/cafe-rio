@@ -26,8 +26,9 @@ export const loadUser = () => async (dispatch, getState) => {
       dispatch({ type: USER_LOADED, payload: res.data.data[0] });
     }
   } catch (err) {
-    if (err)
-      dispatch(returnErrors(err.response.data.error, err.response.status));
+    if (err && err.response) {
+      dispatch(returnErrors(err.response.data.error, err.response.status)); 
+    }
     dispatch({ type: AUTH_ERROR });
   }
 };
@@ -98,6 +99,8 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 
 // logout
 export const logOut = () => (dispatch) => {
+
+  console.log('LOGGING OUT>>>')
   dispatch({
     type: LOGOUT_SUCCESS,
   });
