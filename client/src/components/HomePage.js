@@ -1,55 +1,45 @@
-import React, { useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import React from "react";
 import PropTypes from "prop-types";
-import Meals from "./Meals";
 import { connect } from "react-redux";
-import { getMeals } from '../actions/mealActions';
+import Button from './Button';
+import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
-  todaysMenu: {
-    // backgroundColor: theme.palette.secondary.light,
-    marginTop: ".8rem",
-  },
-  todaysMenuText: {
-    fontSize: "1rem",
-    fontWeight: "bolder",
+const IntroText = () => {
+    return(
+        <div className="z-50 text-center text-white">
+            <p className="text-3xl sm:text-4xl lg:text-5xl mb-4">A place to recharge yourself</p>
+            <div className="text-xl sm:text-2xl lg:text-3xl">
+                <p>Drink some coffee.</p>
+                <p>Grab a snack.</p>    
+            </div>
+        </div>
+    )
+}
 
-    // color: theme.palette.main,
-  },
-}));
+const HomePage = () => {
 
-const HomePage = ({getMeals}) => {
+    const history = useHistory();
 
-  useEffect(() => {
-    getMeals();
-  })
+    return (
+        <div className="flex justify-center lg:justify-start mx-auto w-full max-w-screen-xl h-2/3 my-auto">
+            <div className="flex lg:ml-20 flex-col my-auto ">
+                <IntroText />
+                <Button 
+                className="rounded-full hover:bg-theme-color"
+                text="See menu" 
+                onClick={()=>history.push("/menu")}
+                />    
+            </div>
+        </div>
+    )
+}
 
-  const classes = useStyles();
-  return (
-    <Container maxWidth="md">
-      <Grid container justify="center" spacing={2}>
-        <Grid item container className={classes.todaysMenu}>
-          <Typography variant="h5" className={classes.todaysMenuText}>
-            TODAY'S MENU
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-        <Meals filter="Hot Drinks"/>
-        <Meals filter="Cold Drinks"/>
-        <Meals filter="Pastries" />
-        <Meals filter="Starters" />
-        <Meals filter="Entrees" />
-        </Grid>
-      </Grid>
-    </Container>
-  );
-};
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
 
 HomePage.propTypes = {
   getMeals: PropTypes.func.isRequired
 };
 
-export default connect(null, { getMeals })(HomePage);
+export default connect(mapStateToProps, {})(HomePage);
