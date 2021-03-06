@@ -18,7 +18,9 @@ export default function SingleMeal({meal,addToOrder}) {
       onClick={()=>addToOrder(meal)} 
       className="h-2/3 w-full bg-theme-color rounded-xl flex relative"
       >
-        <div className="w-full h-full z-30 hover:opacity-50">
+        <div 
+        className="w-full h-full z-30 transition duration-500 ease-in-out hover:opacity-50"
+        >
           <Image url={picture}/>  
         </div>
         <div className="z-1 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
