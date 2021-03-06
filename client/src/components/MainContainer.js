@@ -4,7 +4,7 @@ import HomePage from "./HomePage";
 import Checkout from "./Checkout";
 import Menu from './Menu';
 import SignUp from './SignUp';
-import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import NavBar from './NavBar';
 import About from './About';
 
