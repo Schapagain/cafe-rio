@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import Button from './Button';
 import { useHistory } from "react-router-dom";
 
@@ -34,12 +32,4 @@ const HomePage = () => {
     )
 }
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
-});
-
-HomePage.propTypes = {
-  getMeals: PropTypes.func.isRequired
-};
-
-export default connect(mapStateToProps, {})(HomePage);
+export default HomePage;
