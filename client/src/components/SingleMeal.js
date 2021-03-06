@@ -1,111 +1,36 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
-import { makeStyles } from "@material-ui/styles";
+import { MdAddShoppingCart } from 'react-icons/md';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    [theme.breakpoints.up("md")]: {
-      width: "300px",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
-    [theme.breakpoints.down("xs")]: {
-      // width: "100%",
-      marginLeft: "1rem",
-      marginRight: "1rem",
-    },
-  },
-  media: {
-    // height: "15rem",
-    paddingTop: "56.25%",
-  },
-  content: {
-    padding: 0,
-    paddingTop: "0.5em",
-    paddingLeft: "0.5em",
-  },
-  orderButtonContainer: {
-    paddingBottom: "0.5em",
-  },
-  orderButton: {
-    // fontSize: "0.6rem",
-  },
-  priceText: {
-    lineHeight: "1em",
-  },
-  foodName: {
-    ...theme.typography,
-    fontSize: "1rem",
-  },
-  foodPrice: {
-    fontSize: "0.9rem",
-    lineHeight: ".9rem",
-  },
-}));
-
-const SingleMeal = ({ meal, handleOnClick }) => {
-  const classes = useStyles();
+function Image({url}) {
   return (
-    <Card className={classes.root} id="mealCard">
-      <Grid container justify="center" alignItems="center">
-        <Grid item xs={5} sm={12}>
-          <CardMedia
-            // component="img"
-            alt={meal.name}
-            image={meal.picture}
-            className={classes.media}
-          />
-        </Grid>
-        <Grid container item xs={7} sm={12}>
-          <Grid item sm={12}>
-            <CardContent className={classes.content}>
-              <Typography variant="subtitle2" className={classes.foodName}>
-                {meal.name}
-              </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-                className={classes.foodPrice}
-              >
-                {`$${meal.price && Number(meal.price).toFixed(2)}`}
-              </Typography>
-            </CardContent>
-          </Grid>
-          <Grid
-            item
-            sm={12}
-            container
-            justify="center"
-            className={classes.orderButtonContainer}
-          >
-            <CardActions>
-              <Button
-                startIcon={<AddShoppingCartIcon />}
-                aria-label="order button"
-                variant="contained"
-                color="secondary"
-                size="small"
-                className={classes.orderButton}
-                onClick={() => {
-                  handleOnClick(meal);
-                }}
-              >
-                ADD TO ORDER
-              </Button>
-            </CardActions>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Card>
-  );
-};
+      <img 
+      className=" cursor-pointer rounded-xl w-full h-full object-cover" 
+      src={url} 
+      alt="cafe food option" /> 
+  )
+}
 
-export default SingleMeal;
+export default function SingleMeal({meal,addToOrder}) {
+  const {name,picture,price} = meal;
+  return (
+    <div className="w-full p-2 flex justify-center flex-col h-full">
+      <div 
+      onClick={()=>addToOrder(meal)} 
+      className="h-2/3 w-full bg-theme-color rounded-xl flex relative"
+      >
+        <div className="w-full h-full z-30 hover:opacity-50">
+          <Image url={picture}/>  
+        </div>
+        <div className="z-1 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <MdAddShoppingCart className="my-auto p-1 rounded-full text-6xl"/>
+        </div>
+      </div>
+      <div className="justify-between mt-2 flex">
+        <div className="flex my-auto text-white bg-theme-color p-1 rounded-bl-xl rounded-tr-xl">
+          <p className="text-xl">{name}</p>
+          <p className="ml-2 my-auto">${(price && Number(meal.price).toFixed(2)) || 'inf'}</p>   
+        </div>
+      </div>
+    </div>
+  )
+}
