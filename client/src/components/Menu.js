@@ -11,7 +11,7 @@ const Menu = ({getMeals,className}) => {
   })
 
   return (
-    <div className={`${className} max-w-screen-xl flex flex-col p-5 m-auto`}>
+    <div className={`${className} w-full min-h-screen max-w-screen-xl flex flex-col p-5 m-auto`}>
         <Meals filter="HOT DRINKS"/>
         <Meals filter="COLD DRINKS"/>
         <Meals filter="PASTRIES" />
