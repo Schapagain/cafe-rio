@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
 import CartSingleMeal from "./CartSingleMeal";
-import emptyCartImage from "../empty_cart.png";
+import emptyCartImage from "../images/empty_cart.png";
 import { Typography } from "@material-ui/core";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
 import { createPaymentIntent } from "../actions/paymentActions";
