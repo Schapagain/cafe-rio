@@ -30,7 +30,7 @@ export default function MainContainer() {
                     <Checkout />  
                 </Route>
                 <Route exact path="/menu">
-                    <div className="w-full h-full p-5 bg-cover bg-brown-paper justify-center flex flex-col">
+                    <div className="w-full h-full p-5 bg-contain bg-brown-paper justify-center flex flex-col">
                         <NavBar className="z-50 bg-theme-color rounded-xl text-offwhite"/>
                         <Menu className="text-offwhite"/>
                     </div>
