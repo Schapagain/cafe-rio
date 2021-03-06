@@ -1,135 +1,75 @@
-import React, { Fragment, useState } from "react";
-import { makeStyles } from "@material-ui/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import { connect } from "react-redux";
-import { Link, useLocation, useHistory } from "react-router-dom";
-
-import Cart from "./Cart";
+import { useHistory } from 'react-router-dom';
+import { logOut } from '../actions/authActions';
+import { connect } from 'react-redux';
 import PropTypes from "prop-types";
-import Fade from "@material-ui/core/Fade";
-import Logout from "./Logout";
-// setting up how the AppBar behaves when scrolling
-function ElevationScroll(props) {
-  const { children } = props;
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0,
-  });
+import Cart from './Cart';
 
-  return React.cloneElement(children, {
-    elevation: trigger ? 4 : 0,
-  });
+const Brand = () => {
+    const history = useHistory();
+    return (
+        <a 
+        className = "my-auto px-2 font-medium text-3xl"
+        href="!#" 
+        onClick={(e)=>{e.preventDefault();history.push("/")}}
+        >
+            Café Río
+        </a>
+    );
 }
 
-// create Hook to allow component to access styles
-const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-  },
-  button: {
-    color: "white",
-    marginLeft: "auto",
-  },
-}));
+const NavLink = ({text,onClick}) => {
+    return (
+        <a 
+        className = {
+            `p-3 font-medium text-calypso text-lg mx-4
+            transition transform ease-in-out duration-700 hover:bg-theme-color hover:scale-110 hover:text-white rounded-full`
+        }
+        href="!#" 
+        onClick={(e)=>{e.preventDefault();onClick()}}
+        >
+            {text}
+        </a>
+    )
+}
 
-const NavBar = ({ isAuthenticated, user }) => {
-  const classes = useStyles();
-  const location = useLocation();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+const NavLinks = ({isAuthenticated, cartEmpty, logOut}) => {
 
-  const handleOpenMenu = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
+    const history = useHistory();
+    return (
+        <div className="flex">
+            <NavLink text="Menu" onClick={()=>history.push("/menu")} />
+            <NavLink text="About" onClick={()=>history.push("/about")} />
+            {isAuthenticated 
+            ? <NavLink text="Logout" onClick={()=>{logOut();history.push("/")}} />
+            : <NavLink text="Login" onClick={()=>history.push("/login")} />
+            }
+            {!cartEmpty && <Cart />}
+        </div>
+    );
+}
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+const NavBar = ({order,className,logOut,isAuthenticated}) => {
 
-  let history = useHistory();
-  const handleLogin = () => {
-    console.log("redirecting..");
-    history.push("/login");
-    handleClose();
-  };
+    const cartEmpty = ! (order && order.totalMeals);  
 
-  return (
-    <Fragment>
-      <ElevationScroll>
-        <AppBar>
-          <Toolbar>
-            <Button
-              component={Link}
-              to="/"
-              color="inherit"
-              disableFocusRipple
-              disableTouchRipple
-              disableRipple
-            >
-              <Typography variant="h6">Café Río</Typography>
-            </Button>
-            <Button
-              onClick={handleOpenMenu}
-              className={classes.button}
-              size="large"
-              startIcon={<AccountCircle />}
-              aria-controls={isAuthenticated ? "auth-menu" : "guest-menu"}
-              aria-haspopup="true"
-            ></Button>
-            {isAuthenticated && (
-              <Typography component="h3" variant="button">
-                {user.name}
-              </Typography>
-            )}
-            {location.pathname !== "/checkout" && <Cart />}
-          </Toolbar>
-        </AppBar>
-      </ElevationScroll>
-      <Menu
-        id="auth-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        open={isAuthenticated && open}
-        onClose={handleClose}
-        TransitionComponent={Fade}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <Logout closeMenu={handleClose} />
-      </Menu>
+    return (
+        <div className = {className + " w-full mx-auto max-w-screen-xl flex p-1 m-4 justify-between"}>
+            <Brand />
+            <NavLinks isAuthenticated={isAuthenticated} logOut={logOut} cartEmpty={cartEmpty}/>
+        </div>
+    );
+}
 
-      <Menu
-        id="guest-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={!isAuthenticated && open}
-        onClose={handleClose}
-        TransitionComponent={Fade}
-      >
-        <MenuItem onClick={handleLogin}>Login</MenuItem>
-      </Menu>
-      <div className={classes.toolbarMargin} />
-    </Fragment>
-  );
-};
-
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user,
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    order: state.order.order
 });
 
 NavBar.propTypes = {
-  isAuthenticated: PropTypes.bool,
-  user: PropTypes.object,
+    isAuthenticated: PropTypes.bool.isRequired,
+    order: PropTypes.object.isRequired,
+    className: PropTypes.string,
+    logOut: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, {})(NavBar);
+export default connect(mapStateToProps, {logOut})(NavBar);
