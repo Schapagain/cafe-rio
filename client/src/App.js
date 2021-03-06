@@ -8,6 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import store from "./store";
 import { loadUser } from "./actions/authActions";
 import MainContainer from './components/MainContainer';
+import { getMeals } from "./actions/mealActions";
 
 const stripePromise = loadStripe(
   "pk_test_51I8QurI5qzReycR9FSYytJ8iPoxfXFQwYObAZC0x8jXsHY6K6XOCZ8AtF6N8NDiDpPC58I090d88Q0i0Y4PudyZo00AFJEaifB"
@@ -16,6 +17,7 @@ const stripePromise = loadStripe(
 function App() {
   useEffect(() => {
     store.dispatch(loadUser());
+    store.dispatch(getMeals());
   }, []);
   return (
     <Provider store={store}>
