@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 
 import SingleMeal from "./SingleMeal";
 import { addMealToOrder } from "../actions/orderActions";
-// import Spinner from "./Spinner";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 
@@ -13,21 +12,24 @@ const Meals = ({ meal, filter, addMealToOrder }) => {
   let { meals, isLoading } = meal;
   meals = meals.filter((meal) => meal.category === filter.toLowerCase());
   return (
-    <div className="flex flex-col h-full sm:h-96">
+    <div className="flex w-full flex-col h-full sm:h-96">
       <h1 className="font-medium w-1/2 text-black mx-auto bg-opacity-20 bg-gray-200 rounded-xl text-center text-3xl p-2 mt-10">
-        {meals.length ? filter : null}
+        {filter}
       </h1>
-      <div className="flex w-full mx-auto flex-col overflow-y-auto sm:flex-row sm:overflow-x-auto">
+      {(isLoading || meals.length) 
+      ? (<div className="flex w-full mx-auto flex-col overflow-y-auto sm:flex-row sm:overflow-x-auto">
         {(isLoading 
         ? Array.from(new Array(4)) 
         : meals).map((meal, index) => meal 
           ? ( <SingleMeal
+                  key={meal.id || index}
                   meal={meal}
                   addToOrder={(meal) => {
                     addMealToOrder(meal);
                   }}
                 />) 
           : ( <Skeleton
+                  key={index}
                   animation="wave"
                   variant="rect"
                   width={300}
@@ -37,8 +39,13 @@ const Meals = ({ meal, filter, addMealToOrder }) => {
           )
         }
       </div>
+      ) : (
+        <div className="h-96 flex text-black text-xl sm:text-2xl">
+          <h1 className="m-auto bg-red-300 p-3 rounded-lg">Sorry, couldn't get {filter ? filter.toLowerCase() : "meal"} right now</h1>
+        </div>
+      )}
     </div>
-  );
+    );
 };
 
 Meals.propTypes = {
