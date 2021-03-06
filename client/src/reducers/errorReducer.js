@@ -11,7 +11,12 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case GET_ERRORS:
       return {
-        field: action.payload.error.field ? action.payload.error.field : "",
+        field: (
+          action.payload && 
+          action.payload.error && 
+          action.payload.error.field) 
+          ? action.payload.error.field 
+          : "",
         msg: action.payload.error.field
           ? action.payload.error.msg
           : action.payload.error,
