@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import Meals from "./Meals";
 import classNames from 'classnames';
-import { a, useTransition } from 'react-spring';
+import { a, useTransition, config } from 'react-spring';
 
 const FilterButton = ({ text, toggleCategory, isOn }) => {
 
   const mainClass = classNames(
-    'bg-red-400 sm:my-auto select-none text-xs flex rounded-full p-2 m-2 cursor-pointer',
+    'bg-green-700 bg-opacity-30 sm:my-auto select-none text-xs flex rounded-full p-2 m-2 cursor-pointer',
     'transition duration-500 ease-in-out hover:bg-opacity-50',
     {
-      'text-base' : isOn,
-      'bg-green-700' : isOn,
+      'text-base bg-green-700 bg-opacity-100' : isOn,
       'text-black' : !isOn,
     },
   );
@@ -42,13 +41,16 @@ const Filterbar = ({ filtersSelected, toggleCategory, filters}) => {
 export default function Menu({ className }) {
 
   const filters = ["HOT DRINKS","COLD DRINKS","PASTRIES","STARTERS","ENTREES"];
-  const [filtersSelected,setFiltersSelected] = useState(filters);
+  const [filtersSelected,setFiltersSelected] = useState([]);
  
-  const transitions = useTransition(filtersSelected,null,{
+  // Display all categories if no filter selected
+  const displayFilters = filtersSelected.length ? filtersSelected : filters;
+  const transitions = useTransition(displayFilters,null,{
     from: { opacity: 0},
     enter: { opacity: 1},
     leave: { opacity: 0},
     unique: true,
+    config: config.gentle
   });
 
   const toggleCategory = (category) => {

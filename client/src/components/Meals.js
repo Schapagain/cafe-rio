@@ -12,12 +12,12 @@ const Meals = ({ meal, filter, addMealToOrder }) => {
   let { meals, isLoading } = meal;
   meals = meals.filter((meal) => meal.category === filter.toLowerCase());
   return (
-    <div className="flex w-full flex-col h-full sm:h-96">
-      <h1 className="font-medium w-1/2 text-black mx-auto bg-opacity-20 bg-gray-200 rounded-xl text-center text-3xl p-2 mt-10">
+    <div className="flex w-full my-10 flex-col h-full sm:h-96">
+      <h1 className="font-medium w-1/2 text-black mx-auto bg-opacity-20 bg-gray-200 rounded-xl text-center text-3xl p-2 mb-5 mt-10">
         {filter}
       </h1>
       {(isLoading || meals.length) 
-      ? (<div className="flex w-full mx-auto flex-col overflow-y-auto sm:flex-row sm:overflow-x-auto">
+      ? (<div className="flex w-full mt justify-center h-full flex-wrap">
         {(isLoading 
         ? Array.from(new Array(4)) 
         : meals).map((meal, index) => meal 
