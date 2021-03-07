@@ -37,7 +37,7 @@ export default function MainContainer() {
                 </Route>
                 <Route path="/">
                     <div className="w-full h-screen p-5 bg-cover bg-coffee-on-desk justify-center flex flex-col">
-                        <NavBar className="z-50 text-white"/>
+                        <NavBar showCart={true} className="z-50 text-white"/>
                         <HomePage />
                     </div>  
                 </Route>
