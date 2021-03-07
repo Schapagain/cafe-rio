@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Meals from "./Meals";
 import classNames from 'classnames';
 import { a, useTransition, config } from 'react-spring';
+import Cart from './Cart';
 
 const FilterButton = ({ text, toggleCategory, isOn }) => {
 
@@ -26,7 +27,7 @@ const FilterButton = ({ text, toggleCategory, isOn }) => {
 
 const Filterbar = ({ filtersSelected, toggleCategory, filters}) => {
   return (
-    <div className="sticky top-0 sm:h-14 flex-wrap flex bg-opacity-60 justify-center z-50 p-2 rounded-xl bg-gray-400">
+    <div className="sticky top-0 flex-wrap flex bg-opacity-60 justify-center z-50 p-2 rounded-xl bg-gray-400">
         {filters.map(filter => (
         <FilterButton 
         key={filter}
@@ -34,6 +35,10 @@ const Filterbar = ({ filtersSelected, toggleCategory, filters}) => {
         toggleCategory={toggleCategory} 
         text={filter} 
         />))}
+        <div className="mr-0 focus-none">
+          <Cart />  
+        </div>
+        
     </div>
   )
 }
