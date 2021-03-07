@@ -13,7 +13,7 @@ function Image({url}) {
 export default function SingleMeal({meal,addToOrder}) {
   const {name,picture,price} = meal;
   return (
-    <div className="w-44 h-80 my-auto mx-2 p-2 flex flex-col">
+    <div className="w-52 h-80 my-auto mx-2 p-2 flex flex-col">
       <div 
       onClick={()=>addToOrder(meal)} 
       className="h-2/3 max-w-sm bg-theme-color rounded-xl flex relative"
