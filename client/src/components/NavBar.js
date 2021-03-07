@@ -32,7 +32,7 @@ const NavLink = ({text,onClick}) => {
     )
 }
 
-const NavLinks = ({isAuthenticated, cartEmpty, logOut}) => {
+const NavLinks = ({isAuthenticated, showCart, logOut}) => {
 
     const history = useHistory();
     return (
@@ -43,33 +43,30 @@ const NavLinks = ({isAuthenticated, cartEmpty, logOut}) => {
             ? <NavLink text="Logout" onClick={()=>{logOut();history.push("/")}} />
             : <NavLink text="Login" onClick={()=>history.push("/login")} />
             }
-            {!cartEmpty && <Cart />}
+            {showCart && isAuthenticated && <Cart className="text-white"/>}
         </div>
     );
 }
 
-const NavBar = ({order,className,logOut,isAuthenticated}) => {
-
-    const cartEmpty = ! (order && order.totalMeals);  
+const NavBar = ({showCart, className,logOut,isAuthenticated}) => {
 
     return (
         <div className = {className + " w-full mx-auto max-w-screen-xl flex p-1 m-4 justify-between"}>
             <Brand />
-            <NavLinks isAuthenticated={isAuthenticated} logOut={logOut} cartEmpty={cartEmpty}/>
+            <NavLinks showCart={showCart} isAuthenticated={isAuthenticated} logOut={logOut}/>
         </div>
     );
 }
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,
-    order: state.order.order
 });
 
 NavBar.propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
-    order: PropTypes.object.isRequired,
     className: PropTypes.string,
     logOut: PropTypes.func.isRequired,
+    showCart: PropTypes.bool,
 };
 
 export default connect(mapStateToProps, {logOut})(NavBar);
