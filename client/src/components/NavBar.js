@@ -8,7 +8,7 @@ const Brand = () => {
     const history = useHistory();
     return (
         <a 
-        className = "my-auto px-2 font-medium text-3xl"
+        className = "my-auto px-2 font-medium text-lg sm:text-3xl"
         href="!#" 
         onClick={(e)=>{e.preventDefault();history.push("/")}}
         >
@@ -21,7 +21,7 @@ const NavLink = ({text,onClick}) => {
     return (
         <a 
         className = {
-            `p-3 font-medium text-calypso text-lg mx-4
+            `my-auto p-2 font-medium text-calypso text-sm sm:text-lg mx-4
             transition transform ease-in-out duration-700 hover:bg-theme-color hover:scale-110 hover:text-white rounded-full`
         }
         href="!#" 
