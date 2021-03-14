@@ -3,7 +3,6 @@ import Button from "./Button";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -31,12 +30,10 @@ const SignIn = ({
   console.log(msg, errorFlag);
   useEffect(() => {
     if (checkoutFail) {
-      checkoutFail = false;
       setErrorFlag("WARNING");
       setMsg("You must login before checking out!");
     }
     if (signUpSuccess) {
-      signUpSuccess = false;
       setErrorFlag("SUCCESS");
       setMsg(
         "Signed up successfully! An activation link has been sent via email."
