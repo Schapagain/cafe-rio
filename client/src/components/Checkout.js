@@ -33,10 +33,8 @@ const Checkout = ({
         state: { checkoutFail: true },
       });
     }
-    {
-      createPaymentIntent();
-      setOrderChanged(false);
-    }
+    createPaymentIntent();
+    setOrderChanged(false);
   }, [
     orderChanged,
     createPaymentIntent,

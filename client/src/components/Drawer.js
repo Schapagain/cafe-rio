@@ -6,9 +6,6 @@ import Button from "./Button";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
 import { useHistory } from "react-router-dom";
-import store from "../store";
-import { LOAD_CHECKOUT } from "../actions/types";
-import { createPaymentIntent } from "../actions/paymentActions";
 import OrderInfo from "./OrderInfo";
 
 const Leaf = ({ cartOpen, setCartOpen, numItems }) => {
