@@ -60,7 +60,11 @@ const NavLinks = ({ isAuthenticated, activeLink, logOut }) => {
           }}
         />
       ) : (
-        <NavLink text="Login" onClick={() => history.push("/login")} />
+        <NavLink
+          active={activeLink === "login"}
+          text="Login"
+          onClick={() => history.push("/login")}
+        />
       )}
     </div>
   );

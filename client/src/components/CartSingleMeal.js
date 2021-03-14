@@ -12,14 +12,14 @@ const CartSingleMeal = ({
         <p className="mr-2 my-auto">{meal.name}</p>
         <p
           onClick={() => handleSubtractOne(meal.id)}
-          className="p-2 mx-1 bg-gray-600 bg-opacity-50 my-auto rounded-full w-6 h-6 flex items-center justify-center  bg-theme-color"
+          className="p-2 mx-1 cursor-pointer bg-gray-600 bg-opacity-50 my-auto rounded-full w-6 h-6 flex items-center justify-center  bg-theme-color"
         >
           -
         </p>
         <p className="my-auto p-2 ">{quantity}</p>
         <p
           onClick={() => handleAddOne(meal)}
-          className="mx-1 p-2 bg-gray-600 bg-opacity-50 my-auto rounded-full w-6 h-6 flex items-center justify-center  bg-theme-color"
+          className="mx-1 cursor-pointer p-2 bg-gray-600 bg-opacity-50 my-auto rounded-full w-6 h-6 flex items-center justify-center  bg-theme-color"
         >
           +
         </p>

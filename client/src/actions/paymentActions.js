@@ -13,13 +13,13 @@ import { tokenConfig } from "./shared";
 
 export const createPaymentIntent = () => async (dispatch, getState) => {
   try {
+    dispatch({ type: PAYMENT_PROCESSING });
     const endpoint = `${ROOT_ENDPOINT}/api/orders/create_intent`;
     const res = await axios.post(
       endpoint,
       { user: getState().auth.user.id, meals: getState().order.order.mealIds },
       tokenConfig(getState)
     );
-
     dispatch({
       type: CREATE_PAYMENT_INTENT_SUCCESS,
       payload: { amount: res.data.amount, clientSecret: res.data.secret },

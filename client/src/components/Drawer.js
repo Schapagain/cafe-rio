@@ -3,9 +3,13 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useTransition, animated } from "react-spring";
 import Button from "./Button";
-import CartSingleMeal from "./CartSingleMeal";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { addMealToOrder, removeMealFromOrder } from "../actions/orderActions";
+import { useHistory } from "react-router-dom";
+import store from "../store";
+import { LOAD_CHECKOUT } from "../actions/types";
+import { createPaymentIntent } from "../actions/paymentActions";
+import OrderInfo from "./OrderInfo";
 
 const Leaf = ({ cartOpen, setCartOpen, numItems }) => {
   const transitions = useTransition(cartOpen, null, {
@@ -40,24 +44,12 @@ const Leaf = ({ cartOpen, setCartOpen, numItems }) => {
   );
 };
 
-const Items = ({ meals, addMealToOrder, removeMealFromOrder }) => (
-  <div className="w-full h-full flex flex-col overflow-y-auto">
-    {meals.map(({ meal, quantity }) => (
-      <CartSingleMeal
-        key={meal.id}
-        meal={meal}
-        quantity={quantity}
-        handleAddOne={addMealToOrder}
-        handleSubtractOne={removeMealFromOrder}
-      />
-    ))}
-  </div>
-);
-
-const Seperator = () => <div className="h-1 mr-2 my-5 w-1/2 bg-offwhite"></div>;
-const Total = ({ total }) => <div className="mr-2">${total}</div>;
-const CheckoutButton = () => (
-  <Button text="Checkout" className="mx-auto mb-10" />
+const CheckoutButton = ({ handleCheckout }) => (
+  <Button
+    onClick={handleCheckout}
+    text="Checkout"
+    className="mx-auto bg-gray-700 text-black"
+  />
 );
 
 export const Drawer = ({ order, addMealToOrder, removeMealFromOrder }) => {
@@ -73,6 +65,13 @@ export const Drawer = ({ order, addMealToOrder, removeMealFromOrder }) => {
     leave: { transform: "translate3d(100%,0,0)" },
   });
 
+  const history = useHistory();
+
+  const handleCheckout = () => {
+    history.push("/checkout");
+    setCartOpen(false);
+  };
+
   return (
     <div className="select-none">
       {transitions.map(
@@ -86,17 +85,16 @@ export const Drawer = ({ order, addMealToOrder, removeMealFromOrder }) => {
               <h1 className="p-3 w-full pt-10 mb-10 bg-gray-600 bg-opacity-50 text-center text-3xl">
                 Your bag
               </h1>
-              <div className="p-5 w-full overflow-y-auto flex flex-col items-end h-full">
+              <div className="p-5 w-full flex flex-col items-end h-5/6">
                 {numItems > 0 ? (
                   <>
-                    <Items
+                    <OrderInfo
                       meals={mealsInOrder}
                       addMealToOrder={addMealToOrder}
                       removeMealFromOrder={removeMealFromOrder}
+                      total={total}
                     />
-                    <Seperator />
-                    <Total total={total} />
-                    <CheckoutButton />
+                    <CheckoutButton handleCheckout={handleCheckout} />
                   </>
                 ) : (
                   <p className="m-auto">Oops your cart is empty</p>

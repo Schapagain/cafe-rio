@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
   REGISTER_FAIL,
+  REGISTER_SUCCESS,
 } from "../actions/types";
 
 const initialState = {
@@ -43,6 +44,12 @@ export default function reducer(state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
         user: action.payload.user,
+      };
+
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
       };
 
     case AUTH_ERROR:

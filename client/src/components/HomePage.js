@@ -33,7 +33,7 @@ const HomePage = () => {
       >
         <IntroText />
         <Button
-          className="rounded-full hover:bg-theme-color"
+          className="rounded-full bg-theme-color"
           text="See menu"
           onClick={() => history.push("/menu")}
         />

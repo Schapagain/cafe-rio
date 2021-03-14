@@ -11,7 +11,7 @@ const MAX_DISPLAY_COUNT_DEFAULT = 5;
 
 const FilterDisplayImage = ({ className, images }) => {
   return (
-    <div className={className + " p-5 justify-center flex h-96"}>
+    <div className={className + " hidden p-5 justify-center lg:flex h-96"}>
       <img
         className="w-full rounded-xl object-cover h-full"
         src={images[1] || images[0]}
@@ -65,8 +65,8 @@ const Meals = ({ meal, filter, flexOrder, addMealToOrder }) => {
   const [toggled, setToggled] = useState(false);
   return isLoading || meals.length ? (
     <div
-      className={`flex w-full mb-10 h-full  ${
-        flexOrder ? "flex-row-reverse mr-10" : "flex-row ml-10"
+      className={`flex  w-full mb-10 h-full  ${
+        flexOrder ? "flex-row-reverse lg:mr-10" : "flex-row lg:ml-10"
       }`}
     >
       <FilterDisplayImage
@@ -81,7 +81,7 @@ const Meals = ({ meal, filter, flexOrder, addMealToOrder }) => {
         displayCount={toggled ? meals.length : MAX_DISPLAY_COUNT_DEFAULT}
         addMealToOrder={addMealToOrder}
       />
-      <div className="w-1/4 flex">
+      <div className="w-1/4 hidden lg:flex">
         {MAX_DISPLAY_COUNT_DEFAULT < meals.length && (
           <MdUnfoldMore
             onClick={() => setToggled(!toggled)}

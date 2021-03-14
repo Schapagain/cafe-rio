@@ -14,5 +14,17 @@ export default createMuiTheme({
         padding: 0,
       },
     },
+    MuiStepIcon: {
+      root: {
+        "&$completed": {
+          color: "pink",
+        },
+        "&$active": {
+          color: "red",
+        },
+      },
+      active: {},
+      completed: {},
+    },
   },
 });

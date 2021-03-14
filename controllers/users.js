@@ -19,11 +19,11 @@ const {
  */
 async function signupUser(user) {
   try {
+    console.log("signinig up:", user);
     checkIdCardPresence(user);
     user = trimPrematureIds(user);
     user = await saveUserIdCard(user);
     const newUser = new User(user);
-    console.log("here after creating new user");
     user = await newUser.save();
 
     // generate activation link for the user and send email

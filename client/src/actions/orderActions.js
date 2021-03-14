@@ -13,11 +13,9 @@ import { tokenConfig } from "./shared";
 import { Order } from "../utils/order";
 
 export const addOrder = () => async (dispatch, getState) => {
-  
   try {
     const endpoint = `${ROOT_ENDPOINT}/api/orders/`;
-    const order = 
-    {
+    const order = {
       user: getState().auth.user.id,
       meals: getState().order.order.mealIds,
       payment: getState().payment.confirmedPaymentIntent.payment_method,
@@ -25,9 +23,8 @@ export const addOrder = () => async (dispatch, getState) => {
       deliveryTime: getState().order.order.orderTime,
       type: getState().order.order.orderType,
     };
-    console.log('adding order',order);
-    const res = await axios.post(endpoint,order,tokenConfig(getState));
-    
+    const res = await axios.post(endpoint, order, tokenConfig(getState));
+
     dispatch({ type: ADD_ORDER, payload: res.data.order });
   } catch (err) {
     if (err.response) {

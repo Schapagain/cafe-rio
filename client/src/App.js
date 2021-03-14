@@ -7,7 +7,7 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import store from "./store";
 import { loadUser } from "./actions/authActions";
-import MainContainer from './components/MainContainer';
+import MainContainer from "./components/MainContainer";
 import { getMeals } from "./actions/mealActions";
 
 const stripePromise = loadStripe(

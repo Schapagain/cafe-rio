@@ -34,6 +34,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         clientSecret: action.payload.clientSecret,
         amount: action.payload.amount,
+        isLoading: false,
       };
 
     case CONFIRM_CARD_PAYMENT_SUCCESS:

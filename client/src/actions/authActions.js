@@ -27,7 +27,7 @@ export const loadUser = () => async (dispatch, getState) => {
     }
   } catch (err) {
     if (err && err.response) {
-      dispatch(returnErrors(err.response.data.error, err.response.status)); 
+      dispatch(returnErrors(err.response.data.error, err.response.status));
     }
     dispatch({ type: AUTH_ERROR });
   }
@@ -48,7 +48,6 @@ export const signUp = (newUser) => async (dispatch) => {
   //  so we submit the body as FormData instead of JSON
   const body = newUser;
   const endpoint = `${ROOT_ENDPOINT}/api/users/signup`;
-
   try {
     await axios.post(endpoint, body, config);
     dispatch({ type: REGISTER_SUCCESS });
@@ -99,8 +98,6 @@ export const signIn = ({ email, password }) => async (dispatch) => {
 
 // logout
 export const logOut = () => (dispatch) => {
-
-  console.log('LOGGING OUT>>>')
   dispatch({
     type: LOGOUT_SUCCESS,
   });

@@ -18,19 +18,35 @@ function MainContainer({ order }) {
         <Route
           exact
           path="/login"
-          render={(props) => <SignIn {...props.location.state} />}
+          render={(props) => (
+            <div className="w-full h-screen bg-opacity-30 p-5 bg-cover bg-coffee-on-desk-dark justify-center flex flex-col">
+              <NavBar
+                activeLink="login"
+                className="z-50 rounded-xl text-white"
+              />
+              <SignIn {...props.location.state} />
+            </div>
+          )}
         />
         <Route exact path="/about">
           <div className="w-full h-screen p-5 bg-cover bg-coffee-on-desk-dark justify-center flex flex-col">
-            <NavBar className="z-50 rounded-x text-white" />
+            <NavBar activeLink="about" className="z-50 rounded-x text-white" />
             <About className="text-offwhite" />
           </div>
         </Route>
         <Route exact path="/signup">
-          <SignUp />
+          <div className="w-full min-h-screen bg-opacity-30 p-5 bg-cover bg-coffee-on-desk-dark justify-center flex flex-col">
+            <NavBar
+              activeLink="signup"
+              className="z-50 rounded-xl text-white"
+            />
+            <SignUp />
+          </div>
         </Route>
         <Route exact path="/checkout">
-          <Checkout />
+          <div className="w-full h-screen bg-opacity-30 p-5 bg-cover bg-coffee-on-desk-dark justify-center flex flex-col">
+            <Checkout />
+          </div>
         </Route>
         <Route exact path="/menu">
           <div className="w-full h-full bg-opacity-30 p-5 bg-cover bg-coffee-on-desk-dark justify-center flex flex-col">

@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IdUpload = ({ setIdCard }) => {
+const IdUpload = ({ idCard, setIdCard }) => {
   const classes = useStyles();
-  const [uploadedFileUrl, setUploadedFileUrl] = useState("");
+  const [uploadedFileUrl, setUploadedFileUrl] = useState(idCard || "");
 
   const onDrop = (acceptedFiles) => {
     handleImageUpload(acceptedFiles[0]);
@@ -35,7 +35,7 @@ const IdUpload = ({ setIdCard }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleImageUpload = (file) => {
-    setUploadedFileUrl(URL.createObjectURL(file));
+    setUploadedFileUrl(file);
     setIdCard(file);
   };
 
@@ -43,11 +43,8 @@ const IdUpload = ({ setIdCard }) => {
     <Paper className={classes.imagePreview} square>
       <Grid container justify="center">
         <Grid item xs={12}>
-          <Typography variant="button">ID photo Preview</Typography>
-        </Grid>
-        <Grid item xs={12}>
           <img
-            src={uploadedFileUrl}
+            src={URL.createObjectURL(uploadedFileUrl)}
             alt="employment id card"
             className={classes.image}
           />

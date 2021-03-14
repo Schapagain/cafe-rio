@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Divider from "@material-ui/core/Divider";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import Spinner from "./Spinner";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -24,7 +21,7 @@ import { signUp } from "../actions/authActions";
 import IdUpload from "./IdUpload";
 import { clearErrors } from "../actions/errorActions";
 import Copyright from "./Copyright";
-
+import StepIcon from "./StepIcon";
 // TODO: show feedback for image upload
 
 const useStyles = makeStyles((theme) => ({
@@ -53,15 +50,23 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     width: "100%",
+    marginBottom: "20px",
   },
+  button: {
+    backgroundColor: "#065F46",
+    color: "white",
+  },
+  stepIcon: {
+    color: "#065F46",
+    active: { color: "pink" },
+  },
+  alternativeLabel: {},
+  active: { color: "blue" },
+  completed: {},
 }));
 
 function getSteps() {
-  return [
-    "Input Your Information",
-    "Upload a Photo of Your Employee ID",
-    "Confirm Your Information",
-  ];
+  return ["Company Information", "Employee ID Card", "Personal Information"];
 }
 
 const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
@@ -76,9 +81,8 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   const [idCard, setIdCard] = useState(null);
   const [nextDisabled, setNextDisabled] = useState(true);
   // state for what step of sign up we're at
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
-
   // showing errors if they exist
   let history = useHistory();
   const [msg, setMsg] = useState("");
@@ -120,152 +124,40 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
     signUp(newUser);
   };
 
-  const PreviewForm = () => (
-    <Grid item xs={12}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            autoComplete="name"
-            name="name"
-            variant="outlined"
-            required
-            fullWidth
-            id="name"
-            label="Name"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            autoComplete="organization"
-            name="organization"
-            variant="outlined"
-            required
-            fullWidth
-            id="organization"
-            label="Organization"
-            value={organization}
-            onChange={(e) => {
-              setOrganization(e.target.value);
-            }}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            autoComplete="Employee ID"
-            name="employeeId"
-            variant="outlined"
-            required
-            fullWidth
-            id="employeeId"
-            label="Employee ID"
-            value={employeeId}
-            onChange={(e) => {
-              setEmployeeId(e.target.value);
-            }}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            autoComplete="Phone"
-            name="phone"
-            variant="outlined"
-            required
-            fullWidth
-            id="phone"
-            label="Phone"
-            value={phone}
-            onChange={(e) => {
-              setPhone(e.target.value);
-            }}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-        </Grid>
-      </Grid>
-    </Grid>
-  );
-
   const checkDisabled = () => {
     if (activeStep === 0) {
-      const fields = [name, email, password, organization, employeeId, phone];
+      const fields = [organization, employeeId, phone];
       const nextDisabled = fields.reduce(
         (disabled, field) => Boolean(field) && disabled
       );
       setNextDisabled(!nextDisabled);
     } else if (activeStep === 1) {
       setNextDisabled(!idCard);
+    } else if (activeStep === 2) {
+      const fields = [name, email, password];
+      const nextDisabled = fields.reduce(
+        (disabled, field) => Boolean(field) && disabled
+      );
+      setNextDisabled(!nextDisabled);
     }
   };
 
   const SignUpButtons = () => (
     <Grid container justify="space-between">
-      <Button
-        disabled={activeStep === 0}
-        onClick={handleBack}
-        className={classes.button}
-      >
-        Back
-      </Button>
+      {!isLoading && (
+        <Button
+          disabled={activeStep === 0}
+          onClick={handleBack}
+          className={activeStep === 0 ? classes.buttonDisabled : classes.button}
+        >
+          Back
+        </Button>
+      )}
       {activeStep !== steps.length - 1 ? (
         <Button
           variant="contained"
-          color="primary"
           onClick={handleNext}
-          className={classes.button}
+          className={nextDisabled ? classes.buttonDisabled : classes.button}
           disabled={nextDisabled}
         >
           Next
@@ -286,7 +178,7 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
       )}
       <Grid container justify="flex-end" className={classes.signin}>
         <Grid item>
-          <Link component={RouterLink} to="/login" variant="body2">
+          <Link className="hover:underline" to="/login">
             Already have an account? Sign in
           </Link>
         </Grid>
@@ -295,26 +187,27 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
   );
 
   return (
-    <Container component="main" maxWidth="xs">
+    <div className="h-full flex flex-col items-center justify-start text-white m-auto w-full sm:w-1/2 xl:w-1/3 max-w-screen-xl">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
+        <div className="w-10 flex h-10 bg-theme-color rounded-full">
+          <LockOutlinedIcon className="text-4xl m-auto" />
+        </div>
+        <h1 className="text-3xl mb-1">Sign Up</h1>
 
         <Stepper activeStep={activeStep}>
-          {steps.map((label) => {
+          {steps.map((label, index) => {
             return (
               <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+                <StepLabel
+                  icon={<StepIcon currentStep={activeStep} step={index + 1} />}
+                >
+                  {label}
+                </StepLabel>
               </Step>
             );
           })}
         </Stepper>
-        {msg !== "" ? <Alert severity="error">{msg.msg}</Alert> : null}
         {activeStep === steps.length ? (
           <div>
             <Typography className={classes.instructions}>
@@ -329,6 +222,59 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
             <Grid container spacing={2} justify="center">
               <Grid item xs={12}>
                 {activeStep === 0 ? (
+                  <Grid item xs={12}>
+                    <Grid container spacing={2} justify="center">
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="organization"
+                          name="organization"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="organization"
+                          label="Organization"
+                          autoFocus
+                          value={organization}
+                          onChange={(e) => {
+                            setOrganization(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="Employee ID"
+                          name="employeeId"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="employeeId"
+                          label="Employee ID"
+                          value={employeeId}
+                          onChange={(e) => {
+                            setEmployeeId(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          autoComplete="Phone"
+                          name="phone"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="phone"
+                          label="Phone"
+                          value={phone}
+                          onChange={(e) => {
+                            setPhone(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                ) : activeStep === 1 ? (
+                  <IdUpload idCard={idCard} setIdCard={setIdCard} />
+                ) : (
                   <Grid item xs={12}>
                     <Grid container spacing={2} justify="center">
                       <Grid item xs={12}>
@@ -378,76 +324,13 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
                           }}
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <Divider />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          autoComplete="organization"
-                          name="organization"
-                          variant="outlined"
-                          required
-                          fullWidth
-                          id="organization"
-                          label="Organization"
-                          autoFocus
-                          value={organization}
-                          onChange={(e) => {
-                            setOrganization(e.target.value);
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          autoComplete="Employee ID"
-                          name="employeeId"
-                          variant="outlined"
-                          required
-                          fullWidth
-                          id="employeeId"
-                          label="Employee ID"
-                          autoFocus
-                          value={employeeId}
-                          onChange={(e) => {
-                            setEmployeeId(e.target.value);
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          autoComplete="Phone"
-                          name="phone"
-                          variant="outlined"
-                          required
-                          fullWidth
-                          id="phone"
-                          label="Phone"
-                          autoFocus
-                          value={phone}
-                          onChange={(e) => {
-                            setPhone(e.target.value);
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                ) : activeStep === 1 ? (
-                  <IdUpload setIdCard={setIdCard} />
-                ) : (
-                  <Grid container justify="center">
-                    <Grid item xs={12}>
-                      <img
-                        src={URL.createObjectURL(idCard)}
-                        alt="employment id card"
-                        className={classes.image}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <PreviewForm />
                     </Grid>
                   </Grid>
                 )}
               </Grid>
+              {msg !== "" ? (
+                <Alert severity="error">{msg && msg.msg ? msg.msg : msg}</Alert>
+              ) : null}
               <Grid item xs={12}>
                 <SignUpButtons />
               </Grid>
@@ -458,7 +341,7 @@ const SignUp = ({ signUp, error, isLoading, clearErrors }) => {
       <Box mt={5}>
         <Copyright />
       </Box>
-    </Container>
+    </div>
   );
 };
 
