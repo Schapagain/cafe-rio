@@ -56,7 +56,7 @@ const Items = ({ meals, addMealToOrder, removeMealFromOrder }) => (
 
 const Seperator = () => <div className="h-1 mr-2 my-5 w-1/2 bg-offwhite"></div>;
 const Total = ({ total }) => <div className="mr-2">${total}</div>;
-const CheckoutButton = ({}) => (
+const CheckoutButton = () => (
   <Button text="Checkout" className="mx-auto mb-10" />
 );
 

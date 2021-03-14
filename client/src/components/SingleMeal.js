@@ -1,18 +1,8 @@
 import React from "react";
 import { MdAddShoppingCart } from "react-icons/md";
 
-function Image({ url }) {
-  return (
-    <img
-      className="cursor-pointer rounded-xl w-full max-h-80 h-full object-cover"
-      src={url}
-      alt="cafe food option"
-    />
-  );
-}
-
 export default function SingleMeal({ meal, addToOrder }) {
-  const { name, picture, price } = meal;
+  const { name, price } = meal;
   return (
     <div className=" my-2 w-full cursor-pointer flex flex-col">
       <div
