@@ -63,7 +63,11 @@ const Meals = ({ meal, filter, flexOrder, addMealToOrder }) => {
   let { meals, isLoading } = meal;
   meals = meals.filter((meal) => meal.category === filter.toLowerCase());
   const [toggled, setToggled] = useState(false);
-  return isLoading || meals.length ? (
+  return isLoading ? (
+    <div className="fixed top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
+      Loading...
+    </div>
+  ) : meals.length ? (
     <div
       className={`flex  w-full mb-10 h-full  ${
         flexOrder ? "flex-row-reverse lg:mr-10" : "flex-row lg:ml-10"
@@ -90,7 +94,9 @@ const Meals = ({ meal, filter, flexOrder, addMealToOrder }) => {
         )}
       </div>
     </div>
-  ) : null;
+  ) : (
+    <> </>
+  );
 };
 
 Meals.propTypes = {
