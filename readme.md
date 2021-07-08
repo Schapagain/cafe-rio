@@ -54,6 +54,7 @@ We added things, and redesigned here and there, even after the program ended, as
 
 <br/>
 <br/>
+
 ### Responses and Error Codes
 All responses are JSON objects. In cases of failure, an 'error' property shall always exist with an appropriate error message. The following are all possible http response types:
 
