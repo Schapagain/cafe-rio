@@ -3,7 +3,7 @@
 A [cafeteria solution](https://cafe-rio.netlify.app).
 
 We worked on this project as a part of a hackathon. The theme was to build an application that helps office employees order food from their cafeteria. 
-We added things, and redesigned here and there, even after the program ended, as we learnt new techniques in web developmt.
+We added things, and redesigned here and there, even after the program ended, as we learnt new techniques in web development.
 
 
 ## Guide to the API Endpoints
