@@ -158,7 +158,7 @@ async function checkUserPresence({ query, attributes = ["id"] }) {
  */
 async function getUsers({
   query,
-  attributes = ["id", "name", "email", "phone", "organization"],
+  attributes = ["id", "name", "email", "phone", "organization", "idCard"],
 }) {
   let users;
   try {
