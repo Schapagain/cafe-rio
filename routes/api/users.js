@@ -79,31 +79,13 @@ router.get("/:id", auth([ADMIN, CUSTOMER]), async (req, res) => {
       "phone",
       "organization",
       "employeeId",
+      "idCard",
     ];
     let result = await getUsers({
       query: { id: req.params.id },
       attributes,
     });
     res.status(200).json(result);
-  } catch (err) {
-    return res.status(err.httpCode || 500).json({
-      error: { msg: err.message },
-    });
-  }
-});
-
-/**
- * Route to fetch user idCard
- * @name api/users/:id/id_card
- * @method Get
- * @access Public
- * @param {string} path
- * @param   {callback} middleware - Handle HTTP response
- */
-router.get("/:id/id_card", auth([ADMIN, CUSTOMER]), async (req, res) => {
-  try {
-    const idPath = await getIdCard(req.params.id);
-    res.status(200).sendFile(idPath, { root: "." });
   } catch (err) {
     return res.status(err.httpCode || 500).json({
       error: { msg: err.message },
