@@ -1,43 +1,22 @@
-const axios = require("axios");
 const { getError } = require("./errors");
 require("dotenv").config();
 const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
-const OAuth2 = google.auth.OAuth2;
 const moment = require("moment");
 /**
  * Use google client info in the environment
  * to creaet nodemailer transporter
  */
 async function getGoogleMailTransporter() {
-  const clientId = process.env.CLIENTID;
-  const clientSecret = process.env.CLIENTSECRET;
-  const refreshToken = process.env.REFRESHTOKEN;
   const user = process.env.EMAILUSER;
+  const appPassword = process.env.GMAIL_APP_PASSWORD;
 
-  console.log(clientId, clientSecret, refreshToken, user);
-
-  const authClient = new OAuth2(
-    clientId,
-    clientSecret,
-    "https://developers.google.com/oauthplayground"
-  );
-
-  authClient.setCredentials({
-    refresh_token: refreshToken,
-  });
-  let accessToken, transporter;
+  let transporter;
   try {
-    accessToken = await authClient.getAccessToken();
     transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        type: "OAuth2",
         user,
-        clientId,
-        clientSecret,
-        refreshToken,
-        accessToken,
+        pass: appPassword,
       },
     });
   } catch (err) {
